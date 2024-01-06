@@ -1,23 +1,27 @@
 import { Express } from "express";
 import request from "supertest";
 import initApp from "../app";
-import mongoose from "mongoose";
-import StudentPost, { IStudentPost } from "../models/post_model";
+import mongoose, { model } from "mongoose";
+import Post, { IPost } from "../models/post_model";
 import User, { IUser } from "../models/user_model";
+import userController from "../controllers/user_controller";
 
 let app: Express;
 const user: IUser = {
-  email: "test@student.post.test",
+  username: "alonl",
   password: "1234567890",
+  firstname: "alon",
+  lastname: "levi",
+  phoneNumber: "050-0000000"
 }
 let accessToken = "";
 
 beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
-  await StudentPost.deleteMany();
+  await Post.deleteMany();
 
-  await User.deleteMany({ 'email': user.email });
+  await User.deleteMany({ 'username': user.username });
   const response = await request(app).post("/auth/register").send(user);
   user._id = response.body._id;
   const response2 = await request(app).post("/auth/login").send(user);
@@ -28,14 +32,22 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-const post1: IStudentPost = {
-  title: "title1",
-  message: "message1",
-  owner: "1234567890",
+getId(async() => {
+  await request(app)
+    .get("/alonl")
+})
+
+
+
+const post1: IPost = {
+  description: "title1",
+  breed: "golden",
+  
+  userIdOwner: await request(app).post("/user/get").send(user),
 };
 
 describe("Student post tests", () => {
-  const addStudentPost = async (post: IStudentPost) => {
+  const addStudentPost = async (post: IPost) => {
     const response = await request(app)
       .post("/studentpost")
       .set("Authorization", "JWT " + accessToken)
@@ -66,3 +78,7 @@ describe("Student post tests", () => {
   });
 
 });
+function getId(arg0: () => Promise<void>) {
+  throw new Error("Function not implemented.");
+}
+
