@@ -1,14 +1,16 @@
 import mongoose from "mongoose";
 
 export interface IUser {
-  email: string;
+  username: string;
   password: string;
-  _id?: string;
-  refreshTokens?: string[];
+  firstname: string;
+  lastname: string;
+  phoneNumber: string;
+  refreshTokens?: string[]; //todo
 }
 
 const userSchema = new mongoose.Schema<IUser>({
-  email: {
+  username: {
     type: String,
     required: true,
   },
@@ -16,7 +18,19 @@ const userSchema = new mongoose.Schema<IUser>({
     type: String,
     required: true,
   },
-  refreshTokens: {
+  firstname: {
+    type: String,
+    required: true,
+  },
+  lastname: {
+    type: String,
+    required: true,
+  },
+  phoneNumber: {
+    type: String,
+    required: true,
+  },
+  refreshTokens: { //todo
     type: [String],
     required: false,
   },
