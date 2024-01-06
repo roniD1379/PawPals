@@ -1,26 +1,16 @@
 ###
 
-GET http://localhost:3000/student
-
+GET http://localhost:3000/user
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTk5ODdhYzY1M2RmZmE1YmFjM2Q3ODUiLCJpYXQiOjE3MDQ1NjE2NjV9.2DAqv2YYA3whtxvWcVftSFb3scy4yzaRROW6oe-WERM
 ###
 
-GET http://localhost:3000/student?name=John%20Doe
-
-
-###
-
-GET http://localhost:3000/student/1234567891
+GET http://localhost:3000/user?username=alonl
 
 
 ###
 
-POST http://localhost:3000/student
-Content-Type: application/json
+GET http://localhost:3000/auth/1234567891
 
-{
-    "name": "John Doe 1",
-    "_id": "1234567891"
-}
 
 ###
 
@@ -28,8 +18,11 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "email": "test1@test.com",
-    "password": "1234567890"
+    "username": "alonl",
+    "password": "1234567890",
+    "firstname": "alon",
+    "lastname": "levi",
+    "phoneNumber": "050-0000000"
 }
 
 ###
@@ -38,6 +31,6 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email": "testUser@test.com",
+    "username": "alonl",
     "password": "1234567890"
 }

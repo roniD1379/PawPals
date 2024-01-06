@@ -6,14 +6,17 @@ import User from "../models/user_model";
 
 let app: Express;
 const user = {
-  email: "testUser@test.com",
+  username: "alonr",
   password: "1234567890",
+  firstname: "alon",
+  lastname: "test",
+  phoneNumber: "050-0000000"
 }
 
 beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
-  await User.deleteMany({ 'email': user.email });
+  await User.deleteMany({ 'username': user.username });
 });
 
 afterAll(async () => {
@@ -42,7 +45,7 @@ describe("Auth tests", () => {
   test("Test Register missing password", async () => {
     const response = await request(app)
       .post("/auth/register").send({
-        email: "test@test.com",
+        username: "alonl",
       });
     expect(response.statusCode).toBe(400);
   });
@@ -57,20 +60,20 @@ describe("Auth tests", () => {
   });
 
   test("Test forbidden access without token", async () => {
-    const response = await request(app).get("/student");
+    const response = await request(app).get("/user");
     expect(response.statusCode).toBe(401);
   });
 
   test("Test access with valid token", async () => {
     const response = await request(app)
-      .get("/student")
+      .get("/user")
       .set("Authorization", "JWT " + accessToken);
     expect(response.statusCode).toBe(200);
   });
 
   test("Test access with invalid token", async () => {
     const response = await request(app)
-      .get("/student")
+      .get("/user")
       .set("Authorization", "JWT 1" + accessToken);
     expect(response.statusCode).toBe(401);
   });
@@ -81,7 +84,7 @@ describe("Auth tests", () => {
     await new Promise(resolve => setTimeout(() => resolve("done"), 5000));
 
     const response = await request(app)
-      .get("/student")
+      .get("/user")
       .set("Authorization", "JWT " + accessToken);
     expect(response.statusCode).not.toBe(200);
   });
@@ -99,7 +102,7 @@ describe("Auth tests", () => {
     newRefreshToken = response.body.refreshToken;
 
     const response2 = await request(app)
-      .get("/student")
+      .get("/user")
       .set("Authorization", "JWT " + newAccessToken);
     expect(response2.statusCode).toBe(200);
   });

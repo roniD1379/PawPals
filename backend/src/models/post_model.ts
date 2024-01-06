@@ -33,4 +33,4 @@ const postSchema = new Schema<IPost>({
 
 
 
-export default model<IPost>("Post", postSchema);
+export default model<IPost>("Post", postSchema, "Posts");

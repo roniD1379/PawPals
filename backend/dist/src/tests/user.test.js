@@ -19,7 +19,14 @@ const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
 let accessToken;
 const user = {
-    username: "alonr",
+    username: "alonee",
+    password: "1234567890",
+    firstname: "alon",
+    lastname: "test",
+    phoneNumber: "050-0000000"
+};
+const stu = {
+    username: "alony",
     password: "1234567890",
     firstname: "alon",
     lastname: "test",
@@ -37,48 +44,31 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
-const student = {
-    name: "John Doe",
-    _id: "1234567890",
-};
-describe("Student tests", () => {
-    const addStudent = (user) => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/student")
+describe("user tests", () => {
+    const adduser = (userrInp) => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).post("/user")
             .set("Authorization", "JWT " + accessToken)
-            .send(student);
+            .send(userrInp);
         expect(response.statusCode).toBe(201);
     });
-    test("Test Get All Students - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/student").set("Authorization", "JWT " + accessToken);
-        expect(response.statusCode).toBe(200);
-        expect(response.body).toStrictEqual([]);
+    test("Test Post user", () => __awaiter(void 0, void 0, void 0, function* () {
+        adduser(stu);
     }));
-    test("Test Post Student", () => __awaiter(void 0, void 0, void 0, function* () {
-        addStudent(user);
-    }));
-    test("Test Get All Students with one student in DB", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/user").set("Authorization", "JWT " + accessToken);
-        expect(response.statusCode).toBe(200);
-        expect(response.body.length).toBe(1);
-        const st = response.body[0];
-        expect(st.username).toBe(user.username);
-        //expect(st._id).toBe(student._id);
-    }));
-    test("Test Post duplicate Student", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/user").set("Authorization", "JWT " + accessToken).send(student);
+    test("Test Post duplicate user", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).post("/user").set("Authorization", "JWT " + accessToken).send(user);
         expect(response.statusCode).toBe(406);
     }));
-    // test("Test PUT /student/:id", async () => {
-    //   const updatedStudent = { ...student, name: "Jane Doe 33" };
+    // test("Test PUT /user/:id", async () => {
+    //   const updateduser = { ...user, name: "Jane Doe 33" };
     //   const response = await request(app)
-    //     .put(`/student/${student._id}`)
-    //     .send(updatedStudent);
+    //     .put(`/user/${user._id}`)
+    //     .send(updateduser);
     //   expect(response.statusCode).toBe(200);
-    //   expect(response.body.name).toBe(updatedStudent.name);
+    //   expect(response.body.name).toBe(updateduser.name);
     // });
-    // test("Test DELETE /student/:id", async () => {
-    //   const response = await request(app).delete(`/student/${student._id}`);
+    // test("Test DELETE /user/:id", async () => {
+    //   const response = await request(app).delete(`/user/${user._id}`);
     //   expect(response.statusCode).toBe(200);
     // });
 });
-//# sourceMappingURL=student.test.js.map
+//# sourceMappingURL=user.test.js.map

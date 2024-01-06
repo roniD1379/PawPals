@@ -12,7 +12,7 @@ export class BaseController<ModelType>{
         console.log("get all");
         try {
             if (req.query.name) {
-                const obj = await this.model.find({ username: req.query.name });
+                const obj = await this.model.find({ name: req.query.name });
                 res.send(obj);
             } else {
                 const obj = await this.model.find();
@@ -36,9 +36,15 @@ export class BaseController<ModelType>{
     async post(req: Request, res: Response) {
         console.log("post:" + req.body);
         try {
+            const findUsername = await this.model.findOne({ 'username': req.body.username});
+            console.log("adsdasdfcsfccfs  "+findUsername)
+            if(findUsername!=null){
+                throw "Username exists";
+            }
             const obj = await this.model.create(req.body);
             res.status(201).send(obj);
         } catch (err) {
+            console.log("got intoooooooooooooooooo")
             console.log(err);
             res.status(406).send("fail: " + err.message);
         }

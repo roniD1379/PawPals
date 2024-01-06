@@ -21,4 +21,4 @@ const comment = new Schema<IComment>({
   }
 });
 
-export default model<IComment>("Comment", comment);
+export default model<IComment>("Comment", comment, "Comments");

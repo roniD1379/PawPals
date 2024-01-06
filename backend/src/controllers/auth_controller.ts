@@ -2,41 +2,45 @@ import { Request, Response } from 'express';
 import User from '../models/user_model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { ObjectId } from 'mongoose';
 
 const register = async (req: Request, res: Response) => {
-    const email = req.body.email;
+    const username = req.body.username;
     const password = req.body.password;
-    if (!email || !password) {
-        return res.status(400).send("missing email or password");
+    const firstname = req.body.firstname;
+    const lastname = req.body.lastname;
+    const phoneNumber = req.body.phoneNumber;
+    if (!username || !password) {
+        return res.status(400).send("missing username or password");
     }
     try {
-        const rs = await User.findOne({ 'email': email });
+        const rs = await User.findOne({ 'username': username });
         if (rs != null) {
-            return res.status(406).send("email already exists");
+            return res.status(406).send("username already exists");
         }
         const salt = await bcrypt.genSalt(10);
         const encryptedPassword = await bcrypt.hash(password, salt);
-        const rs2 = await User.create({ 'email': email, 'password': encryptedPassword });
+        const rs2 = await User.create({ 'username': username, 'password': encryptedPassword, 'firstname':firstname, 'lastname': lastname, 'phoneNumber':phoneNumber });
         return res.status(201).send(rs2);
     } catch (err) {
-        return res.status(400).send("error missing email or password");
+        return res.status(400).send("error missing username or password");
     }
 }
 
 const login = async (req: Request, res: Response) => {
-    const email = req.body.email;
+    const username = req.body.username;
     const password = req.body.password;
-    if (!email || !password) {
-        return res.status(400).send("missing email or password");
+    if (!username || !password) {
+        return res.status(400).send("missing username or password");
     }
     try {
-        const user = await User.findOne({ 'email': email });
+        const user = await User.findOne({ 'username': username });
         if (user == null) {
-            return res.status(401).send("email or password incorrect");
+            return res.status(401).send("username or password incorrect");
         }
         const match = await bcrypt.compare(password, user.password);
         if (!match) {
-            return res.status(401).send("email or password incorrect");
+            return res.status(401).send("username or password incorrect");
         }
 
         const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
@@ -52,7 +56,7 @@ const login = async (req: Request, res: Response) => {
             'refreshToken': refreshToken
         });
     } catch (err) {
-        return res.status(400).send("error missing email or password");
+        return res.status(400).send("error missing username or password");
     }
 }
 
@@ -60,7 +64,7 @@ const logout = async (req: Request, res: Response) => {
     const authHeader = req.headers['authorization'];
     const refreshToken = authHeader && authHeader.split(' ')[1]; // Bearer <token>
     if (refreshToken == null) return res.sendStatus(401);
-    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user: { '_id': string }) => {
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user: { '_id': ObjectId }) => {
         console.log(err);
         if (err) return res.sendStatus(401);
         try {
@@ -84,7 +88,7 @@ const refresh = async (req: Request, res: Response) => {
     const authHeader = req.headers['authorization'];
     const refreshToken = authHeader && authHeader.split(' ')[1]; // Bearer <token>
     if (refreshToken == null) return res.sendStatus(401);
-    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user: { '_id': string }) => {
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user: { '_id': ObjectId }) => {
         if (err) {
             console.log(err);
             return res.sendStatus(401);
