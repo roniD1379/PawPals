@@ -1,0 +1,21 @@
+.form-input {
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5em;
+}
+
+.form-input-icon {
+  margin-right: 0.5em;
+}
+
+.form-input > input {
+  outline: none;
+  border-radius: 20px;
+  border: 1px solid var(--input-border-color);
+  padding: 0.5em 0.7em;
+  width: 70%;
+  font-size: 1rem;
+}
