@@ -11,10 +11,11 @@ const initApp = (): Promise<Express>  => {
   const promise = new Promise<Express>((resolve) => {
     const db = mongoose.connection;
     db.once("open", () => console.log("Connected to Database"));
+    db
     db.on("error", (error) => console.error(error));
     const url = process.env.DB_URL;
     console.log(url)
-    mongoose.connect(url!).then(() => {
+    mongoose.connect(url!, {user: process.env.DB_USERNAME, pass: process.env.DB_PASSWORD, dbName: process.env.DB_NAME}).then(() => {
       const app = express();
       app.use(bodyParser.json());
       app.use(bodyParser.urlencoded({ extended: true }));

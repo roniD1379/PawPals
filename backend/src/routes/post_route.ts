@@ -3,7 +3,7 @@ const router = express.Router();
 import postController from "../controllers/post_controller";
 import authMiddleware from "../common/auth_middleware";
 
-router.get("/", postController.get.bind(postController));
+router.get("/" ,postController.get.bind(postController));
 
 router.get("/:id", postController.getById.bind(postController));
 

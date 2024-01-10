@@ -37,14 +37,12 @@ export class BaseController<ModelType>{
         console.log("post:" + req.body);
         try {
             const findUsername = await this.model.findOne({ 'username': req.body.username});
-            console.log("adsdasdfcsfccfs  "+findUsername)
             if(findUsername!=null){
                 throw "Username exists";
             }
             const obj = await this.model.create(req.body);
             res.status(201).send(obj);
         } catch (err) {
-            console.log("got intoooooooooooooooooo")
             console.log(err);
             res.status(406).send("fail: " + err.message);
         }

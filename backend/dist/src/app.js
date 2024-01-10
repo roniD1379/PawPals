@@ -15,10 +15,11 @@ const initApp = () => {
     const promise = new Promise((resolve) => {
         const db = mongoose_1.default.connection;
         db.once("open", () => console.log("Connected to Database"));
+        db;
         db.on("error", (error) => console.error(error));
         const url = process.env.DB_URL;
         console.log(url);
-        mongoose_1.default.connect(url).then(() => {
+        mongoose_1.default.connect(url, { user: process.env.DB_USERNAME, pass: process.env.DB_PASSWORD, dbName: process.env.DB_NAME }).then(() => {
             const app = (0, express_1.default)();
             app.use(body_parser_1.default.json());
             app.use(body_parser_1.default.urlencoded({ extended: true }));
