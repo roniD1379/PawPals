@@ -1,12 +1,28 @@
+import { useEffect } from "react";
 import "./FormUploadImage.css";
 import { FaImage } from "react-icons/fa";
 
 interface IProps {
   uploadedImageId: string;
   isLarge?: boolean;
+  currentImage?: string;
 }
 
-function FormUploadImage({ uploadedImageId, isLarge = false }: IProps) {
+function FormUploadImage({
+  uploadedImageId,
+  isLarge = false,
+  currentImage = "#",
+}: IProps) {
+  useEffect(() => {
+    if (currentImage !== "#" && currentImage !== "") {
+      const img = document.getElementById(uploadedImageId);
+      if (img != null) {
+        img.style.display = "block";
+        document.getElementById("default-upload-image")?.remove();
+      }
+    }
+  }, []);
+
   return (
     <div
       className={
@@ -36,7 +52,11 @@ function FormUploadImage({ uploadedImageId, isLarge = false }: IProps) {
           }
         }}
       />
-      <img id={uploadedImageId} className="upload-image-img" src="#" />
+      <img
+        id={uploadedImageId}
+        className="upload-image-img"
+        src={currentImage === "" ? "#" : currentImage}
+      />
     </div>
   );
 }

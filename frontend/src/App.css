@@ -9,6 +9,8 @@
   --color-scroll-bar: #f3f3f3;
   --color-scroll-bar-hover: #e2e2e2;
   --welcome-page-border-color: #e0e0e0;
+  --color-heart-on-post: white;
+  --profile-details-container-height: 210px;
 }
 
 .btn {

@@ -1,0 +1,14 @@
+.EditProfileModal {
+  width: 320px;
+}
+
+.register-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.update-profile-btn {
+  margin-top: 1em;
+}

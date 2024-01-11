@@ -151,6 +151,23 @@ function Post({
     ]);
   };
 
+  const showHeartOnPost = (element: HTMLElement) => {
+    const heart = document.createElement("div");
+
+    heart.innerHTML = "&hearts;";
+    heart.className = "heart-on-post";
+    heart.style.opacity = "1";
+    element.parentElement?.appendChild(heart);
+
+    setTimeout(() => {
+      heart.style.opacity = "0";
+    }, 200);
+
+    setTimeout(() => {
+      heart.remove();
+    }, 300);
+  };
+
   useEffect(() => {
     if (isShowingDetails) {
       getPostComments(id);
@@ -169,9 +186,11 @@ function Post({
           className="post-img"
           src={img}
           alt="post-img"
-          onDoubleClick={() => {
-            if (!isLiked) likePost();
-            // TODO: show heart on image when liking
+          onDoubleClick={(e) => {
+            if (!isLiked) {
+              likePost();
+              showHeartOnPost(e.target as HTMLElement);
+            }
           }}
         />
         <span className="post-created-at">{getPostedOn(createdAt)}</span>

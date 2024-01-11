@@ -1,7 +1,7 @@
 import "./Register.css";
 import { useState } from "react";
 import FormInput from "../utils/FormInput/FormInput";
-import { FaPaw, FaLock, FaUser, FaList } from "react-icons/fa";
+import { FaPaw, FaLock, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import FormUploadImage from "../utils/FormUploadImage/FormUploadImage";
 
@@ -64,7 +64,7 @@ function Register() {
           <FormInput
             name="description"
             placeholder="description"
-            icon={<FaList size={20} />}
+            icon={<FaPaw size={20} />}
             state={description}
             setState={setDescription}
           />
