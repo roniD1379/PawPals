@@ -136,9 +136,14 @@
   padding-right: 0.5em;
 }
 
-.post-comment-comment {
-}
-
 .post-comment-created-at {
   font-size: 0.7rem;
+}
+
+.post-contact {
+  margin-right: 0.5em;
+}
+
+.post-contact:hover {
+  cursor: pointer;
 }

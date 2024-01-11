@@ -1,0 +1,21 @@
+.CreatePost {
+  overflow-y: scroll;
+  height: calc(100vh - 155px);
+  padding-top: 0.5em;
+  text-align: center;
+}
+
+.create-post-form {
+  margin-top: 1em;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.create-post-btn {
+  display: block;
+  margin: 1em auto;
+}
+
+.create-post-title {
+  margin-top: 0em;
+}

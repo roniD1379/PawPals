@@ -6,6 +6,8 @@ import { useState } from "react";
 
 function Feed() {
   const [showPostDetails, setShowPostDetails] = useState(false);
+  const [showPostOwnerContactDetails, setShowPostOwnerContactDetails] =
+    useState(false);
   const [post, setPost] = useState<IPostProp>({
     id: 0,
     ownerId: 0,
@@ -17,6 +19,8 @@ function Feed() {
     numOfComments: 0,
     breed: "",
     createdAt: "",
+    ownerFirstName: "",
+    ownerPhoneNumber: "",
   });
 
   const getAllPosts = () => {
@@ -33,6 +37,7 @@ function Feed() {
             post={post}
             setPost={setPost}
             setShowPostDetails={setShowPostDetails}
+            setShowPostOwnerContactDetails={setShowPostOwnerContactDetails}
           />
         );
       })}
@@ -44,8 +49,20 @@ function Feed() {
               post={post}
               setPost={setPost}
               setShowPostDetails={setShowPostDetails}
+              setShowPostOwnerContactDetails={setShowPostOwnerContactDetails}
               isShowingDetails={true}
             />
+          }
+        />
+      )}
+      {showPostOwnerContactDetails && (
+        <Modal
+          setIsOpen={setShowPostOwnerContactDetails}
+          component={
+            <div className="post-owner-contact-details">
+              <p>Contact name: {post.ownerFirstName}</p>
+              <p>Phone number: {post.ownerPhoneNumber}</p>
+            </div>
           }
         />
       )}
