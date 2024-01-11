@@ -15,7 +15,7 @@ function Login() {
     e.preventDefault();
     // TODO: write login functionality
 
-    navigate("/feed");
+    navigate("/main");
   };
 
   return (
