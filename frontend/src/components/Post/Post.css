@@ -1,0 +1,144 @@
+.Post {
+  width: 90%;
+  margin: 1em auto;
+  box-shadow: 0px 4px 10px 1px var(--color-soft-box-shadow);
+  max-height: 600px;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 20px;
+}
+
+.modal .Post {
+  max-height: 650px;
+}
+
+.post-img {
+  width: 100%;
+  border-radius: 20px;
+}
+
+.post-img-container {
+  width: 70%;
+  margin-top: 0.3em;
+  position: relative;
+}
+
+.post-created-at {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background-color: white;
+  padding: 0.5em 0.7em;
+  border-radius: 50px;
+  font-size: 0.8rem;
+}
+
+.post-username {
+  font-weight: 500;
+}
+
+.post-details {
+  margin-top: 0.7em;
+  margin-bottom: 1em;
+  padding-left: 0.5em;
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+}
+
+.post-description {
+  font-size: 0.9rem;
+}
+
+.post-show-comments {
+  font-size: 0.9rem;
+  margin-top: 0.5em;
+  width: fit-content;
+}
+
+.post-show-comments:hover {
+  cursor: pointer;
+}
+
+.post-like-container {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+
+.post-like-container > svg:hover {
+  cursor: pointer;
+}
+
+.post-likes-and-breed-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.post-breed {
+  height: fit-content;
+  border-radius: 50px;
+  border: 1px solid black;
+  padding: 0.2em 0.5em;
+  font-size: 0.9rem;
+}
+
+.post-comment-input {
+  border-radius: 20px;
+  border: 1px solid var(--input-border-color);
+  padding: 0.5em 0.7em;
+  margin-top: 0.3em;
+  outline: none;
+  flex-grow: 10;
+}
+
+.post-comment-btn {
+  margin-left: 0.5em;
+  max-width: 30px;
+  max-height: 30px;
+  flex-grow: 1;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  padding: 0.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.post-comment-btn:hover {
+  cursor: pointer;
+  background-color: var(--color-light-grey);
+}
+
+.post-comment-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.post-all-comments {
+  margin: 0.5em auto;
+  max-height: 100px;
+  overflow-y: scroll;
+  width: 100%;
+}
+
+.post-comment {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.post-comment-username {
+  font-weight: 600;
+  padding-right: 0.5em;
+}
+
+.post-comment-comment {
+}
+
+.post-comment-created-at {
+  font-size: 0.7rem;
+}

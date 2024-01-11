@@ -17,7 +17,7 @@ function Register() {
     e.preventDefault();
     // TODO: write register functionality
 
-    navigate("/feed");
+    navigate("/main");
   };
 
   return (

@@ -1,0 +1,62 @@
+.MainPage {
+  height: 100%;
+  box-shadow: 0px 4px 10px 1px var(--color-soft-box-shadow);
+}
+
+.main-page-main,
+.main-page-nav,
+.MainPage {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 850px;
+}
+
+.main-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 75px;
+  border-bottom: 1px solid var(--welcome-page-border-color);
+  padding-bottom: 0.2em;
+}
+
+.main-page-header-img {
+  max-width: 200px;
+  max-height: 75px;
+  width: auto;
+  height: auto;
+  margin-right: 0.5em;
+}
+
+.main-page-header-main-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.main-page-header-sub-title {
+  font-size: 1rem;
+}
+
+.main-page-nav {
+  position: absolute;
+  bottom: 0;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  box-shadow: inset 0px 3px 10px -3px var(--color-soft-box-shadow);
+}
+
+.main-page-nav-btn {
+  background: none;
+  border: none;
+  border-radius: 50%;
+  padding: 1em;
+}
+
+.main-page-nav-btn-active,
+.main-page-nav-btn:hover {
+  background-color: var(--color-light-grey);
+  cursor: pointer;
+}
