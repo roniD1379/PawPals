@@ -11,6 +11,7 @@ interface IProps {
   state?: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setState?: React.SetStateAction<any>;
+  width?: string;
 }
 
 function FormInput({
@@ -20,13 +21,14 @@ function FormInput({
   isRequired = false,
   state,
   setState,
+  width,
 }: IProps) {
   return (
-    <div className="form-input">
+    <div className="form-input" style={{ width: width }}>
       <span className="form-input-icon">{icon}</span>
       <input
         type={type}
-        placeholder={placeholder}
+        placeholder={(isRequired ? "* " : "") + placeholder}
         name="name"
         required={isRequired}
         value={state}

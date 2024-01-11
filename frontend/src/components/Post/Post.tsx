@@ -1,4 +1,4 @@
-import { FaHeart, FaPaperPlane, FaRegHeart } from "react-icons/fa";
+import { FaHeart, FaPaperPlane, FaPhone, FaRegHeart } from "react-icons/fa";
 import "./Post.css";
 import { useEffect, useState } from "react";
 
@@ -13,6 +13,8 @@ export interface IPostProp {
   numOfComments: number;
   breed: string;
   createdAt: string;
+  ownerFirstName: string;
+  ownerPhoneNumber: string;
 }
 
 interface IPostComment {
@@ -25,6 +27,7 @@ interface IProps {
   post: IPostProp;
   setPost: React.Dispatch<React.SetStateAction<IPostProp>>;
   setShowPostDetails: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowPostOwnerContactDetails: React.Dispatch<React.SetStateAction<boolean>>;
   isShowingDetails?: boolean;
 }
 
@@ -32,6 +35,7 @@ function Post({
   post,
   setPost,
   setShowPostDetails,
+  setShowPostOwnerContactDetails,
   isShowingDetails = false,
 }: IProps) {
   const {
@@ -192,7 +196,18 @@ function Post({
               <span className="post-likes">{postNumOfLikes} likes</span>
             )}
           </div>
-          <span className="post-breed">{breed}</span>
+          <div className="post-breed-and-contact-container">
+            <span
+              className="post-contact"
+              onClick={() => {
+                setPost(post);
+                setShowPostOwnerContactDetails(true);
+              }}
+            >
+              <FaPhone />
+            </span>
+            <span className="post-breed">{breed}</span>
+          </div>
         </div>
         <span className="post-username">{ownerUsername}</span>
         <span className="post-description">

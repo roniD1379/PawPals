@@ -3,6 +3,7 @@ import { useState } from "react";
 import FormInput from "../utils/FormInput/FormInput";
 import { FaPaw, FaLock, FaUser, FaList } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import FormUploadImage from "../utils/FormUploadImage/FormUploadImage";
 
 function Register() {
   const navigate = useNavigate();
@@ -26,34 +27,7 @@ function Register() {
         <div className="logo-main-title">PawPals</div>
         <div className="logo-sub-title">Find your perfect fury friend</div>
         <form className="register-form" onSubmit={(e) => register(e)}>
-          <div className="upload-profile-image-container">
-            <div id="default-profile-image">
-              <FaUser size={80} />
-            </div>
-            <input
-              className="upload-profile-image-input"
-              type="file"
-              onChange={(e) => {
-                if (e.target.files && e.target.files[0]) {
-                  const img = document.getElementById("profile-img");
-                  if (img != null) {
-                    img.onload = () => {
-                      URL.revokeObjectURL(img.getAttribute("src")!);
-                    };
-
-                    img.setAttribute(
-                      "src",
-                      URL.createObjectURL(e.target.files[0])
-                    );
-
-                    img.style.display = "block";
-                    document.getElementById("default-profile-image")?.remove();
-                  }
-                }
-              }}
-            />
-            <img id="profile-img" className="profile-img" src="#" />
-          </div>
+          <FormUploadImage uploadedImageId="profile-img" />
           <FormInput
             name="first-name"
             placeholder="First name"

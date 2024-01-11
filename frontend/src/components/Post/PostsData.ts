@@ -12,6 +12,8 @@ export const postsData = [
     numOfComments: 20,
     breed: "Labrador Retriever",
     createdAt: "2022-01-01T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 2,
@@ -24,6 +26,8 @@ export const postsData = [
     numOfComments: 15,
     breed: "Mixed Breed",
     createdAt: "2022-01-02T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 3,
@@ -36,6 +40,8 @@ export const postsData = [
     numOfComments: 18,
     breed: "Pomeranian",
     createdAt: "2022-01-03T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 4,
@@ -48,6 +54,8 @@ export const postsData = [
     numOfComments: 10,
     breed: "Terrier",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 5,
@@ -60,6 +68,8 @@ export const postsData = [
     numOfComments: 25,
     breed: "English Bulldog",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 6,
@@ -72,6 +82,8 @@ export const postsData = [
     numOfComments: 8,
     breed: "Greyhound",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 7,
@@ -84,6 +96,8 @@ export const postsData = [
     numOfComments: 15,
     breed: "Dachshund",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 8,
@@ -96,6 +110,8 @@ export const postsData = [
     numOfComments: 12,
     breed: "Siberian Husky",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 9,
@@ -108,6 +124,8 @@ export const postsData = [
     numOfComments: 14,
     breed: "Beagle",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 10,
@@ -120,6 +138,8 @@ export const postsData = [
     numOfComments: 18,
     breed: "Golden Retriever",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 11,
@@ -132,6 +152,8 @@ export const postsData = [
     numOfComments: 22,
     breed: "Boxer",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 12,
@@ -144,6 +166,8 @@ export const postsData = [
     numOfComments: 16,
     breed: "Pembroke Welsh Corgi",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 13,
@@ -156,6 +180,8 @@ export const postsData = [
     numOfComments: 20,
     breed: "Great Dane",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 14,
@@ -168,6 +194,8 @@ export const postsData = [
     numOfComments: 14,
     breed: "Shiba Inu",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 15,
@@ -180,6 +208,8 @@ export const postsData = [
     numOfComments: 25,
     breed: "Rottweiler",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 16,
@@ -192,6 +222,8 @@ export const postsData = [
     numOfComments: 10,
     breed: "Maltese",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 17,
@@ -204,6 +236,8 @@ export const postsData = [
     numOfComments: 15,
     breed: "Poodle",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 18,
@@ -216,6 +250,8 @@ export const postsData = [
     numOfComments: 20,
     breed: "Border Collie",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 19,
@@ -228,6 +264,8 @@ export const postsData = [
     numOfComments: 12,
     breed: "Cocker Spaniel",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
   {
     id: 20,
@@ -240,5 +278,7 @@ export const postsData = [
     numOfComments: 18,
     breed: "Australian Shepherd",
     createdAt: "2022-01-04T00:00:00.000Z",
+    ownerFirstName: "John",
+    ownerPhoneNumber: "555-555-5555",
   },
 ];
