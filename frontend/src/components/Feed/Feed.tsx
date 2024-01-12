@@ -3,6 +3,7 @@ import Post, { IPostProp } from "../Post/Post";
 import { postsData } from "../Post/PostsData";
 import Modal from "../utils/Modal/Modal";
 import { useState } from "react";
+import PostContactDetails from "../PostContactDetails/PostContactDetails";
 
 function Feed() {
   const [showPostDetails, setShowPostDetails] = useState(false);
@@ -15,9 +16,11 @@ function Feed() {
     img: "",
     description: "",
     isLikedByUser: false,
+    isPostOwner: false,
     numOfLikes: 0,
     numOfComments: 0,
     breed: "",
+    breedId: 0,
     createdAt: "",
     ownerFirstName: "",
     ownerPhoneNumber: "",
@@ -59,10 +62,10 @@ function Feed() {
         <Modal
           setIsOpen={setShowPostOwnerContactDetails}
           component={
-            <div className="post-owner-contact-details">
-              <p>Contact name: {post.ownerFirstName}</p>
-              <p>Phone number: {post.ownerPhoneNumber}</p>
-            </div>
+            <PostContactDetails
+              ownerFirstName={post.ownerFirstName}
+              ownerPhoneNumber={post.ownerPhoneNumber}
+            />
           }
         />
       )}

@@ -1,6 +1,20 @@
-import { FaHeart, FaPaperPlane, FaPhone, FaRegHeart } from "react-icons/fa";
+import {
+  FaHeart,
+  FaInfoCircle,
+  FaPaperPlane,
+  FaPhone,
+  FaRegHeart,
+  FaTrash,
+} from "react-icons/fa";
 import "./Post.css";
 import { useEffect, useState } from "react";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { MdModeEditOutline } from "react-icons/md";
+import Modal from "../utils/Modal/Modal";
+import BreedInfo from "../BreedInfo/BreedInfo";
+import FormSelect from "../utils/FormSelect/FormSelect";
+import { getDogBreeds } from "../utils/Api";
+import FormInput from "../utils/FormInput/FormInput";
 
 export interface IPostProp {
   id: number;
@@ -9,9 +23,11 @@ export interface IPostProp {
   img: string;
   description: string;
   isLikedByUser: boolean;
+  isPostOwner: boolean;
   numOfLikes: number;
   numOfComments: number;
   breed: string;
+  breedId: number;
   createdAt: string;
   ownerFirstName: string;
   ownerPhoneNumber: string;
@@ -28,6 +44,7 @@ interface IProps {
   setPost: React.Dispatch<React.SetStateAction<IPostProp>>;
   setShowPostDetails: React.Dispatch<React.SetStateAction<boolean>>;
   setShowPostOwnerContactDetails: React.Dispatch<React.SetStateAction<boolean>>;
+  setRenderPosts?: React.Dispatch<React.SetStateAction<boolean>>;
   isShowingDetails?: boolean;
 }
 
@@ -36,6 +53,7 @@ function Post({
   setPost,
   setShowPostDetails,
   setShowPostOwnerContactDetails,
+  setRenderPosts,
   isShowingDetails = false,
 }: IProps) {
   const {
@@ -45,9 +63,11 @@ function Post({
     img,
     description,
     isLikedByUser,
+    isPostOwner,
     numOfLikes,
     numOfComments,
     breed,
+    breedId,
     createdAt,
   } = post;
 
@@ -56,6 +76,13 @@ function Post({
   const [postNumOfComments, setPostNumOfComments] = useState(numOfComments);
   const [comments, setComments] = useState<IPostComment[]>([]);
   const [newComment, setNewComment] = useState("");
+  const [showDeletePostModal, setShowDeletePostModal] = useState(false);
+  const [showBreedInfo, setShowBreedInfo] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editBreedId, setEditBreedId] = useState(breedId.toString());
+  const [editDescription, setEditDescription] = useState(description);
+  const [postDescription, setPostDescription] = useState(description);
+  const [postBreed, setPostBreed] = useState(breed);
 
   const getPostedOn = (postedDate: string) => {
     const today = new Date().getTime();
@@ -116,6 +143,33 @@ function Post({
 
     setShowPostDetails(true);
     setPost(post);
+  };
+
+  const editPost = () => {
+    // TODO: write editPost functionality
+
+    // Update UI
+    setIsEditMode(false);
+    setPostDescription(editDescription);
+    const selectBreedElement = document.getElementById(
+      "post-" + id + "-edit-breed-select"
+    );
+    setPostBreed(
+      (selectBreedElement as HTMLSelectElement)[
+        (selectBreedElement as HTMLSelectElement).selectedIndex
+      ].innerText
+    );
+  };
+
+  const deletePost = () => {
+    // TODO: write deletePost functionality
+
+    // Delete from UI
+    const postElement = document.getElementById("post-" + id);
+    if (postElement) postElement.remove();
+    setShowDeletePostModal(false);
+    setShowPostDetails(false);
+    if (setRenderPosts) setRenderPosts((prevVal) => !prevVal);
   };
 
   const getPostComments = (postId: number): void => {
@@ -194,6 +248,27 @@ function Post({
           }}
         />
         <span className="post-created-at">{getPostedOn(createdAt)}</span>
+        {isPostOwner && (
+          <div className="post-operations">
+            <span className="post-options">
+              <BsThreeDotsVertical />
+            </span>
+            <span
+              className="post-edit"
+              onClick={() => {
+                setIsEditMode(true);
+              }}
+            >
+              <MdModeEditOutline />
+            </span>
+            <span
+              className="post-delete"
+              onClick={() => setShowDeletePostModal(true)}
+            >
+              <FaTrash />
+            </span>
+          </div>
+        )}
       </div>
       <div className="post-details">
         <div className="post-likes-and-breed-container">
@@ -215,24 +290,70 @@ function Post({
               <span className="post-likes">{postNumOfLikes} likes</span>
             )}
           </div>
-          <div className="post-breed-and-contact-container">
+          <div
+            className={`post-breed-and-contact-container ${
+              isEditMode && "post-breed-and-contact-container-edit"
+            }`}
+          >
+            <span
+              className="post-breed-info"
+              onClick={() => {
+                setShowBreedInfo(true);
+              }}
+              title="Breed info"
+            >
+              <FaInfoCircle size={18} />
+            </span>
             <span
               className="post-contact"
               onClick={() => {
                 setPost(post);
                 setShowPostOwnerContactDetails(true);
               }}
+              title="Contact owner"
             >
               <FaPhone />
             </span>
-            <span className="post-breed">{breed}</span>
+            {isEditMode ? (
+              <span className="post-breed-edit-select">
+                <FormSelect
+                  selectId={"post-" + id + "-edit-breed-select"}
+                  getElementsFunc={getDogBreeds}
+                  optionState={editBreedId}
+                  setOptionState={setEditBreedId}
+                  width="180px"
+                />
+              </span>
+            ) : (
+              <span className="post-breed">{postBreed}</span>
+            )}
           </div>
         </div>
         <span className="post-username">{ownerUsername}</span>
-        <span className="post-description">
-          {description.length > 90
-            ? description.substring(0, 90) + "..."
-            : description}
+        <span
+          className={`post-description ${
+            isEditMode && "post-description-edit"
+          }`}
+        >
+          {isEditMode ? (
+            <>
+              <FormInput
+                state={editDescription}
+                setState={setEditDescription}
+                width="100%"
+              />
+              <button
+                className="btn btn-small post-save-btn"
+                onClick={editPost}
+              >
+                Save
+              </button>
+            </>
+          ) : postDescription.length > 90 ? (
+            postDescription.substring(0, 90) + "..."
+          ) : (
+            postDescription
+          )}
         </span>
         {isShowingDetails ? (
           <div className="post-all-comments">
@@ -277,6 +398,28 @@ function Post({
           </button>
         </form>
       </div>
+      {showDeletePostModal && (
+        <Modal
+          setIsOpen={setShowDeletePostModal}
+          component={
+            <div className="delete-post-modal">
+              <p>Are you sure you want to delete this post?</p>
+              <button
+                className="btn btn-large delete-post-btn"
+                onClick={deletePost}
+              >
+                Delete
+              </button>
+            </div>
+          }
+        />
+      )}
+      {showBreedInfo && (
+        <Modal
+          setIsOpen={setShowBreedInfo}
+          component={<BreedInfo breedId={breedId} />}
+        />
+      )}
     </div>
   );
 }

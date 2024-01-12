@@ -1,0 +1,25 @@
+.BreedInfo {
+  width: 100%;
+  max-width: 400px;
+}
+
+.breed-info-img-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.breed-info-img {
+  max-width: 250px;
+  border-radius: 20px;
+}
+
+.breed-info-loader-container {
+  height: 150px;
+  width: 150px;
+  margin: 1em auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 1em;
+}

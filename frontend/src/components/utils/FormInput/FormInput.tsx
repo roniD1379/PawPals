@@ -25,7 +25,7 @@ function FormInput({
 }: IProps) {
   return (
     <div className="form-input" style={{ width: width }}>
-      <span className="form-input-icon">{icon}</span>
+      {icon && <span className="form-input-icon">{icon}</span>}
       <input
         type={type}
         placeholder={(isRequired ? "* " : "") + placeholder}
@@ -33,6 +33,7 @@ function FormInput({
         required={isRequired}
         value={state}
         onChange={(e) => setState(e.target.value)}
+        style={icon ? {} : { width: "100%" }}
       />
     </div>
   );
