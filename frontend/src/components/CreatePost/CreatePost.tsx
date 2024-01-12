@@ -3,12 +3,24 @@ import FormInput from "../utils/FormInput/FormInput";
 import "./CreatePost.css";
 import { useEffect, useState } from "react";
 import FormUploadImage from "../utils/FormUploadImage/FormUploadImage";
-import axios from "axios";
 import FormSelect from "../utils/FormSelect/FormSelect";
+import { getDogBreeds } from "../utils/Api";
 
 function CreatePost() {
   const [description, setDescription] = useState("");
-  const [breeds, setBreeds] = useState<string[]>([]);
+  const [breeds, setBreeds] = useState<
+    [
+      {
+        value: string;
+        text: string;
+      }
+    ]
+  >([
+    {
+      value: "0",
+      text: "",
+    },
+  ]);
   const [selectedBreed, setSelectedBreed] = useState("");
 
   const createPost = (e: React.FormEvent) => {
@@ -16,20 +28,10 @@ function CreatePost() {
     // TODO: write createPost functionality
   };
 
-  const getDogBreeds = async () => {
-    await axios
-      .get("https://dog.ceo/api/breeds/list/all")
-      .then((response) => {
-        const breedsList = Object.keys(response.data.message);
-        setBreeds(breedsList);
-      })
-      .catch((error) => {
-        console.error("Error fetching dog breeds:", error);
-      });
-  };
-
   useEffect(() => {
-    getDogBreeds();
+    getDogBreeds().then((breeds) => {
+      setBreeds(breeds);
+    });
   }, []);
 
   return (

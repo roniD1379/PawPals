@@ -5,6 +5,7 @@ import Post, { IPostProp } from "../Post/Post";
 import Modal from "../utils/Modal/Modal";
 import { postsData } from "../Post/PostsData";
 import EditProfileModal from "./EditProfileModal/EditProfileModal";
+import PostContactDetails from "../PostContactDetails/PostContactDetails";
 
 function Profile() {
   const [username, setUsername] = useState("");
@@ -15,6 +16,7 @@ function Profile() {
   const [lastName, setLastName] = useState("");
   const [posts, setPosts] = useState<IPostProp[][]>([]);
   const [showPostDetails, setShowPostDetails] = useState(false);
+  const [renderPosts, setRenderPosts] = useState(false);
   const [showPostOwnerContactDetails, setShowPostOwnerContactDetails] =
     useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
@@ -25,9 +27,11 @@ function Profile() {
     img: "",
     description: "",
     isLikedByUser: false,
+    isPostOwner: false,
     numOfLikes: 0,
     numOfComments: 0,
     breed: "",
+    breedId: 0,
     createdAt: "",
     ownerFirstName: "",
     ownerPhoneNumber: "",
@@ -61,7 +65,7 @@ function Profile() {
   useEffect(() => {
     getUserDetails();
     getPostsForUserProfile();
-  }, []);
+  }, [renderPosts]);
 
   return (
     <div className="Profile">
@@ -124,6 +128,7 @@ function Profile() {
               setPost={setPost}
               setShowPostDetails={setShowPostDetails}
               setShowPostOwnerContactDetails={setShowPostOwnerContactDetails}
+              setRenderPosts={setRenderPosts}
               isShowingDetails={true}
             />
           }
@@ -133,10 +138,10 @@ function Profile() {
         <Modal
           setIsOpen={setShowPostOwnerContactDetails}
           component={
-            <div className="post-owner-contact-details">
-              <p>Contact name: {post.ownerFirstName}</p>
-              <p>Phone number: {post.ownerPhoneNumber}</p>
-            </div>
+            <PostContactDetails
+              ownerFirstName={post.ownerFirstName}
+              ownerPhoneNumber={post.ownerPhoneNumber}
+            />
           }
         />
       )}
