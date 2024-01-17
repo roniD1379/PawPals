@@ -23,7 +23,7 @@ export class BaseController<ModelType>{
         }
     }
 
-    async getById(req: Request, res: Response) {
+    async getById(req: Request, res: Response)  {
         console.log("get by id:" + req.params.id);
         try {
             const obj = await this.model.findById(req.params.id);
@@ -48,12 +48,26 @@ export class BaseController<ModelType>{
         }
     }
 
-    putById(req: Request, res: Response) { //todo
-        res.send("put by id: " + req.params.id);
+    async putById(req: Request, res: Response) { 
+        console.log("put by id: " + req.params.id);
+        try {
+            const obj = await this.model.findByIdAndUpdate(req.params.id, req.body, {new: true});
+            res.status(201).send(obj);
+        } catch (err) {
+            console.log(err);
+            res.status(406).send("fail: " + err.message);
+        }
     }
 
-    deleteById(req: Request, res: Response) { //todo
-        res.send("delete user by id: " + req.params.id);
+    async deleteById(req: Request, res: Response) { 
+        console.log("delete user by id: " + req.params.id);
+        try {
+            const obj = await this.model.findByIdAndDelete(req.params.id, req.body);
+            res.status(201).send(obj);
+        } catch (err) {
+            console.log(err);
+            res.status(406).send("fail: " + err.message);
+        }
     }
 }
 

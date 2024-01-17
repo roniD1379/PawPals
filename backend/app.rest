@@ -1,7 +1,29 @@
 ###
 
-GET http://localhost:3000/user
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTk5ODdhYzY1M2RmZmE1YmFjM2Q3ODUiLCJpYXQiOjE3MDQ1NjE2NjV9.2DAqv2YYA3whtxvWcVftSFb3scy4yzaRROW6oe-WERM
+POST http://localhost:3000/post/create
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1NWMwNjZhN2JjNWQ1YjAiLCJpYXQiOjE3MDU1MDU3MzN9.LP_M6Q623yBFIr53Dr7So9lz9oFHb2SNlUcG1xizPxQ
+Content-Type: application/json
+
+{
+    "breedId": 5,
+    "breed": "lover",
+    "description": "very cute",
+    "image": ""
+}
+
+###
+
+GET http://localhost:3000/post/all 
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1NWMwNjZhN2JjNWQ1YjAiLCJpYXQiOjE3MDU1MDU3MzN9.LP_M6Q623yBFIr53Dr7So9lz9oFHb2SNlUcG1xizPxQ
+###
+
+PUT  http://localhost:3000/post/like/65a7f435255c066a7bc5d5b5
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1NWMwNjZhN2JjNWQ1YjAiLCJpYXQiOjE3MDU1MDU3MzN9.LP_M6Q623yBFIr53Dr7So9lz9oFHb2SNlUcG1xizPxQ
+###
+
+
+PUT  http://localhost:3000/post/dislike/65a7f435255c066a7bc5d5b5
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1NWMwNjZhN2JjNWQ1YjAiLCJpYXQiOjE3MDU1MDU3MzN9.LP_M6Q623yBFIr53Dr7So9lz9oFHb2SNlUcG1xizPxQ
 ###
 
 GET http://localhost:3000/user?username=alonl

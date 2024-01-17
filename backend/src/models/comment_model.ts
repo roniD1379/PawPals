@@ -19,6 +19,6 @@ const comment = new Schema<IComment>({
     type: Schema.Types.ObjectId,
     required: true,
   }
-});
+}, { timestamps: true });
 
 export default model<IComment>("Comment", comment, "Comments");

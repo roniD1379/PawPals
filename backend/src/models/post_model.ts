@@ -1,11 +1,12 @@
-import {Schema, model} from 'mongoose';
+import {Schema, model, mongo} from 'mongoose';
 
 export interface IPost {
   description: string;
   image?: string; //todo
   breed: string;
-  userIdOwner: Schema.Types.ObjectId;
-  likes: Array<Schema.Types.ObjectId>;
+  breedId: number;
+  userIdOwner: mongo.ObjectId;
+  likes: Array<mongo.ObjectId>;
 }
 
 const postSchema = new Schema<IPost>({
@@ -21,6 +22,10 @@ const postSchema = new Schema<IPost>({
     type: String,
     required: true,
   },
+  breedId: {
+    type: Number,
+    required: true,
+  },
   userIdOwner: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -29,7 +34,7 @@ const postSchema = new Schema<IPost>({
     type: [{type: Schema.Types.ObjectId, ref: 'User'}],
     required: true,
   },
-});
+}, { timestamps: true });
 
 
 
