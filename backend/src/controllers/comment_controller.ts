@@ -1,29 +1,43 @@
 import Comment, { IComment } from "../models/comment_model";
 import { BaseController } from "./base_controller";
 import { Response } from "express";
-import {mongo} from 'mongoose';
 import { AuthResquest } from "../common/auth_middleware";
+import CommentService from "../services/comment_service";
 
 class CommentController extends BaseController<IComment>{
     constructor() {
         super(Comment)
     }
 
-    //todo
-    // async get(req: AuthResquest, res: Response) {
-    //     console.log("get:" + req.body);
-    //     //req.body.ownerUsername = await userController.getById(req,res).then(result => result.username);
-    //     // return await super.get(req, res).then(res => 
-    //     //     {
-    //     //         //res.ownerUsername = await User.findById(req.body.ownerId);
-    //     //     });
-    // }
+    async getById(req: AuthResquest, res: Response) {
+        const userIdObject = CommentService.convertToIdObject(req.user._id)
+        
+        try {
+            const commentObj = await Comment.find({_id: userIdObject});
 
-    async comment(req: AuthResquest, res: Response) {
-        console.log("post:" + req.body);
+            const output = await Promise.all(commentObj.map(async comment => 
+                {
+                    const commentOwner = await CommentService.getOwnerObj(comment);
+                    return {
+                        ...comment.toObject(), // Convert Mongoose document to plain JavaScript objec
+                        ownerUsername: commentOwner.username,
+                        }
+                }));
+
+            res.send(output);
+
+        } catch (err) {
+            res.status(500).json({ message: err.message });
+        }
+    }
+
+    async post(req: AuthResquest, res: Response) {
         req.body.ownerId = req.user._id;
+
         super.post(req, res);
     }
+
+   
 }
 
 export default new CommentController();

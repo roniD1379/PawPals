@@ -10,6 +10,8 @@ const register = async (req: Request, res: Response) => {
     const firstname = req.body.firstname;
     const lastname = req.body.lastname;
     const phoneNumber = req.body.phoneNumber;
+    const userImage = req.body.userImage;
+    const description = req.body.description;
     if (!username || !password) {
         return res.status(400).send("missing username or password");
     }
@@ -18,11 +20,20 @@ const register = async (req: Request, res: Response) => {
         if (rs != null) {
             return res.status(406).send("username already exists");
         }
+        console.log("gbood");
         const salt = await bcrypt.genSalt(10);
         const encryptedPassword = await bcrypt.hash(password, salt);
-        const rs2 = await User.create({ 'username': username, 'password': encryptedPassword, 'firstname':firstname, 'lastname': lastname, 'phoneNumber':phoneNumber });
+        const rs2 = await User.create({ 'username': username, 
+                                        'password': encryptedPassword,
+                                        'firstname':firstname, 
+                                        'lastname': lastname, 
+                                        'userImage': userImage,
+                                        'description': description,
+                                        'phoneNumber':phoneNumber });
+        console.log(rs2);
         return res.status(201).send(rs2);
     } catch (err) {
+        console.log(err);
         return res.status(400).send("error missing username or password");
     }
 }

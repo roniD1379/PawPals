@@ -1,14 +1,16 @@
-import {Schema, model} from 'mongoose';
+import {Schema, model, mongo} from 'mongoose';
 
 export interface IComment {
-  postId: Schema.Types.ObjectId;
+  _id: mongo.ObjectId,
+  postId: mongo.ObjectId;
   text: string;
-  ownerId: Schema.Types.ObjectId;
+  ownerId: mongo.ObjectId;
 }
 
 const comment = new Schema<IComment>({
   postId: {
     type: Schema.Types.ObjectId,
+    ref: "Post",
     required: true,
   },
   text: {
@@ -17,6 +19,7 @@ const comment = new Schema<IComment>({
   },
   ownerId: {
     type: Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   }
 }, { timestamps: true });

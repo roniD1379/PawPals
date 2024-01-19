@@ -9,7 +9,7 @@ export class BaseController<ModelType>{
     }
 
     async get(req: Request, res: Response) {
-        console.log("get all");
+
         try {
             if (req.query.name) {
                 const obj = await this.model.find({ name: req.query.name });
@@ -18,30 +18,29 @@ export class BaseController<ModelType>{
                 const obj = await this.model.find();
                 res.send(obj);
             }
+
         } catch (err) {
             res.status(500).json({ message: err.message });
         }
     }
 
     async getById(req: Request, res: Response)  {
-        console.log("get by id:" + req.params.id);
+
         try {
-            const obj = await this.model.findById(req.params.id);
+            const obj = await this.model.findById(req.body._id);
             res.send(obj);
+
         } catch (err) {
             res.status(500).json({ message: err.message });
         }
     }
 
     async post(req: Request, res: Response) {
-        console.log("post:" + req.body);
+
         try {
-            const findUsername = await this.model.findOne({ 'username': req.body.username});
-            if(findUsername!=null){
-                throw "Username exists";
-            }
             const obj = await this.model.create(req.body);
             res.status(201).send(obj);
+
         } catch (err) {
             console.log(err);
             res.status(406).send("fail: " + err.message);
@@ -49,21 +48,24 @@ export class BaseController<ModelType>{
     }
 
     async putById(req: Request, res: Response) { 
-        console.log("put by id: " + req.params.id);
+
         try {
-            const obj = await this.model.findByIdAndUpdate(req.params.id, req.body, {new: true});
+            const obj = await this.model.findByIdAndUpdate(req.body._id, req.body, {new: true});
             res.status(201).send(obj);
+
         } catch (err) {
             console.log(err);
             res.status(406).send("fail: " + err.message);
         }
     }
 
+//todo - add delete for comments
     async deleteById(req: Request, res: Response) { 
-        console.log("delete user by id: " + req.params.id);
+
         try {
-            const obj = await this.model.findByIdAndDelete(req.params.id, req.body);
+            const obj = await this.model.findByIdAndDelete(req.body._id);
             res.status(201).send(obj);
+            
         } catch (err) {
             console.log(err);
             res.status(406).send("fail: " + err.message);

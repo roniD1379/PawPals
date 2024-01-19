@@ -1,15 +1,18 @@
-import mongoose from "mongoose";
+import {Schema, model, mongo} from 'mongoose';
 
 export interface IUser {
+  _id: mongo.ObjectId,
   username: string;
   password: string;
   firstname: string;
   lastname: string;
+  userImage?: string;
+  description?: string;
   phoneNumber: string;
-  refreshTokens?: string[]; //todo
+  refreshTokens?: string[]; 
 }
 
-const userSchema = new mongoose.Schema<IUser>({
+const userSchema = new Schema<IUser>({
   username: {
     type: String,
     required: true,
@@ -26,14 +29,22 @@ const userSchema = new mongoose.Schema<IUser>({
     type: String,
     required: true,
   },
+  userImage: {
+    type: String,
+    required: false,
+  },
+  description: {
+    type: String,
+    required: false,
+  },
   phoneNumber: {
     type: String,
     required: true,
   },
-  refreshTokens: { //todo
+  refreshTokens: {
     type: [String],
     required: false,
-  },
+  }
 });
 
-export default mongoose.model<IUser>("User", userSchema, "Users");
+export default model<IUser>("User", userSchema, "Users");

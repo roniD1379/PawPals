@@ -1,3 +1,7 @@
+### Post Route
+
+GET http://localhost:3000/post/all 
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1NWMwNjZhN2JjNWQ1YjAiLCJpYXQiOjE3MDU1MDU3MzN9.LP_M6Q623yBFIr53Dr7So9lz9oFHb2SNlUcG1xizPxQ
 ###
 
 POST http://localhost:3000/post/create
@@ -5,45 +9,100 @@ Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1
 Content-Type: application/json
 
 {
-    "breedId": 5,
-    "breed": "lover",
-    "description": "very cute",
+    "breedId": 2,
+    "breed": "Labrador",
+    "description": "Known for its intelligence and versatility, Labradors are often cherished as family pets.",
     "image": ""
 }
 
 ###
 
-GET http://localhost:3000/post/all 
+POST  http://localhost:3000/post/comment
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1NWMwNjZhN2JjNWQ1YjAiLCJpYXQiOjE3MDU1MDU3MzN9.LP_M6Q623yBFIr53Dr7So9lz9oFHb2SNlUcG1xizPxQ
+Content-Type: application/json
+
+{
+    "postId": "65aa9e99c1f558fdf93df4a4",
+    "text": "Such a cool dog!"
+}
+
 ###
 
-PUT  http://localhost:3000/post/like/65a7f435255c066a7bc5d5b5
+PUT  http://localhost:3000/post/edit
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1NWMwNjZhN2JjNWQ1YjAiLCJpYXQiOjE3MDU1MDU3MzN9.LP_M6Q623yBFIr53Dr7So9lz9oFHb2SNlUcG1xizPxQ
+Content-Type: application/json
+
+{
+    "_id": "65aa9e99c1f558fdf93df4a4",
+    "breedId": 100,
+    "breed": "Labrador",
+    "description": "Known for its intelligence and versatility, Labradors are often cherished as family pets."
+}
+
 ###
 
-
-PUT  http://localhost:3000/post/dislike/65a7f435255c066a7bc5d5b5
+PUT  http://localhost:3000/post/dislike
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1NWMwNjZhN2JjNWQ1YjAiLCJpYXQiOjE3MDU1MDU3MzN9.LP_M6Q623yBFIr53Dr7So9lz9oFHb2SNlUcG1xizPxQ
-###
+Content-Type: application/json
 
-GET http://localhost:3000/user?username=alonl
-
-
-###
-
-GET http://localhost:3000/auth/1234567891
-
+{
+    "_id": "65aa9e99c1f558fdf93df4a4"
+}
 
 ###
+
+PUT  http://localhost:3000/post/like
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1NWMwNjZhN2JjNWQ1YjAiLCJpYXQiOjE3MDU1MDU3MzN9.LP_M6Q623yBFIr53Dr7So9lz9oFHb2SNlUcG1xizPxQ
+Content-Type: application/json
+
+{
+    "_id": "65aa9e99c1f558fdf93df4a4"
+}
+
+###
+
+DELETE  http://localhost:3000/post/delete
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1NWMwNjZhN2JjNWQ1YjAiLCJpYXQiOjE3MDU1MDU3MzN9.LP_M6Q623yBFIr53Dr7So9lz9oFHb2SNlUcG1xizPxQ
+Content-Type: application/json
+
+{
+    "_id": "65aa9e99c1f558fdf93df4a4"
+}
+
+###
+
+GET  http://localhost:3000/post/comments/65aa9e99c1f558fdf93df4a4
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1NWMwNjZhN2JjNWQ1YjAiLCJpYXQiOjE3MDU1MDU3MzN9.LP_M6Q623yBFIr53Dr7So9lz9oFHb2SNlUcG1xizPxQ
+
+
+### User Route
+
+GET http://localhost:3000/user/details/65aabfbdc5425b74b6d0e975
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1NWMwNjZhN2JjNWQ1YjAiLCJpYXQiOjE3MDU1MDU3MzN9.LP_M6Q623yBFIr53Dr7So9lz9oFHb2SNlUcG1xizPxQ
+
+###
+
+PUT http://localhost:3000/user/edit
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1NWMwNjZhN2JjNWQ1YjAiLCJpYXQiOjE3MDU1MDU3MzN9.LP_M6Q623yBFIr53Dr7So9lz9oFHb2SNlUcG1xizPxQ
+Content-Type: application/json
+
+{
+    "_id": "65aabfbdc5425b74b6d0e975",
+    "firstname": "Amit"
+}
+
+### Auth Route
 
 POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "username": "alonl",
+    "username": "alonm",
     "password": "1234567890",
     "firstname": "alon",
     "lastname": "levi",
+    "userImage": " ",
+    "description": " ",
     "phoneNumber": "050-0000000"
 }
 
