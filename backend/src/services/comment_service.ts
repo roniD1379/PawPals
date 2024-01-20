@@ -9,8 +9,8 @@ class CommentService {
         return new mongo.ObjectId(id);
     }
 
-    async getOwnerObj(item: IComment) {
-        return await User.findById(item.ownerId);
+    async getOwnerObj(comment: IComment) {
+        return await User.findById(comment.ownerId);
     }
     
 }

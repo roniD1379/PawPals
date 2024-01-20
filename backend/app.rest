@@ -4,14 +4,18 @@ GET http://localhost:3000/post/all
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1NWMwNjZhN2JjNWQ1YjAiLCJpYXQiOjE3MDU1MDU3MzN9.LP_M6Q623yBFIr53Dr7So9lz9oFHb2SNlUcG1xizPxQ
 ###
 
+GET http://localhost:3000/post/allByUser/65aba6e2ee855cb9ccc1288f
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWFiYTZlMmVlODU1Y2I5Y2NjMTI4OGYiLCJpYXQiOjE3MDU3NDgyNTV9.hQRSZcmF5d7nZlbzWgRE6n5PcxUKrA-setKxlOneVYo
+###
+
 POST http://localhost:3000/post/create
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1NWMwNjZhN2JjNWQ1YjAiLCJpYXQiOjE3MDU1MDU3MzN9.LP_M6Q623yBFIr53Dr7So9lz9oFHb2SNlUcG1xizPxQ
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWFiYTZlMmVlODU1Y2I5Y2NjMTI4OGYiLCJpYXQiOjE3MDU3NDgyNTV9.hQRSZcmF5d7nZlbzWgRE6n5PcxUKrA-setKxlOneVYo
 Content-Type: application/json
 
 {
-    "breedId": 2,
-    "breed": "Labrador",
-    "description": "Known for its intelligence and versatility, Labradors are often cherished as family pets.",
+    "breedId": 5,
+    "breed": "Pomeranian",
+    "description": "Tiny female, 6 years old",
     "image": ""
 }
 
@@ -97,9 +101,9 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "username": "alonm",
+    "username": "orip",
     "password": "1234567890",
-    "firstname": "alon",
+    "firstname": "ori",
     "lastname": "levi",
     "userImage": " ",
     "description": " ",
@@ -112,6 +116,6 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "username": "alonl",
+    "username": "orip",
     "password": "1234567890"
 }

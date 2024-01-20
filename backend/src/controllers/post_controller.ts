@@ -4,7 +4,6 @@ import { Response } from "express";
 import { AuthResquest} from "../common/auth_middleware";
 import PostService from "../services/post_service";
 
-
 class PostController extends BaseController<IPost>{
     constructor() {
         super(Post)
@@ -37,6 +36,12 @@ class PostController extends BaseController<IPost>{
         } catch (err) {
             res.status(500).json({ message: err.message });
         }
+    }
+
+    async getAllByUser(req: AuthResquest, res: Response) {
+        req.body.query = {ownerId: req.params.id};
+
+        super.get(req, res);
     }
 
     async post(req: AuthResquest, res: Response) {
@@ -72,6 +77,20 @@ class PostController extends BaseController<IPost>{
 
         } catch (err) {
             res.status(500).json({ message: err.message });
+        }
+    }
+
+    async deleteById(req: AuthResquest, res: Response) { 
+
+        try {
+            const postObj = await this.model.findById(req.body._id);
+            await this.model.deleteOne({_id: postObj._id});
+            PostService.deleteRelatedComments(postObj);
+
+            res.status(201).send(postObj);
+            
+        } catch (err) {
+            res.status(406).send("fail: " + err.message);
         }
     }
 }

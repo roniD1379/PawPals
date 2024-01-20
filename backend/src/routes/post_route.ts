@@ -6,6 +6,8 @@ import commentController from "../controllers/comment_controller";
 
 router.get("/all" ,authMiddleware,postController.getAll.bind(postController));
 
+router.get("/allByUser/:id" ,authMiddleware,postController.getAllByUser.bind(postController));
+
 router.get("/:id", authMiddleware, postController.getById.bind(postController));
 
 router.get("/comments/:id", authMiddleware, commentController.getById.bind(commentController));

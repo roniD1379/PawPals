@@ -11,8 +11,8 @@ export class BaseController<ModelType>{
     async get(req: Request, res: Response) {
 
         try {
-            if (req.query.name) {
-                const obj = await this.model.find({ name: req.query.name });
+            if (req.body.query) {
+                const obj = await this.model.find((req.body.query)).exec();
                 res.send(obj);
             } else {
                 const obj = await this.model.find();
@@ -42,7 +42,6 @@ export class BaseController<ModelType>{
             res.status(201).send(obj);
 
         } catch (err) {
-            console.log(err);
             res.status(406).send("fail: " + err.message);
         }
     }
@@ -54,12 +53,10 @@ export class BaseController<ModelType>{
             res.status(201).send(obj);
 
         } catch (err) {
-            console.log(err);
             res.status(406).send("fail: " + err.message);
         }
     }
 
-//todo - add delete for comments
     async deleteById(req: Request, res: Response) { 
 
         try {
@@ -67,7 +64,6 @@ export class BaseController<ModelType>{
             res.status(201).send(obj);
             
         } catch (err) {
-            console.log(err);
             res.status(406).send("fail: " + err.message);
         }
     }
