@@ -342,10 +342,7 @@ function Post({
                 setState={setEditDescription}
                 width="100%"
               />
-              <button
-                className="btn btn-small post-save-btn"
-                onClick={editPost}
-              >
+              <button className="btn post-save-btn" onClick={editPost}>
                 Save
               </button>
             </>

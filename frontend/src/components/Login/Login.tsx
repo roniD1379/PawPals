@@ -2,21 +2,56 @@ import "./Login.css";
 import logo from "../../assets/images/logo_img.png";
 import FormInput from "../utils/FormInput/FormInput";
 import { FaPaw, FaLock } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { globals } from "../utils/Globals";
+import { clearTokens, setTokens } from "../utils/AuthUtils";
+import api from "../utils/AxiosInterceptors";
+
+interface LoginData {
+  username: string;
+  password: string;
+}
+
+interface LoginApiResponse {
+  accessToken: string;
+  refreshToken: string;
+}
 
 function Login() {
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState<LoginData>({
+    username: "",
+    password: "",
+  });
 
-  const login = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: write login functionality
-
-    navigate("/main");
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
+
+  const login = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    await api
+      .post<LoginApiResponse>(globals.auth.login, formData)
+      .then((res) => {
+        setTokens(res.data.accessToken, res.data.refreshToken);
+        navigate("/main");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.response.data);
+      });
+  };
+
+  useEffect(() => {
+    clearTokens();
+  }, []);
 
   return (
     <div className="WelcomePage">
@@ -30,8 +65,9 @@ function Login() {
             placeholder="username"
             icon={<FaPaw size={20} />}
             isRequired={true}
-            state={username}
-            setState={setUsername}
+            state={formData.username}
+            setState={handleInputChange}
+            minLength={6}
           />
           <FormInput
             name="password"
@@ -39,8 +75,9 @@ function Login() {
             placeholder="password"
             icon={<FaLock size={20} />}
             isRequired={true}
-            state={password}
-            setState={setPassword}
+            state={formData.password}
+            setState={handleInputChange}
+            minLength={6}
           />
           <button type="submit" className="btn btn-large login-btn">
             Sign In

@@ -19,6 +19,7 @@
   height: 75px;
   border-bottom: 1px solid var(--welcome-page-border-color);
   padding-bottom: 0.2em;
+  position: relative;
 }
 
 .main-page-header-img {
@@ -59,4 +60,13 @@
 .main-page-nav-btn:hover {
   background-color: var(--color-light-grey);
   cursor: pointer;
+}
+
+.logout-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-top: 1em;
+  margin-right: 1em;
+  font-size: 0.8rem;
 }

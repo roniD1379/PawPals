@@ -1,24 +1,61 @@
 import "./Register.css";
 import { useState } from "react";
 import FormInput from "../utils/FormInput/FormInput";
-import { FaPaw, FaLock, FaUser } from "react-icons/fa";
+import { FaPaw, FaLock, FaUser, FaPhone } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import FormUploadImage from "../utils/FormUploadImage/FormUploadImage";
+import { globals } from "../utils/Globals";
+import toast from "react-hot-toast";
+import api from "../utils/AxiosInterceptors";
+
+interface RegistrationData {
+  firstName: string;
+  lastName: string;
+  username: string;
+  password: string;
+  description: string;
+  phoneNumber: string;
+  userImage: string;
+}
+
+interface RegisterApiResponse {
+  message: string;
+}
 
 function Register() {
   const navigate = useNavigate();
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [description, setDescription] = useState("");
+  const [formData, setFormData] = useState<RegistrationData>({
+    firstName: "",
+    lastName: "",
+    username: "",
+    password: "",
+    description: "",
+    phoneNumber: "",
+    userImage: "",
+  });
 
-  const register = (e: React.FormEvent) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const register = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: write register functionality
 
-    navigate("/main");
+    await api
+      .post<RegisterApiResponse>(globals.auth.register, formData)
+      .then((res) => {
+        console.log(res.data);
+        toast.success("Registered successfully!");
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.response.data);
+      });
   };
 
   return (
@@ -29,28 +66,29 @@ function Register() {
         <form className="register-form" onSubmit={(e) => register(e)}>
           <FormUploadImage uploadedImageId="profile-img" />
           <FormInput
-            name="first-name"
+            name="firstName"
             placeholder="First name"
             icon={<FaUser size={20} />}
             isRequired={true}
-            state={firstName}
-            setState={setFirstName}
+            state={formData.firstName}
+            setState={handleInputChange}
           />
           <FormInput
-            name="last-name"
+            name="lastName"
             placeholder="Last name"
             icon={<FaUser size={20} />}
             isRequired={true}
-            state={lastName}
-            setState={setLastName}
+            state={formData.lastName}
+            setState={handleInputChange}
           />
           <FormInput
             name="username"
             placeholder="username"
             icon={<FaPaw size={20} />}
             isRequired={true}
-            state={username}
-            setState={setUsername}
+            state={formData.username}
+            setState={handleInputChange}
+            minLength={6}
           />
           <FormInput
             name="password"
@@ -58,15 +96,25 @@ function Register() {
             placeholder="password"
             icon={<FaLock size={20} />}
             isRequired={true}
-            state={password}
-            setState={setPassword}
+            state={formData.password}
+            setState={handleInputChange}
+            minLength={6}
           />
           <FormInput
             name="description"
             placeholder="description"
             icon={<FaPaw size={20} />}
-            state={description}
-            setState={setDescription}
+            state={formData.description}
+            setState={handleInputChange}
+          />
+          <FormInput
+            name="phoneNumber"
+            type="tel"
+            placeholder="Phone number"
+            icon={<FaPhone size={20} />}
+            isRequired={true}
+            state={formData.phoneNumber}
+            setState={handleInputChange}
           />
           <button type="submit" className="btn btn-large register-btn">
             Register
