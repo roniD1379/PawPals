@@ -5,8 +5,15 @@ import { useState } from "react";
 import CreatePost from "../CreatePost/CreatePost";
 import Profile from "../Profile/Profile";
 import Feed from "../Feed/Feed";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { globals } from "../utils/Globals";
+import { clearTokens } from "../utils/AuthUtils";
+import api from "../utils/AxiosInterceptors";
 
 function MainPage() {
+  const navigate = useNavigate();
+
   const [showSection, setShowSection] = useState("nav-feed");
 
   const handleNavbarClick = (id: string) => {
@@ -26,6 +33,21 @@ function MainPage() {
     setShowSection(id);
   };
 
+  const logout = async () => {
+    await api
+      .post(globals.auth.logout, {
+        refreshToken: localStorage.getItem("refreshToken"),
+      })
+      .then(() => {
+        clearTokens();
+        toast.success("Logged out successfully");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <div className="MainPage">
       <main className="main-page-main">
@@ -37,6 +59,15 @@ function MainPage() {
               Find your perfect fury friend
             </div>
           </div>
+          <button
+            className="btn logout-btn"
+            title="Logout"
+            onClick={() => {
+              logout();
+            }}
+          >
+            Logout
+          </button>
         </header>
         <div>
           {showSection === "nav-feed" && <Feed />}

@@ -3,7 +3,7 @@ import "./FormInput.css";
 
 interface IProps {
   placeholder?: string;
-  type?: "text" | "number" | "password";
+  type?: "text" | "number" | "password" | "email" | "tel";
   icon?: JSX.Element;
   name?: string;
   isRequired?: boolean;
@@ -12,9 +12,11 @@ interface IProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setState?: React.SetStateAction<any>;
   width?: string;
+  minLength?: number;
 }
 
 function FormInput({
+  name = "",
   placeholder = "",
   type = "text",
   icon,
@@ -22,6 +24,7 @@ function FormInput({
   state,
   setState,
   width,
+  minLength,
 }: IProps) {
   return (
     <div className="form-input" style={{ width: width }}>
@@ -29,11 +32,12 @@ function FormInput({
       <input
         type={type}
         placeholder={(isRequired ? "* " : "") + placeholder}
-        name="name"
+        name={name}
         required={isRequired}
         value={state}
-        onChange={(e) => setState(e.target.value)}
+        onChange={(e) => setState(e)}
         style={icon ? {} : { width: "100%" }}
+        minLength={minLength}
       />
     </div>
   );

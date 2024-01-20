@@ -1,9 +1,15 @@
 import "./WelcomePage.css";
 import logo from "../../assets/images/logo_img.png";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { isValidToken } from "../utils/AuthUtils";
 
 function WelcomePage() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isValidToken()) navigate("/main");
+  }, []);
 
   return (
     <div className="WelcomePage">
