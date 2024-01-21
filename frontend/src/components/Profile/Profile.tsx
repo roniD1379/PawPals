@@ -6,6 +6,8 @@ import Modal from "../utils/Modal/Modal";
 import { postsData } from "../Post/PostsData";
 import EditProfileModal from "./EditProfileModal/EditProfileModal";
 import PostContactDetails from "../PostContactDetails/PostContactDetails";
+import { PullToRefresh, PullDownContent } from "react-js-pull-to-refresh";
+import PullToRefreshLoader from "../utils/PullToRefreshLoader/PullToRefreshLoader";
 
 function Profile() {
   const [username, setUsername] = useState("");
@@ -62,6 +64,10 @@ function Profile() {
     setPosts(chunkArray(postsData, 3));
   };
 
+  const onRefresh = async () => {
+    console.log("Refreshing...");
+  };
+
   useEffect(() => {
     getUserDetails();
     getPostsForUserProfile();
@@ -102,22 +108,32 @@ function Profile() {
         </div>
       </div>
       <div className="profile-posts-container">
-        {posts.map((row, rowIndex) => (
-          <div key={rowIndex} className="profile-feed-post-img-row">
-            {row.map((post, columnIndex) => (
-              <img
-                key={columnIndex}
-                src={post.img}
-                alt="post-image"
-                className="profile-feed-post-img"
-                onClick={() => {
-                  setPost(post);
-                  setShowPostDetails(true);
-                }}
-              />
-            ))}
-          </div>
-        ))}
+        <PullToRefresh
+          pullDownContent={<PullDownContent />}
+          releaseContent={<PullToRefreshLoader />}
+          refreshContent={<PullToRefreshLoader />}
+          pullDownThreshold={80}
+          onRefresh={onRefresh}
+          triggerHeight={500}
+          backgroundColor="white"
+        >
+          {posts.map((row, rowIndex) => (
+            <div key={rowIndex} className="profile-feed-post-img-row">
+              {row.map((post, columnIndex) => (
+                <img
+                  key={columnIndex}
+                  src={post.img}
+                  alt="post-image"
+                  className="profile-feed-post-img"
+                  onClick={() => {
+                    setPost(post);
+                    setShowPostDetails(true);
+                  }}
+                />
+              ))}
+            </div>
+          ))}
+        </PullToRefresh>
       </div>
       {showPostDetails && (
         <Modal
