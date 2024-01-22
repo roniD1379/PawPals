@@ -14,6 +14,7 @@ import {
   noMoreDataElement,
 } from "../utils/InfiniteScroll/InfiniteScrollUtils";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { globals } from "../utils/Globals";
 
 function Profile() {
   const [username, setUsername] = useState("");
@@ -154,7 +155,7 @@ function Profile() {
                 {row.map((post, columnIndex) => (
                   <img
                     key={columnIndex}
-                    src={post.img}
+                    src={globals.files + post.img}
                     alt="post-image"
                     className="profile-feed-post-img"
                     onClick={() => {

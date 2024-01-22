@@ -3,6 +3,7 @@
   height: calc(100vh - 155px);
   padding-top: 0.5em;
   text-align: center;
+  position: relative;
 }
 
 .create-post-form {
@@ -18,4 +19,11 @@
 
 .create-post-title {
   margin-top: 0em;
+}
+
+.create-post-loading {
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

@@ -48,6 +48,10 @@ function MainPage() {
       });
   };
 
+  const showFeed = () => {
+    setShowSection("nav-feed");
+  };
+
   return (
     <div className="MainPage">
       <main className="main-page-main">
@@ -71,7 +75,9 @@ function MainPage() {
         </header>
         <div>
           {showSection === "nav-feed" && <Feed />}
-          {showSection === "nav-create-post" && <CreatePost />}
+          {showSection === "nav-create-post" && (
+            <CreatePost showFeed={showFeed} />
+          )}
           {showSection === "nav-profile" && <Profile />}
         </div>
         <nav id="main-page-nav" className="main-page-nav">
