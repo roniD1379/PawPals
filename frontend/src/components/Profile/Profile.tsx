@@ -8,6 +8,12 @@ import EditProfileModal from "./EditProfileModal/EditProfileModal";
 import PostContactDetails from "../PostContactDetails/PostContactDetails";
 import { PullToRefresh, PullDownContent } from "react-js-pull-to-refresh";
 import PullToRefreshLoader from "../utils/PullToRefreshLoader/PullToRefreshLoader";
+import {
+  PROFILE_FEED_PAGE_SIZE,
+  loaderElement,
+  noMoreDataElement,
+} from "../utils/InfiniteScroll/InfiniteScrollUtils";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 function Profile() {
   const [username, setUsername] = useState("");
@@ -17,6 +23,7 @@ function Profile() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [posts, setPosts] = useState<IPostProp[][]>([]);
+  const [hasMore, setHasMore] = useState(true);
   const [showPostDetails, setShowPostDetails] = useState(false);
   const [renderPosts, setRenderPosts] = useState(false);
   const [showPostOwnerContactDetails, setShowPostOwnerContactDetails] =
@@ -38,6 +45,7 @@ function Profile() {
     ownerFirstName: "",
     ownerPhoneNumber: "",
   });
+  const [page, setPage] = useState(0);
 
   const getUserDetails = () => {
     // TODO: write getUserDetails functionality
@@ -58,14 +66,28 @@ function Profile() {
     });
   };
 
-  const getPostsForUserProfile = (): void => {
+  const getPostsForUserProfile = (isRefresh = false): void => {
     // TODO: write getPostsForUserProfile functionality
+    const postsPage = isRefresh ? 0 : page;
+    const newPosts = postsData.slice(
+      postsPage * PROFILE_FEED_PAGE_SIZE,
+      (postsPage + 1) * PROFILE_FEED_PAGE_SIZE
+    );
 
-    setPosts(chunkArray(postsData, 3));
+    setPage(postsPage + 1);
+    if (newPosts.length < PROFILE_FEED_PAGE_SIZE) setHasMore(false);
+    if (isRefresh) setPosts([...chunkArray(newPosts, 3)]);
+    else setPosts((prevData) => [...prevData, ...chunkArray(newPosts, 3)]);
+  };
+
+  const fetchMorePosts = () => {
+    getPostsForUserProfile();
   };
 
   const onRefresh = async () => {
-    console.log("Refreshing...");
+    setHasMore(true);
+    setPage(0);
+    getPostsForUserProfile(true);
   };
 
   useEffect(() => {
@@ -117,22 +139,33 @@ function Profile() {
           triggerHeight={500}
           backgroundColor="white"
         >
-          {posts.map((row, rowIndex) => (
-            <div key={rowIndex} className="profile-feed-post-img-row">
-              {row.map((post, columnIndex) => (
-                <img
-                  key={columnIndex}
-                  src={post.img}
-                  alt="post-image"
-                  className="profile-feed-post-img"
-                  onClick={() => {
-                    setPost(post);
-                    setShowPostDetails(true);
-                  }}
-                />
-              ))}
-            </div>
-          ))}
+          <InfiniteScroll
+            dataLength={posts.length}
+            next={fetchMorePosts}
+            hasMore={hasMore}
+            loader={loaderElement}
+            endMessage={noMoreDataElement}
+            height={
+              "calc(100vh - 175px - var(--profile-details-container-height))"
+            }
+          >
+            {posts.map((row, rowIndex) => (
+              <div key={rowIndex} className="profile-feed-post-img-row">
+                {row.map((post, columnIndex) => (
+                  <img
+                    key={columnIndex}
+                    src={post.img}
+                    alt="post-image"
+                    className="profile-feed-post-img"
+                    onClick={() => {
+                      setPost(post);
+                      setShowPostDetails(true);
+                    }}
+                  />
+                ))}
+              </div>
+            ))}
+          </InfiniteScroll>
         </PullToRefresh>
       </div>
       {showPostDetails && (

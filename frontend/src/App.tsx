@@ -1,4 +1,5 @@
 import "./App.css";
+import "./components/utils/InfiniteScroll/InfiniteScroll.css";
 import MainPage from "./components/MainPage/MainPage";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
