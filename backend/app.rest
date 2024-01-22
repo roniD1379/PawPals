@@ -54,7 +54,7 @@ Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1
 Content-Type: application/json
 
 {
-    "_id": "65aa9e99c1f558fdf93df4a4"
+    "postId": "65aa9e99c1f558fdf93df4a4"
 }
 
 ###
@@ -64,7 +64,7 @@ Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWE3ZjNiMDI1
 Content-Type: application/json
 
 {
-    "_id": "65aa9e99c1f558fdf93df4a4"
+    "postId": "65aa9e99c1f558fdf93df4a4"
 }
 
 ###

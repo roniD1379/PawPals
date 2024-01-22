@@ -33,7 +33,7 @@ function Profile() {
     useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [post, setPost] = useState<IPostProp>({
-    id: 0,
+    _id: "0",
     ownerId: 0,
     ownerUsername: "",
     img: "",
@@ -51,8 +51,8 @@ function Profile() {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const getUserDetails = () => {
-    api
+  const getUserDetails = async () => {
+    await api
       .get(globals.users.userDetails)
       .then((response) => {
         setUsername(response.data.username);

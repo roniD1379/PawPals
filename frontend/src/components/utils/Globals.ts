@@ -16,7 +16,10 @@ export const globals = {
   },
   posts: {
     posts: BASE_URL + POST_CONTROLLER,
+    feedPosts: BASE_URL + POST_CONTROLLER + "all",
     create: BASE_URL + POST_CONTROLLER + "create",
+    like: BASE_URL + POST_CONTROLLER + "like",
+    dislike: BASE_URL + POST_CONTROLLER + "dislike",
   },
   users: {
     userDetails: BASE_URL + USER_CONTROLLER + "details",

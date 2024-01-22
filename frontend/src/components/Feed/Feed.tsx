@@ -18,7 +18,7 @@ function Feed() {
   const [showPostOwnerContactDetails, setShowPostOwnerContactDetails] =
     useState(false);
   const [post, setPost] = useState<IPostProp>({
-    id: 0,
+    _id: "0",
     ownerId: 0,
     ownerUsername: "",
     img: "",
@@ -50,6 +50,9 @@ function Feed() {
     if (newPosts.length < FEED_PAGE_SIZE) setHasMore(false);
     if (isRefresh) setPosts([...newPosts]);
     else setPosts((prevData) => [...prevData, ...newPosts]);
+    // api.get(globals.posts.feedPosts).then((response) => {
+    //   setPosts(response.data);
+    // });
   };
 
   const fetchMorePosts = () => {
