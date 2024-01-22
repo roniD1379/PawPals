@@ -91,11 +91,11 @@ class PostController extends BaseController<IPost> {
   async like(req: AuthResquest, res: Response) {
     try {
       const userId = PostService.convertToIdObject(req.user._id);
-      const postObj = await Post.findById(req.body._id);
+      const postObj = await Post.findById(req.body.postId);
+      if (!postObj) return res.status(400).send("Post not found");
 
-      req.body = PostService.like(postObj, userId);
-
-      super.putById(req, res);
+      PostService.like(postObj, userId);
+      res.status(200).send();
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
@@ -104,11 +104,11 @@ class PostController extends BaseController<IPost> {
   async dislike(req: AuthResquest, res: Response) {
     try {
       const userId = PostService.convertToIdObject(req.user._id);
-      const postObj = await Post.findById(req.body._id);
+      const postObj = await Post.findById(req.body.postId);
+      if (!postObj) return res.status(400).send("Post not found");
 
-      req.body = PostService.dislike(postObj, userId);
-
-      super.putById(req, res);
+      PostService.dislike(postObj, userId);
+      res.status(200).send();
     } catch (err) {
       res.status(500).json({ message: err.message });
     }

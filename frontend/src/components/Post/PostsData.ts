@@ -1,6 +1,6 @@
 export const postsData = [
   {
-    id: 1,
+    _id: "1",
     ownerId: 101,
     ownerUsername: "doglover1",
     img: "dog_post_img-1705936076206.jpg",
@@ -16,7 +16,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 2,
+    _id: "2",
     ownerId: 102,
     ownerUsername: "pawsandwhiskers",
     img: "dog_post_img-1705936076206.jpg",
@@ -32,7 +32,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 3,
+    _id: "3",
     ownerId: 103,
     ownerUsername: "happyhounds",
     img: "dog_post_img-1705936076206.jpg",
@@ -48,7 +48,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 4,
+    _id: "4",
     ownerId: 104,
     ownerUsername: "terrierfanatic",
     img: "dog_post_img-1705936076206.jpg",
@@ -64,7 +64,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 5,
+    _id: "5",
     ownerId: 105,
     ownerUsername: "bullybuddies",
     img: "dog_post_img-1705936076206.jpg",
@@ -80,7 +80,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 6,
+    _id: "6",
     ownerId: 106,
     ownerUsername: "greyhoundgalore",
     img: "dog_post_img-1705936076206.jpg",
@@ -96,7 +96,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 7,
+    _id: "7",
     ownerId: 107,
     ownerUsername: "dachshunddelight",
     img: "dog_post_img-1705936076206.jpg",
@@ -112,7 +112,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 8,
+    _id: "8",
     ownerId: 108,
     ownerUsername: "huskyheaven",
     img: "dog_post_img-1705936076206.jpg",
@@ -128,7 +128,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 9,
+    _id: "9",
     ownerId: 109,
     ownerUsername: "beaglebliss",
     img: "dog_post_img-1705936076206.jpg",
@@ -144,7 +144,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 10,
+    _id: "10",
     ownerId: 110,
     ownerUsername: "goldenmoments",
     img: "dog_post_img-1705936076206.jpg",
@@ -160,7 +160,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 11,
+    _id: "11",
     ownerId: 111,
     ownerUsername: "boxerbuddies",
     img: "dog_post_img-1705936076206.jpg",
@@ -176,7 +176,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 12,
+    _id: "12",
     ownerId: 112,
     ownerUsername: "corgicraze",
     img: "dog_post_img-1705936076206.jpg",
@@ -192,7 +192,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 13,
+    _id: "13",
     ownerId: 113,
     ownerUsername: "greatdanefans",
     img: "dog_post_img-1705936076206.jpg",
@@ -208,7 +208,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 14,
+    _id: "14",
     ownerId: 114,
     ownerUsername: "shibainuantics",
     img: "dog_post_img-1705936076206.jpg",
@@ -224,7 +224,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 15,
+    _id: "15",
     ownerId: 115,
     ownerUsername: "rottweilerroyalty",
     img: "dog_post_img-1705936076206.jpg",
@@ -240,7 +240,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 16,
+    _id: "16",
     ownerId: 116,
     ownerUsername: "maltesemagic",
     img: "dog_post_img-1705936076206.jpg",
@@ -256,7 +256,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 17,
+    _id: "17",
     ownerId: 117,
     ownerUsername: "poodleperfection",
     img: "dog_post_img-1705936076206.jpg",
@@ -272,7 +272,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 18,
+    _id: "18",
     ownerId: 118,
     ownerUsername: "bordercolliecharm",
     img: "dog_post_img-1705936076206.jpg",
@@ -288,7 +288,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 19,
+    _id: "19",
     ownerId: 119,
     ownerUsername: "cockerspanielcuddles",
     img: "dog_post_img-1705936076206.jpg",
@@ -304,7 +304,7 @@ export const postsData = [
     ownerPhoneNumber: "555-555-5555",
   },
   {
-    id: 20,
+    _id: "20",
     ownerId: 120,
     ownerUsername: "aussieadventures",
     img: "dog_post_img-1705936076206.jpg",

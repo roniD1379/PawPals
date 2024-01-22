@@ -16,9 +16,10 @@ import FormSelect from "../utils/FormSelect/FormSelect";
 import { getDogBreeds } from "../utils/Api";
 import FormInput from "../utils/FormInput/FormInput";
 import { globals } from "../utils/Globals";
+import api from "../utils/AxiosInterceptors";
 
 export interface IPostProp {
-  id: number;
+  _id: string;
   ownerId: number;
   ownerUsername: string;
   img: string;
@@ -58,7 +59,7 @@ function Post({
   isShowingDetails = false,
 }: IProps) {
   const {
-    id,
+    _id,
     ownerId,
     ownerUsername,
     img,
@@ -103,18 +104,27 @@ function Post({
   };
 
   const likePost = () => {
-    // TODO: write likePost functionality
-
-    setPostNumOfLikes(postNumOfLikes + 1);
-    setIsLiked(true);
+    api
+      .put(globals.posts.like, { postId: _id })
+      .then(() => {
+        setPostNumOfLikes(postNumOfLikes + 1);
+        setIsLiked(true);
+      })
+      .catch((error) => {
+        console.log("Failed to like post: ", error);
+      });
   };
 
-  const unLikePost = () => {
-    // TODO: write unLikePost functionality
-
-    // Updating the amount to likes
-    setPostNumOfLikes(postNumOfLikes - 1);
-    setIsLiked(false);
+  const dislikePost = () => {
+    api
+      .put(globals.posts.dislike, { postId: _id })
+      .then(() => {
+        setPostNumOfLikes(postNumOfLikes - 1);
+        setIsLiked(false);
+      })
+      .catch((error) => {
+        console.log("Failed to dislike post: ", error);
+      });
   };
 
   const commentOnPost = (e: React.FormEvent) => {
@@ -153,7 +163,7 @@ function Post({
     setIsEditMode(false);
     setPostDescription(editDescription);
     const selectBreedElement = document.getElementById(
-      "post-" + id + "-edit-breed-select"
+      "post-" + _id + "-edit-breed-select"
     );
     setPostBreed(
       (selectBreedElement as HTMLSelectElement)[
@@ -166,14 +176,14 @@ function Post({
     // TODO: write deletePost functionality
 
     // Delete from UI
-    const postElement = document.getElementById("post-" + id);
+    const postElement = document.getElementById("post-" + _id);
     if (postElement) postElement.remove();
     setShowDeletePostModal(false);
     setShowPostDetails(false);
     if (setRenderPosts) setRenderPosts((prevVal) => !prevVal);
   };
 
-  const getPostComments = (postId: number): void => {
+  const getPostComments = (postId: string): void => {
     // TODO: write getPostComments functionality
     console.log("Getting post comments for post id: " + postId);
 
@@ -225,15 +235,15 @@ function Post({
 
   useEffect(() => {
     if (isShowingDetails) {
-      getPostComments(id);
+      getPostComments(_id);
     }
   }, []);
 
   return (
     <div
-      id={"post-" + id}
+      id={"post-" + _id}
       className="Post"
-      data-id={id}
+      data-id={_id}
       data-owner-id={ownerId}
     >
       <div className="post-img-container">
@@ -278,7 +288,7 @@ function Post({
               <FaHeart
                 size={20}
                 color={"var(--color-red)"}
-                onClick={unLikePost}
+                onClick={dislikePost}
               />
             ) : (
               <FaRegHeart
@@ -318,7 +328,7 @@ function Post({
             {isEditMode ? (
               <span className="post-breed-edit-select">
                 <FormSelect
-                  selectId={"post-" + id + "-edit-breed-select"}
+                  selectId={"post-" + _id + "-edit-breed-select"}
                   getElementsFunc={getDogBreeds}
                   optionState={editBreedId}
                   setOptionState={setEditBreedId}
@@ -371,7 +381,7 @@ function Post({
         ) : (
           numOfComments > 0 && (
             <span
-              id={"post-" + id + "-num-of-comments"}
+              id={"post-" + _id + "-num-of-comments"}
               className="post-show-comments"
               onClick={showAllComments}
             >
