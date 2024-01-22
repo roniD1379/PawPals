@@ -15,6 +15,8 @@ import {
 } from "../utils/InfiniteScroll/InfiniteScrollUtils";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { globals } from "../utils/Globals";
+import api from "../utils/AxiosInterceptors";
+import { ClipLoader } from "react-spinners";
 
 function Profile() {
   const [username, setUsername] = useState("");
@@ -47,15 +49,22 @@ function Profile() {
     ownerPhoneNumber: "",
   });
   const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const getUserDetails = () => {
-    // TODO: write getUserDetails functionality
-    setUsername("snirAshwal");
-    setUserImage("");
-    setNumOfPosts(10);
-    setDescription("Welcome to my page!");
-    setFirstName("Snir");
-    setLastName("Ashwal");
+    api
+      .get(globals.users.userDetails)
+      .then((response) => {
+        setUsername(response.data.username);
+        setUserImage(response.data.userImage);
+        setNumOfPosts(response.data.numOfPosts);
+        setDescription(response.data.description);
+        setFirstName(response.data.firstName);
+        setLastName(response.data.lastName);
+      })
+      .catch((error) => {
+        console.log("Failed to get user details from server: ", error);
+      });
   };
 
   const chunkArray = (array: IPostProp[], size: number) => {
@@ -91,84 +100,98 @@ function Profile() {
     getPostsForUserProfile(true);
   };
 
+  const getProfileData = async () => {
+    await getUserDetails();
+    await getPostsForUserProfile();
+  };
+
   useEffect(() => {
-    getUserDetails();
-    getPostsForUserProfile();
+    getProfileData().then(() => setLoading(false));
   }, [renderPosts]);
 
   return (
     <div className="Profile">
-      <div className="profile-details-container">
-        <div className="profile-details-data-container">
-          <span className="profile-details-username">{username}</span>
-          <p className="profile-details-description">{description}</p>
-          <p className="profile-details-posts">
-            <span className="profile-details-posts-amount">{numOfPosts}</span>
-            <span>posts</span>
-          </p>
+      {loading ? (
+        <div className="profile-loading">
+          <ClipLoader />
         </div>
-        <div className="profile-details-image-container">
-          {userImage === "" ? (
-            <div className="profile-img-default">
-              <FaUser size={80} />
+      ) : (
+        <>
+          <div className="profile-details-container">
+            <div className="profile-details-data-container">
+              <span className="profile-details-username">{username}</span>
+              <p className="profile-details-description">{description}</p>
+              <p className="profile-details-posts">
+                <span className="profile-details-posts-amount">
+                  {numOfPosts}
+                </span>
+                <span>posts</span>
+              </p>
             </div>
-          ) : (
-            <img
-              className="profile-img"
-              src={userImage === "" ? "#" : userImage}
-              alt="profile-image"
-            />
-          )}
-          <button
-            type="submit"
-            className="btn btn-large profile-edit-btn"
-            onClick={() => {
-              setShowEditProfile(true);
-            }}
-          >
-            Edit Profile
-          </button>
-        </div>
-      </div>
-      <div className="profile-posts-container">
-        <PullToRefresh
-          pullDownContent={<PullDownContent />}
-          releaseContent={<PullToRefreshLoader />}
-          refreshContent={<PullToRefreshLoader />}
-          pullDownThreshold={80}
-          onRefresh={onRefresh}
-          triggerHeight={500}
-          backgroundColor="white"
-        >
-          <InfiniteScroll
-            dataLength={posts.length}
-            next={fetchMorePosts}
-            hasMore={hasMore}
-            loader={loaderElement}
-            endMessage={noMoreDataElement}
-            height={
-              "calc(100vh - 175px - var(--profile-details-container-height))"
-            }
-          >
-            {posts.map((row, rowIndex) => (
-              <div key={rowIndex} className="profile-feed-post-img-row">
-                {row.map((post, columnIndex) => (
-                  <img
-                    key={columnIndex}
-                    src={globals.files + post.img}
-                    alt="post-image"
-                    className="profile-feed-post-img"
-                    onClick={() => {
-                      setPost(post);
-                      setShowPostDetails(true);
-                    }}
-                  />
+            <div className="profile-details-image-container">
+              {userImage === "" ? (
+                <div className="profile-img-default">
+                  <FaUser size={80} />
+                </div>
+              ) : (
+                <img
+                  className="profile-img"
+                  src={userImage === "" ? "#" : globals.files + userImage}
+                  alt="profile-image"
+                />
+              )}
+              <button
+                type="submit"
+                className="btn btn-large profile-edit-btn"
+                onClick={() => {
+                  setShowEditProfile(true);
+                }}
+              >
+                Edit Profile
+              </button>
+            </div>
+          </div>
+          <div className="profile-posts-container">
+            <PullToRefresh
+              pullDownContent={<PullDownContent />}
+              releaseContent={<PullToRefreshLoader />}
+              refreshContent={<PullToRefreshLoader />}
+              pullDownThreshold={80}
+              onRefresh={onRefresh}
+              triggerHeight={500}
+              backgroundColor="white"
+            >
+              <InfiniteScroll
+                dataLength={posts.length}
+                next={fetchMorePosts}
+                hasMore={hasMore}
+                loader={loaderElement}
+                endMessage={noMoreDataElement}
+                height={
+                  "calc(100vh - 175px - var(--profile-details-container-height))"
+                }
+              >
+                {posts.map((row, rowIndex) => (
+                  <div key={rowIndex} className="profile-feed-post-img-row">
+                    {row.map((post, columnIndex) => (
+                      <img
+                        key={columnIndex}
+                        src={globals.files + post.img}
+                        alt="post-image"
+                        className="profile-feed-post-img"
+                        onClick={() => {
+                          setPost(post);
+                          setShowPostDetails(true);
+                        }}
+                      />
+                    ))}
+                  </div>
                 ))}
-              </div>
-            ))}
-          </InfiniteScroll>
-        </PullToRefresh>
-      </div>
+              </InfiniteScroll>
+            </PullToRefresh>
+          </div>
+        </>
+      )}
       {showPostDetails && (
         <Modal
           setIsOpen={setShowPostDetails}

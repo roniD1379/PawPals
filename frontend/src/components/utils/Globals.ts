@@ -3,6 +3,7 @@ const BASE_URL =
 
 const AUTH_CONTROLLER = "auth/";
 const POST_CONTROLLER = "post/";
+const USER_CONTROLLER = "user/";
 const FILES = "uploads/";
 
 export const globals = {
@@ -15,7 +16,10 @@ export const globals = {
   },
   posts: {
     posts: BASE_URL + POST_CONTROLLER,
-    create: BASE_URL + POST_CONTROLLER + "create/",
+    create: BASE_URL + POST_CONTROLLER + "create",
+  },
+  users: {
+    userDetails: BASE_URL + USER_CONTROLLER + "details",
   },
   files: BASE_URL + FILES,
 };
