@@ -6,12 +6,14 @@ interface IProps {
   uploadedImageId: string;
   isLarge?: boolean;
   currentImage?: string;
+  setSelectedFile: React.Dispatch<React.SetStateAction<File | null>>;
 }
 
 function FormUploadImage({
   uploadedImageId,
   isLarge = false,
   currentImage = "#",
+  setSelectedFile,
 }: IProps) {
   useEffect(() => {
     if (currentImage !== "#" && currentImage !== "") {
@@ -45,7 +47,7 @@ function FormUploadImage({
               };
 
               img.setAttribute("src", URL.createObjectURL(e.target.files[0]));
-
+              setSelectedFile(e.target.files[0]);
               img.style.display = "block";
               document.getElementById("default-upload-image")?.remove();
             }

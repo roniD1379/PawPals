@@ -14,6 +14,7 @@ interface IProps {
   optionState: string;
   setOptionState: React.Dispatch<React.SetStateAction<string>>;
   selectId?: string;
+  isRequired?: boolean;
 }
 
 function FormSelect({
@@ -24,6 +25,7 @@ function FormSelect({
   optionState,
   setOptionState,
   selectId,
+  isRequired = false,
 }: IProps) {
   const [selectElements, setSelectElements] = useState(elements);
 
@@ -42,7 +44,9 @@ function FormSelect({
         id={selectId}
         value={optionState}
         onChange={(e) => setOptionState(e.target.value)}
+        required={isRequired}
       >
+        <option value={""}>Not Selected</option>
         {elements
           ? elements.map((element, i) => {
               return (

@@ -15,6 +15,7 @@ import BreedInfo from "../BreedInfo/BreedInfo";
 import FormSelect from "../utils/FormSelect/FormSelect";
 import { getDogBreeds } from "../utils/Api";
 import FormInput from "../utils/FormInput/FormInput";
+import { globals } from "../utils/Globals";
 
 export interface IPostProp {
   id: number;
@@ -238,7 +239,7 @@ function Post({
       <div className="post-img-container">
         <img
           className="post-img"
-          src={img}
+          src={globals.files + img}
           alt="post-img"
           onDoubleClick={(e) => {
             if (!isLiked) {
