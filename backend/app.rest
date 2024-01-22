@@ -8,6 +8,10 @@ GET http://localhost:3000/post/allByUser/65aba6e2ee855cb9ccc1288f
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWFiYTZlMmVlODU1Y2I5Y2NjMTI4OGYiLCJpYXQiOjE3MDU3NDgyNTV9.hQRSZcmF5d7nZlbzWgRE6n5PcxUKrA-setKxlOneVYo
 ###
 
+GET http://localhost:3000/post/feed
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWFiYTZlMmVlODU1Y2I5Y2NjMTI4OGYiLCJpYXQiOjE3MDU3NDgyNTV9.hQRSZcmF5d7nZlbzWgRE6n5PcxUKrA-setKxlOneVYo
+###
+
 POST http://localhost:3000/post/create
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWFiYTZlMmVlODU1Y2I5Y2NjMTI4OGYiLCJpYXQiOjE3MDU3NDgyNTV9.hQRSZcmF5d7nZlbzWgRE6n5PcxUKrA-setKxlOneVYo
 Content-Type: application/json

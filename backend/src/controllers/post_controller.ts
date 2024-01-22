@@ -10,41 +10,56 @@ class PostController extends BaseController<IPost> {
     super(Post);
   }
 
-  async getAll(req: AuthResquest, res: Response) {
-    const userIdObject = PostService.convertToIdObject(req.user._id);
+    async get(req: AuthResquest, res: Response) {
+        const userIdObject = PostService.convertToIdObject(req.user._id)
+        let posts = null;
 
-    try {
-      const posts = await Post.find();
+        try {
 
-      const output = await Promise.all(
-        posts.map(async (post) => {
-          const postOwner = await PostService.getOwnerObj(post);
+            if (req.body.query) {
+                posts = await Post.find((req.body.query)).exec();
+            }
+            else {
+                posts = await Post.find();
+            }
 
-          return {
-            ...post.toObject(), // Convert Mongoose document to plain JavaScript object
-            ownerUsername: postOwner.username,
-            ownerFirstName: postOwner.firstname,
-            ownerPhoneNumber: postOwner.phoneNumber,
-            isLikedByUser: PostService.getIsLikedByUser(post, userIdObject),
-            isPostOwner: PostService.getIsPostOwner(post, userIdObject),
-            numOfLikes: PostService.getNumOfLikes(post),
-            numOfComments: PostService.getNumOfComments(post),
-          };
-        })
-      );
+            const output = await Promise.all(posts.map(async post => 
+                {
+                    const postOwner = await PostService.getOwnerObj(post);
 
-      res.send(output);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
+                    return {
+                        ...post.toObject(), // Convert Mongoose document to plain JavaScript object
+                        ownerUsername: postOwner.username,
+                        ownerFirstName: postOwner.firstname,
+                        ownerPhoneNumber: postOwner.phoneNumber,
+                        isLikedByUser: PostService.getIsLikedByUser(post,userIdObject),
+                        isPostOwner: PostService.getIsPostOwner(post, userIdObject),
+                        numOfLikes: PostService.getNumOfLikes(post),
+                        numOfComments: PostService.getNumOfComments(post)
+                    }
+                }));
+
+            res.send(output);
+
+        } catch (err) {
+            res.status(500).json({ message: err.message });
+        }
     }
-  }
 
-  async getAllByUser(req: AuthResquest, res: Response) {
-    req.body.query = { ownerId: req.params.id };
+    async getTenLatestPosts(req: AuthResquest, res: Response) {
+        
+        req.body.query = {},{},{ sort: { 'created_at' : -1 }, limit: 10};
+        //req.body.query = {ownerId: req.params.id};
 
-    super.get(req, res);
-  }
+        this.get(req, res);
+    }
 
+    async getAllByUser(req: AuthResquest, res: Response) {
+        req.body.query = {ownerId: req.params.id};
+
+        this.get(req, res);
+    }
+  
   async createPost(req: AuthResquest, res: Response) {
     const filename = (req.file as Express.Multer.File).filename;
     const description = req.body.description;
@@ -73,44 +88,45 @@ class PostController extends BaseController<IPost> {
       res.status(201).send();
     } catch (err) {
       res.status(500).send("Fail: " + err.message);
-    }
   }
 
-  async like(req: AuthResquest, res: Response) {
-    try {
-      const userId = PostService.convertToIdObject(req.user._id);
-      const postObj = await Post.findById(req.body._id);
-
-      req.body = PostService.like(postObj, userId);
-
-      super.putById(req, res);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
+ async like(req: AuthResquest, res: Response) {
+        try {
+            const userId = PostService.convertToIdObject(req.user._id);
+            const postObj = await Post.findById(req.body._id);
+            
+            req.body = PostService.like(postObj,userId);
+            
+            super.putById(req, res);
+        } catch (err) {
+            res.status(500).json({ message: err.message });
+        }
     }
-  }
 
   async dislike(req: AuthResquest, res: Response) {
-    try {
-      const userId = PostService.convertToIdObject(req.user._id);
-      const postObj = await Post.findById(req.body._id);
-
-      req.body = PostService.dislike(postObj, userId);
-
-      super.putById(req, res);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
+        try {
+            const userId = PostService.convertToIdObject(req.user._id);
+            const postObj = await Post.findById(req.body._id);
+            
+            req.body = PostService.dislike(postObj,userId);
+            
+            super.putById(req, res);
+        } catch (err) {
+            res.status(500).json({ message: err.message });
+        }
     }
-  }
 
   async deleteById(req: AuthResquest, res: Response) {
-    try {
-      const postObj = await this.model.findById(req.body._id);
-      await this.model.deleteOne({ _id: postObj._id });
-      PostService.deleteRelatedComments(postObj);
+        try {
+            const postObj = await this.model.findById(req.body._id);
+            await this.model.deleteOne({_id: postObj._id});
 
-      res.status(201).send(postObj);
-    } catch (err) {
-      res.status(406).send("fail: " + err.message);
+            PostService.deleteRelatedComments(postObj);
+
+            res.status(201).send(postObj);
+        } catch (err) {
+            res.status(500).json({ message: err.message });
+        }
     }
   }
 }
