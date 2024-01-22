@@ -2,10 +2,16 @@ import "./Feed.css";
 import Post, { IPostProp } from "../Post/Post";
 import { postsData } from "../Post/PostsData";
 import Modal from "../utils/Modal/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PostContactDetails from "../PostContactDetails/PostContactDetails";
 import { PullToRefresh, PullDownContent } from "react-js-pull-to-refresh";
 import PullToRefreshLoader from "../utils/PullToRefreshLoader/PullToRefreshLoader";
+import InfiniteScroll from "react-infinite-scroll-component";
+import {
+  FEED_PAGE_SIZE,
+  loaderElement,
+  noMoreDataElement,
+} from "../utils/InfiniteScroll/InfiniteScrollUtils";
 
 function Feed() {
   const [showPostDetails, setShowPostDetails] = useState(false);
@@ -27,15 +33,38 @@ function Feed() {
     ownerFirstName: "",
     ownerPhoneNumber: "",
   });
+  const [posts, setPosts] = useState<IPostProp[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(0);
 
-  const getAllPosts = () => {
+  const getPosts = (isRefresh = false) => {
     // TODO: write getAllPosts functionality
-    return postsData;
+    const postsPage = isRefresh ? 0 : page;
+
+    const newPosts = postsData.slice(
+      postsPage * FEED_PAGE_SIZE,
+      (postsPage + 1) * FEED_PAGE_SIZE
+    );
+
+    setPage(postsPage + 1);
+    if (newPosts.length < FEED_PAGE_SIZE) setHasMore(false);
+    if (isRefresh) setPosts([...newPosts]);
+    else setPosts((prevData) => [...prevData, ...newPosts]);
+  };
+
+  const fetchMorePosts = () => {
+    getPosts();
   };
 
   const onRefresh = async () => {
-    console.log("Refreshing...");
+    setHasMore(true);
+    setPage(0);
+    getPosts(true);
   };
+
+  useEffect(() => {
+    getPosts();
+  }, []);
 
   return (
     <div className="Feed">
@@ -48,17 +77,26 @@ function Feed() {
         triggerHeight={500}
         backgroundColor="white"
       >
-        {getAllPosts().map((post, i) => {
-          return (
-            <Post
-              key={i}
-              post={post}
-              setPost={setPost}
-              setShowPostDetails={setShowPostDetails}
-              setShowPostOwnerContactDetails={setShowPostOwnerContactDetails}
-            />
-          );
-        })}
+        <InfiniteScroll
+          dataLength={posts.length}
+          next={fetchMorePosts}
+          hasMore={hasMore}
+          loader={loaderElement}
+          endMessage={noMoreDataElement}
+          height={"calc(100vh - 155px)"}
+        >
+          {posts.map((post, i) => {
+            return (
+              <Post
+                key={i}
+                post={post}
+                setPost={setPost}
+                setShowPostDetails={setShowPostDetails}
+                setShowPostOwnerContactDetails={setShowPostOwnerContactDetails}
+              />
+            );
+          })}
+        </InfiniteScroll>
       </PullToRefresh>
       {showPostDetails && (
         <Modal

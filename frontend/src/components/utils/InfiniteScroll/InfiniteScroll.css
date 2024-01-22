@@ -1,0 +1,9 @@
+.infinite-scroll-end {
+  text-align: center;
+}
+
+.infinite-scroll-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
