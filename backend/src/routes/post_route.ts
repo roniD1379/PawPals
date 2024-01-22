@@ -4,9 +4,11 @@ import postController from "../controllers/post_controller";
 import authMiddleware from "../common/auth_middleware";
 import commentController from "../controllers/comment_controller";
 
-router.get("/all" ,authMiddleware,postController.getAll.bind(postController));
+router.get("/all" ,authMiddleware,postController.get.bind(postController));
 
 router.get("/allByUser/:id" ,authMiddleware,postController.getAllByUser.bind(postController));
+
+router.get("/feed" ,authMiddleware,postController.getTenLatestPosts.bind(postController));
 
 router.get("/:id", authMiddleware, postController.getById.bind(postController));
 
