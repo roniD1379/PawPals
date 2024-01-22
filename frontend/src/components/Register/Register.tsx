@@ -15,7 +15,7 @@ interface RegistrationData {
   password: string;
   description: string;
   phoneNumber: string;
-  userImage: string;
+  image?: File | null;
 }
 
 interface RegisterApiResponse {
@@ -25,6 +25,7 @@ interface RegisterApiResponse {
 function Register() {
   const navigate = useNavigate();
 
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [formData, setFormData] = useState<RegistrationData>({
     firstName: "",
     lastName: "",
@@ -32,7 +33,6 @@ function Register() {
     password: "",
     description: "",
     phoneNumber: "",
-    userImage: "",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,8 +45,14 @@ function Register() {
   const register = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (selectedFile) formData.image = selectedFile;
+
     await api
-      .post<RegisterApiResponse>(globals.auth.register, formData)
+      .post<RegisterApiResponse>(globals.auth.register, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((res) => {
         console.log(res.data);
         toast.success("Registered successfully!");
@@ -64,7 +70,10 @@ function Register() {
         <div className="logo-main-title">PawPals</div>
         <div className="logo-sub-title">Find your perfect fury friend</div>
         <form className="register-form" onSubmit={(e) => register(e)}>
-          <FormUploadImage uploadedImageId="profile-img" />
+          <FormUploadImage
+            uploadedImageId="profile-img"
+            setSelectedFile={setSelectedFile}
+          />
           <FormInput
             name="firstName"
             placeholder="First name"

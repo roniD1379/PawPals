@@ -4,15 +4,18 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongoose";
 
-const USERNAME_REGEX = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
+const USERNAME_REGEX = /^[a-zA-Z0-9]{6,}$/;
 const PASSWORD_REGEX = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
 
 const register = async (req: Request, res: Response) => {
+  let filename = "";
+  if (req.file) filename = (req.file as Express.Multer.File).filename;
+
   const username = req.body.username;
   const password = req.body.password;
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
-  const userImage = req.body.userImage;
+  const userImage = filename ? filename : "";
   const phoneNumber = req.body.phoneNumber;
   const description = req.body.description;
 
@@ -29,7 +32,7 @@ const register = async (req: Request, res: Response) => {
     return res
       .status(400)
       .send(
-        "Password can only contain letters and numbers and must be at least 6 characters long"
+        "Password must contain letters and numbers and must be at least 6 characters long"
       );
   }
 
