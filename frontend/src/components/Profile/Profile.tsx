@@ -3,7 +3,6 @@ import "./Profile.css";
 import { FaUser } from "react-icons/fa";
 import Post, { IPostProp } from "../Post/Post";
 import Modal from "../utils/Modal/Modal";
-import { postsData } from "../Post/PostsData";
 import EditProfileModal from "./EditProfileModal/EditProfileModal";
 import PostContactDetails from "../PostContactDetails/PostContactDetails";
 import { PullToRefresh, PullDownContent } from "react-js-pull-to-refresh";
@@ -68,6 +67,7 @@ function Profile() {
   };
 
   const chunkArray = (array: IPostProp[], size: number) => {
+    if (array.length === 0) return [[]];
     const chunks = Math.ceil(array.length / size);
     return Array.from({ length: chunks }, (_, index) => {
       const start = index * size;
@@ -76,18 +76,22 @@ function Profile() {
     });
   };
 
-  const getPostsForUserProfile = (isRefresh = false): void => {
-    // TODO: write getPostsForUserProfile functionality
+  const getPostsForUserProfile = async (isRefresh = false) => {
     const postsPage = isRefresh ? 0 : page;
-    const newPosts = postsData.slice(
-      postsPage * PROFILE_FEED_PAGE_SIZE,
-      (postsPage + 1) * PROFILE_FEED_PAGE_SIZE
-    );
 
-    setPage(postsPage + 1);
-    if (newPosts.length < PROFILE_FEED_PAGE_SIZE) setHasMore(false);
-    if (isRefresh) setPosts([...chunkArray(newPosts, 3)]);
-    else setPosts((prevData) => [...prevData, ...chunkArray(newPosts, 3)]);
+    await api
+      .get(globals.posts.userPosts + "/" + page)
+      .then((response) => {
+        const newPosts = response.data;
+        setPage(postsPage + 1);
+        if (newPosts.length < PROFILE_FEED_PAGE_SIZE) setHasMore(false);
+        if (isRefresh) setPosts([...chunkArray(newPosts, 3)]);
+        else setPosts((prevData) => [...prevData, ...chunkArray(newPosts, 3)]);
+      })
+      .catch((error) => {
+        setPosts([]);
+        console.log("Failed to get user posts posts", error);
+      });
   };
 
   const fetchMorePosts = () => {
@@ -106,7 +110,9 @@ function Profile() {
   };
 
   useEffect(() => {
-    getProfileData().then(() => setLoading(false));
+    getProfileData().then(() => {
+      setLoading(false);
+    });
   }, [renderPosts]);
 
   return (

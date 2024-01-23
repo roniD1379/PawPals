@@ -8,8 +8,9 @@ class PostService {
     return await Comment.deleteMany({ postId: post._id });
   }
 
-  public getNumOfComments(post: IPost) {
-    return Comment.find({ postId: post._id }).countDocuments;
+  async getNumOfComments(post: IPost) {
+    const numOfComments = await Comment.countDocuments({ postId: post._id });
+    return numOfComments;
   }
 
   public getNumOfLikes(post: IPost) {
@@ -57,6 +58,40 @@ class PostService {
       } catch (err) {
         throw new Error("Failed to dislike post: " + err.message);
       }
+    }
+  }
+
+  async formatPost(post: IPost, userIdObject: mongo.ObjectId) {
+    const postOwner = await this.getOwnerObj(post);
+
+    return {
+      _id: post._id,
+      description: post.description,
+      img: post.image,
+      breed: post.breed,
+      breedId: post.breedId,
+      ownerId: post.ownerId,
+      createdAt: post.createdAt,
+      ownerUsername: postOwner.username,
+      ownerFirstName: postOwner.firstname,
+      ownerPhoneNumber: postOwner.phoneNumber,
+      isLikedByUser: this.getIsLikedByUser(post, userIdObject),
+      isPostOwner: this.getIsPostOwner(post, userIdObject),
+      numOfLikes: this.getNumOfLikes(post),
+      numOfComments: await this.getNumOfComments(post),
+    };
+  }
+
+  async formatPosts(posts: IPost[], userIdObject: mongo.ObjectId) {
+    try {
+      const formattedPosts = await Promise.all(
+        posts.map((post) => this.formatPost(post, userIdObject))
+      );
+
+      return formattedPosts;
+    } catch (error) {
+      console.error("Error formatting posts:", error);
+      throw error;
     }
   }
 }

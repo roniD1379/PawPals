@@ -1,6 +1,5 @@
 import "./Feed.css";
 import Post, { IPostProp } from "../Post/Post";
-import { postsData } from "../Post/PostsData";
 import Modal from "../utils/Modal/Modal";
 import { useEffect, useState } from "react";
 import PostContactDetails from "../PostContactDetails/PostContactDetails";
@@ -12,6 +11,8 @@ import {
   loaderElement,
   noMoreDataElement,
 } from "../utils/InfiniteScroll/InfiniteScrollUtils";
+import api from "../utils/AxiosInterceptors";
+import { globals } from "../utils/Globals";
 
 function Feed() {
   const [showPostDetails, setShowPostDetails] = useState(false);
@@ -37,22 +38,22 @@ function Feed() {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(0);
 
-  const getPosts = (isRefresh = false) => {
-    // TODO: write getAllPosts functionality
+  const getPosts = async (isRefresh = false) => {
     const postsPage = isRefresh ? 0 : page;
 
-    const newPosts = postsData.slice(
-      postsPage * FEED_PAGE_SIZE,
-      (postsPage + 1) * FEED_PAGE_SIZE
-    );
-
-    setPage(postsPage + 1);
-    if (newPosts.length < FEED_PAGE_SIZE) setHasMore(false);
-    if (isRefresh) setPosts([...newPosts]);
-    else setPosts((prevData) => [...prevData, ...newPosts]);
-    // api.get(globals.posts.feedPosts).then((response) => {
-    //   setPosts(response.data);
-    // });
+    await api
+      .get(globals.posts.feedPosts + "/" + page)
+      .then((response) => {
+        const newPosts = response.data;
+        setPage(postsPage + 1);
+        if (newPosts.length < FEED_PAGE_SIZE) setHasMore(false);
+        if (isRefresh) setPosts([...newPosts]);
+        else setPosts((prevData) => [...prevData, ...newPosts]);
+      })
+      .catch((error) => {
+        setPosts([]);
+        console.log("Failed to get feed posts", error);
+      });
   };
 
   const fetchMorePosts = () => {
