@@ -1,7 +1,7 @@
 import Comment, { IComment } from "../models/comment_model";
 import { BaseController } from "./base_controller";
 import { Response } from "express";
-import { AuthResquest } from "../common/auth_middleware";
+import { AuthRequest } from "../common/auth_middleware";
 import CommentService from "../services/comment_service";
 import comment_model from "../models/comment_model";
 
@@ -10,7 +10,7 @@ class CommentController extends BaseController<IComment> {
     super(Comment);
   }
 
-  async getById(req: AuthResquest, res: Response) {
+  async getById(req: AuthRequest, res: Response) {
     const userIdObject = CommentService.convertToIdObject(req.user._id);
 
     try {
@@ -32,7 +32,7 @@ class CommentController extends BaseController<IComment> {
     }
   }
 
-  async createComment(req: AuthResquest, res: Response) {
+  async createComment(req: AuthRequest, res: Response) {
     const ownerId = req.user._id;
     const text = req.body.text;
     const postId = req.body.postId;

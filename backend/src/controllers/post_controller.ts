@@ -1,7 +1,7 @@
 import Post, { IPost } from "../models/post_model";
 import { BaseController } from "./base_controller";
 import { Response } from "express";
-import { AuthResquest } from "../common/auth_middleware";
+import { AuthRequest } from "../common/auth_middleware";
 import PostService from "../services/post_service";
 import post_model from "../models/post_model";
 import post_service from "../services/post_service";
@@ -14,7 +14,7 @@ class PostController extends BaseController<IPost> {
     super(Post);
   }
 
-  async get(req: AuthResquest, res: Response) {
+  async get(req: AuthRequest, res: Response) {
     const userIdObject = PostService.convertToIdObject(req.user._id);
     let posts = null;
 
@@ -48,7 +48,7 @@ class PostController extends BaseController<IPost> {
     }
   }
 
-  async getFeedPosts(req: AuthResquest, res: Response) {
+  async getFeedPosts(req: AuthRequest, res: Response) {
     try {
       const userIdObject = PostService.convertToIdObject(req.user._id);
       let posts = [];
@@ -72,7 +72,7 @@ class PostController extends BaseController<IPost> {
     }
   }
 
-  async getUserPosts(req: AuthResquest, res: Response) {
+  async getUserPosts(req: AuthRequest, res: Response) {
     try {
       const userIdObject = PostService.convertToIdObject(req.user._id);
       let posts = [];
@@ -95,7 +95,7 @@ class PostController extends BaseController<IPost> {
     }
   }
 
-  async createPost(req: AuthResquest, res: Response) {
+  async createPost(req: AuthRequest, res: Response) {
     const filename = (req.file as Express.Multer.File).filename;
     const description = req.body.description;
     const breed = req.body.breed;
@@ -126,7 +126,7 @@ class PostController extends BaseController<IPost> {
     }
   }
 
-  async like(req: AuthResquest, res: Response) {
+  async like(req: AuthRequest, res: Response) {
     try {
       const userId = PostService.convertToIdObject(req.user._id);
       const postObj = await Post.findById(req.body.postId);
@@ -139,7 +139,7 @@ class PostController extends BaseController<IPost> {
     }
   }
 
-  async dislike(req: AuthResquest, res: Response) {
+  async dislike(req: AuthRequest, res: Response) {
     try {
       const userId = PostService.convertToIdObject(req.user._id);
       const postObj = await Post.findById(req.body.postId);
@@ -152,7 +152,7 @@ class PostController extends BaseController<IPost> {
     }
   }
 
-  async deleteById(req: AuthResquest, res: Response) {
+  async deleteById(req: AuthRequest, res: Response) {
     try {
       const postObj = await this.model.findById(req.body._id);
       await this.model.deleteOne({ _id: postObj._id });

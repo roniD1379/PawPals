@@ -1,7 +1,7 @@
 import User, { IUser } from "../models/user_model";
 import { BaseController } from "./base_controller";
 import { Response } from "express";
-import { AuthResquest } from "../common/auth_middleware";
+import { AuthRequest } from "../common/auth_middleware";
 import user_service from "../services/user_service";
 
 class UserController extends BaseController<IUser> {
@@ -9,7 +9,7 @@ class UserController extends BaseController<IUser> {
     super(User);
   }
 
-  async getUserDetails(req: AuthResquest, res: Response) {
+  async getUserDetails(req: AuthRequest, res: Response) {
     try {
       const userId = req.user._id;
       const user = await User.findById(userId).select({ password: 0 });
