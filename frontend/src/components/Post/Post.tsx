@@ -18,6 +18,7 @@ import FormInput from "../utils/FormInput/FormInput";
 import { globals } from "../utils/Globals";
 import api from "../utils/AxiosInterceptors";
 import toast from "react-hot-toast";
+import { getSelectedText } from "../utils/FormUtils";
 
 export interface IPostProp {
   _id: string;
@@ -40,6 +41,12 @@ interface IPostComment {
   comment: string;
   ownerUsername: string;
   createdAt: string;
+}
+
+interface EditPostData {
+  description: string;
+  breedId: string;
+  breed: string;
 }
 
 interface IProps {
@@ -83,7 +90,11 @@ function Post({
   const [showBreedInfo, setShowBreedInfo] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editBreedId, setEditBreedId] = useState(breedId.toString());
-  const [editDescription, setEditDescription] = useState(description);
+  const [formData, setFormData] = useState<EditPostData>({
+    description: description,
+    breedId: breedId.toString(),
+    breed: breed,
+  });
   const [postDescription, setPostDescription] = useState(description);
   const [postBreed, setPostBreed] = useState(breed);
 
@@ -102,6 +113,13 @@ function Post({
     } else {
       return `${diffDays} ${diffDays === 1 ? "day" : "days"} ago`;
     }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const likePost = async () => {
@@ -131,9 +149,8 @@ function Post({
   const commentOnPost = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // TODO: write commentOnPost functionality
     await api
-      .post(globals.posts.comment, { postId: _id, text: newComment })
+      .post(globals.posts.createComment, { postId: _id, text: newComment })
       .then((res) => {
         setPostNumOfComments(postNumOfComments + 1);
 
@@ -162,26 +179,30 @@ function Post({
   };
 
   const showAllComments = () => {
-    // TODO: write showAllComments functionality
-
     setShowPostDetails(true);
     setPost(post);
   };
 
-  const editPost = () => {
-    // TODO: write editPost functionality
+  const editPost = async () => {
+    const breedName = getSelectedText("post-" + _id + "-edit-breed-select");
 
-    // Update UI
-    setIsEditMode(false);
-    setPostDescription(editDescription);
-    const selectBreedElement = document.getElementById(
-      "post-" + _id + "-edit-breed-select"
-    );
-    setPostBreed(
-      (selectBreedElement as HTMLSelectElement)[
-        (selectBreedElement as HTMLSelectElement).selectedIndex
-      ].innerText
-    );
+    await api
+      .put(globals.posts.edit, {
+        postId: _id,
+        description: formData.description,
+        breedId: editBreedId,
+        breed: breedName,
+      })
+      .then(() => {
+        // Update UI
+        setIsEditMode(false);
+        setPostDescription(formData.description);
+        setPostBreed(breedName);
+      })
+      .catch((error) => {
+        console.log("Failed to edit post: ", error);
+        toast.error(error.response.data);
+      });
   };
 
   const deletePost = () => {
@@ -195,37 +216,15 @@ function Post({
     if (setRenderPosts) setRenderPosts((prevVal) => !prevVal);
   };
 
-  const getPostComments = (postId: string): void => {
-    // TODO: write getPostComments functionality
-    console.log("Getting post comments for post id: " + postId);
-
-    setComments([
-      {
-        comment: "Wow, what a beautiful dog!",
-        ownerUsername: "snirAshwal",
-        createdAt: "2022-10-11T12:00:00Z",
-      },
-      {
-        comment: "Wow, what a beautiful dog!",
-        ownerUsername: "snirAshwal",
-        createdAt: "2022-10-11T12:00:00Z",
-      },
-      {
-        comment: "Wow, what a beautiful dog!",
-        ownerUsername: "snirAshwal",
-        createdAt: "2022-10-11T12:00:00Z",
-      },
-      {
-        comment: "Wow, what a beautiful dog!",
-        ownerUsername: "snirAshwal",
-        createdAt: "2022-10-11T12:00:00Z",
-      },
-      {
-        comment: "Wow, what a beautiful dog!",
-        ownerUsername: "snirAshwal",
-        createdAt: "2022-10-11T12:00:00Z",
-      },
-    ]);
+  const getPostComments = async (postId: string) => {
+    await api
+      .get(globals.posts.comments + "/" + postId)
+      .then((response) => {
+        setComments(response.data);
+      })
+      .catch((error) => {
+        console.log("Failed to get post comments", error);
+      });
   };
 
   const showHeartOnPost = (element: HTMLElement) => {
@@ -362,8 +361,11 @@ function Post({
           {isEditMode ? (
             <>
               <FormInput
-                state={editDescription}
-                setState={setEditDescription}
+                name="description"
+                placeholder="Description"
+                isRequired={true}
+                state={formData.description}
+                setState={handleInputChange}
                 width="100%"
               />
               <button className="btn post-save-btn" onClick={editPost}>

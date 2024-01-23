@@ -80,7 +80,7 @@ function Profile() {
     const postsPage = isRefresh ? 0 : page;
 
     await api
-      .get(globals.posts.userPosts + "/" + page)
+      .get(globals.posts.userPosts + "/" + postsPage)
       .then((response) => {
         const newPosts = response.data;
         setPage(postsPage + 1);
