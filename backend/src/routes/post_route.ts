@@ -37,7 +37,7 @@ router.post(
 router.post(
   "/comment",
   authMiddleware,
-  commentController.post.bind(commentController)
+  commentController.createComment.bind(commentController)
 );
 
 router.put(
