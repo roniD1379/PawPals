@@ -24,6 +24,7 @@ export const globals = {
     createComment: BASE_URL + POST_CONTROLLER + "comment",
     comments: BASE_URL + POST_CONTROLLER + "comments",
     edit: BASE_URL + POST_CONTROLLER + "edit",
+    delete: BASE_URL + POST_CONTROLLER + "delete",
   },
   users: {
     userDetails: BASE_URL + USER_CONTROLLER + "details",
