@@ -23,6 +23,7 @@ export const globals = {
     dislike: BASE_URL + POST_CONTROLLER + "dislike",
     createComment: BASE_URL + POST_CONTROLLER + "comment",
     comments: BASE_URL + POST_CONTROLLER + "comments",
+    edit: BASE_URL + POST_CONTROLLER + "edit",
   },
   users: {
     userDetails: BASE_URL + USER_CONTROLLER + "details",

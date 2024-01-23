@@ -42,7 +42,7 @@ function Feed() {
     const postsPage = isRefresh ? 0 : page;
 
     await api
-      .get(globals.posts.feedPosts + "/" + page)
+      .get(globals.posts.feedPosts + "/" + postsPage)
       .then((response) => {
         const newPosts = response.data;
         setPage(postsPage + 1);

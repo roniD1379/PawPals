@@ -18,6 +18,7 @@ import FormInput from "../utils/FormInput/FormInput";
 import { globals } from "../utils/Globals";
 import api from "../utils/AxiosInterceptors";
 import toast from "react-hot-toast";
+import { getSelectedText } from "../utils/FormUtils";
 
 export interface IPostProp {
   _id: string;
@@ -40,6 +41,12 @@ interface IPostComment {
   comment: string;
   ownerUsername: string;
   createdAt: string;
+}
+
+interface EditPostData {
+  description: string;
+  breedId: string;
+  breed: string;
 }
 
 interface IProps {
@@ -83,7 +90,11 @@ function Post({
   const [showBreedInfo, setShowBreedInfo] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editBreedId, setEditBreedId] = useState(breedId.toString());
-  const [editDescription, setEditDescription] = useState(description);
+  const [formData, setFormData] = useState<EditPostData>({
+    description: description,
+    breedId: breedId.toString(),
+    breed: breed,
+  });
   const [postDescription, setPostDescription] = useState(description);
   const [postBreed, setPostBreed] = useState(breed);
 
@@ -102,6 +113,13 @@ function Post({
     } else {
       return `${diffDays} ${diffDays === 1 ? "day" : "days"} ago`;
     }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const likePost = async () => {
@@ -165,20 +183,26 @@ function Post({
     setPost(post);
   };
 
-  const editPost = () => {
-    // TODO: write editPost functionality
+  const editPost = async () => {
+    const breedName = getSelectedText("post-" + _id + "-edit-breed-select");
 
-    // Update UI
-    setIsEditMode(false);
-    setPostDescription(editDescription);
-    const selectBreedElement = document.getElementById(
-      "post-" + _id + "-edit-breed-select"
-    );
-    setPostBreed(
-      (selectBreedElement as HTMLSelectElement)[
-        (selectBreedElement as HTMLSelectElement).selectedIndex
-      ].innerText
-    );
+    await api
+      .put(globals.posts.edit, {
+        postId: _id,
+        description: formData.description,
+        breedId: editBreedId,
+        breed: breedName,
+      })
+      .then(() => {
+        // Update UI
+        setIsEditMode(false);
+        setPostDescription(formData.description);
+        setPostBreed(breedName);
+      })
+      .catch((error) => {
+        console.log("Failed to edit post: ", error);
+        toast.error(error.response.data);
+      });
   };
 
   const deletePost = () => {
@@ -337,8 +361,11 @@ function Post({
           {isEditMode ? (
             <>
               <FormInput
-                state={editDescription}
-                setState={setEditDescription}
+                name="description"
+                placeholder="Description"
+                isRequired={true}
+                state={formData.description}
+                setState={handleInputChange}
                 width="100%"
               />
               <button className="btn post-save-btn" onClick={editPost}>

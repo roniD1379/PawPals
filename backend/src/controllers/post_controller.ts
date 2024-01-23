@@ -164,6 +164,37 @@ class PostController extends BaseController<IPost> {
       res.status(500).json({ message: err.message });
     }
   }
+
+  async editById(req: AuthRequest, res: Response) {
+    const postId = req.body.postId;
+    const description = req.body.description;
+    const breed = req.body.breed;
+    const breedId = req.body.breedId;
+
+    if (!description || description === "")
+      return res.status(400).send("Description is required");
+    if (!breed || breed === "")
+      return res.status(400).send("Breed is required");
+    if (!breedId) return res.status(400).send("Breed is required");
+
+    try {
+      const updatedPost = await Post.findByIdAndUpdate(
+        postId,
+        {
+          description,
+          breed,
+          breedId,
+        },
+        { new: true }
+      );
+
+      if (!updatedPost) return res.status(400).send("Post not found");
+
+      res.status(200).send();
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  }
 }
 
 export default new PostController();

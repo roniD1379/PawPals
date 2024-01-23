@@ -43,7 +43,7 @@ router.post(
 router.put(
   "/edit",
   authMiddleware,
-  postController.putById.bind(postController)
+  postController.editById.bind(postController)
 );
 
 router.put("/like", authMiddleware, postController.like.bind(postController));
