@@ -24,7 +24,7 @@ router.get("/:id", authMiddleware, postController.getById.bind(postController));
 router.get(
   "/comments/:id",
   authMiddleware,
-  commentController.getById.bind(commentController)
+  commentController.getPostComments.bind(commentController)
 );
 
 router.post(

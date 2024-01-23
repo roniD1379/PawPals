@@ -131,9 +131,8 @@ function Post({
   const commentOnPost = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // TODO: write commentOnPost functionality
     await api
-      .post(globals.posts.comment, { postId: _id, text: newComment })
+      .post(globals.posts.createComment, { postId: _id, text: newComment })
       .then((res) => {
         setPostNumOfComments(postNumOfComments + 1);
 
@@ -162,8 +161,6 @@ function Post({
   };
 
   const showAllComments = () => {
-    // TODO: write showAllComments functionality
-
     setShowPostDetails(true);
     setPost(post);
   };
@@ -195,37 +192,15 @@ function Post({
     if (setRenderPosts) setRenderPosts((prevVal) => !prevVal);
   };
 
-  const getPostComments = (postId: string): void => {
-    // TODO: write getPostComments functionality
-    console.log("Getting post comments for post id: " + postId);
-
-    setComments([
-      {
-        comment: "Wow, what a beautiful dog!",
-        ownerUsername: "snirAshwal",
-        createdAt: "2022-10-11T12:00:00Z",
-      },
-      {
-        comment: "Wow, what a beautiful dog!",
-        ownerUsername: "snirAshwal",
-        createdAt: "2022-10-11T12:00:00Z",
-      },
-      {
-        comment: "Wow, what a beautiful dog!",
-        ownerUsername: "snirAshwal",
-        createdAt: "2022-10-11T12:00:00Z",
-      },
-      {
-        comment: "Wow, what a beautiful dog!",
-        ownerUsername: "snirAshwal",
-        createdAt: "2022-10-11T12:00:00Z",
-      },
-      {
-        comment: "Wow, what a beautiful dog!",
-        ownerUsername: "snirAshwal",
-        createdAt: "2022-10-11T12:00:00Z",
-      },
-    ]);
+  const getPostComments = async (postId: string) => {
+    await api
+      .get(globals.posts.comments + "/" + postId)
+      .then((response) => {
+        setComments(response.data);
+      })
+      .catch((error) => {
+        console.log("Failed to get post comments", error);
+      });
   };
 
   const showHeartOnPost = (element: HTMLElement) => {

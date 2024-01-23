@@ -3,32 +3,33 @@ import { BaseController } from "./base_controller";
 import { Response } from "express";
 import { AuthRequest } from "../common/auth_middleware";
 import CommentService from "../services/comment_service";
-import comment_model from "../models/comment_model";
 
 class CommentController extends BaseController<IComment> {
   constructor() {
     super(Comment);
   }
 
-  async getById(req: AuthRequest, res: Response) {
-    const userIdObject = CommentService.convertToIdObject(req.user._id);
+  async getPostComments(req: AuthRequest, res: Response) {
+    const postId = req.params.id;
+
+    if (!postId || postId === "")
+      return res.status(400).send("Post ID is required");
 
     try {
-      const commentObj = await Comment.find({ _id: userIdObject });
+      const postComments = await Comment.find({ postId })
+        .populate("ownerId", "username") // Populate the ownerId field with username
+        .sort({ createdAt: -1 }); // Sort comments by createdAt in descending order
 
-      const output = await Promise.all(
-        commentObj.map(async (comment) => {
-          const commentOwner = await CommentService.getOwnerObj(comment);
-          return {
-            ...comment.toObject(), // Convert Mongoose document to plain JavaScript objec
-            ownerUsername: commentOwner.username,
-          };
-        })
-      );
+      const formattedComments = postComments.map((comment) => ({
+        ownerUsername: (comment.ownerId as unknown as { username: string })
+          .username,
+        comment: comment.text,
+        createdAt: comment.createdAt,
+      }));
 
-      res.send(output);
+      res.status(200).json(formattedComments);
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500).json("Fail: " + err.message);
     }
   }
 
@@ -43,7 +44,7 @@ class CommentController extends BaseController<IComment> {
       return res.status(400).send("Post ID is required");
 
     try {
-      const newComment = await comment_model.create({
+      const newComment = await Comment.create({
         postId: postId,
         text: text,
         ownerId: ownerId,
