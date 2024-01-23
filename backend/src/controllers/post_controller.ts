@@ -4,6 +4,10 @@ import { Response } from "express";
 import { AuthResquest } from "../common/auth_middleware";
 import PostService from "../services/post_service";
 import post_model from "../models/post_model";
+import post_service from "../services/post_service";
+
+const FEED_PAGE_SIZE = 5;
+const PROFILE_FEED_PAGE_SIZE = 12;
 
 class PostController extends BaseController<IPost> {
   constructor() {
@@ -44,17 +48,51 @@ class PostController extends BaseController<IPost> {
     }
   }
 
-  async getTenLatestPosts(req: AuthResquest, res: Response) {
-    (req.body.query = {}), {}, { sort: { created_at: -1 }, limit: 10 };
-    //req.body.query = {ownerId: req.params.id};
+  async getFeedPosts(req: AuthResquest, res: Response) {
+    try {
+      const userIdObject = PostService.convertToIdObject(req.user._id);
+      let posts = [];
 
-    this.get(req, res);
+      const page = req.params.page ? parseInt(req.params.page) : 1;
+      const skip = page === 0 ? 0 : (page - 1) * FEED_PAGE_SIZE;
+
+      posts = await Post.find()
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(FEED_PAGE_SIZE);
+
+      const formattedPosts = await post_service.formatPosts(
+        posts,
+        userIdObject
+      );
+      res.status(200).send(formattedPosts);
+    } catch (err) {
+      console.log("Failed to get feed posts: " + err.message);
+      res.status(500).json({ message: err.message });
+    }
   }
 
-  async getAllByUser(req: AuthResquest, res: Response) {
-    req.body.query = { ownerId: req.params.id };
+  async getUserPosts(req: AuthResquest, res: Response) {
+    try {
+      const userIdObject = PostService.convertToIdObject(req.user._id);
+      let posts = [];
+      const page = req.params.page ? parseInt(req.params.page) : 1;
+      const skip = page === 0 ? 0 : (page - 1) * PROFILE_FEED_PAGE_SIZE;
 
-    this.get(req, res);
+      posts = await Post.find({ ownerId: userIdObject })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(PROFILE_FEED_PAGE_SIZE);
+
+      const formattedPosts = await post_service.formatPosts(
+        posts,
+        userIdObject
+      );
+      res.status(200).send(formattedPosts);
+    } catch (err) {
+      console.log("Failed to get user posts: " + err.message);
+      res.status(500).json({ message: err.message });
+    }
   }
 
   async createPost(req: AuthResquest, res: Response) {
