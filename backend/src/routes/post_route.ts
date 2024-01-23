@@ -55,9 +55,9 @@ router.put(
 );
 
 router.delete(
-  "/delete",
+  "/delete/:id",
   authMiddleware,
-  postController.deleteById.bind(postController)
+  postController.deletePostById.bind(postController)
 );
 
 export default router;

@@ -195,6 +195,7 @@ function Post({
       })
       .then(() => {
         // Update UI
+        // TODO: update posts in feed and profile when edit posts when showing comments
         setIsEditMode(false);
         setPostDescription(formData.description);
         setPostBreed(breedName);
@@ -205,15 +206,22 @@ function Post({
       });
   };
 
-  const deletePost = () => {
-    // TODO: write deletePost functionality
-
-    // Delete from UI
-    const postElement = document.getElementById("post-" + _id);
-    if (postElement) postElement.remove();
-    setShowDeletePostModal(false);
-    setShowPostDetails(false);
-    if (setRenderPosts) setRenderPosts((prevVal) => !prevVal);
+  const deletePost = async () => {
+    await api
+      .delete(globals.posts.delete + "/" + _id)
+      .then(() => {
+        // Delete from UI
+        // TODO: update posts in profile when delete post when showing comments
+        const postElement = document.getElementById("post-" + _id);
+        if (postElement) postElement.remove();
+        setShowDeletePostModal(false);
+        setShowPostDetails(false);
+        if (setRenderPosts) setRenderPosts((prevVal) => !prevVal);
+      })
+      .catch((error) => {
+        console.log("Failed to delete post: ", error);
+        toast.error(error.response.data);
+      });
   };
 
   const getPostComments = async (postId: string) => {

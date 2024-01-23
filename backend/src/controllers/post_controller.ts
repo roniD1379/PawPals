@@ -152,14 +152,23 @@ class PostController extends BaseController<IPost> {
     }
   }
 
-  async deleteById(req: AuthRequest, res: Response) {
-    try {
-      const postObj = await this.model.findById(req.body._id);
-      await this.model.deleteOne({ _id: postObj._id });
+  async deletePostById(req: AuthRequest, res: Response) {
+    const postId = req.params.id;
 
+    if (!postId || postId === "")
+      return res.status(400).send("Post ID is required");
+
+    try {
+      const postObj = await Post.findById(postId);
+      if (!postObj) return res.status(400).send("Post not found");
+      if (postObj.ownerId.toString() !== req.user._id)
+        return res.status(401).send("Unauthorized"); // You can not delete a post that is not yours
+
+      // Deleting the post and it's comments
+      await Post.deleteOne({ _id: postObj._id });
       PostService.deleteRelatedComments(postObj);
 
-      res.status(201).send(postObj);
+      res.status(200).send();
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
