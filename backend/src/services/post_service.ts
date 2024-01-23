@@ -34,11 +34,11 @@ class PostService {
   }
 
   async like(post: IPost, userId: mongo.ObjectId) {
-    if (this.getIsLikedByUser(post, userId)) {
-      throw new Error("already liked by user");
-    }
-
     try {
+      if (this.getIsLikedByUser(post, userId)) {
+        throw new Error("already liked by user");
+      }
+
       await post_model.findByIdAndUpdate(post._id, {
         $push: { likes: userId },
       });

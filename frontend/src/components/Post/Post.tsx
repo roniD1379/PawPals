@@ -17,6 +17,7 @@ import { getDogBreeds } from "../utils/Api";
 import FormInput from "../utils/FormInput/FormInput";
 import { globals } from "../utils/Globals";
 import api from "../utils/AxiosInterceptors";
+import toast from "react-hot-toast";
 
 export interface IPostProp {
   _id: string;
@@ -103,8 +104,8 @@ function Post({
     }
   };
 
-  const likePost = () => {
-    api
+  const likePost = async () => {
+    await api
       .put(globals.posts.like, { postId: _id })
       .then(() => {
         setPostNumOfLikes(postNumOfLikes + 1);
@@ -115,8 +116,8 @@ function Post({
       });
   };
 
-  const dislikePost = () => {
-    api
+  const dislikePost = async () => {
+    await api
       .put(globals.posts.dislike, { postId: _id })
       .then(() => {
         setPostNumOfLikes(postNumOfLikes - 1);
@@ -127,26 +128,37 @@ function Post({
       });
   };
 
-  const commentOnPost = (e: React.FormEvent) => {
+  const commentOnPost = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // TODO: write commentOnPost functionality
+    await api
+      .post(globals.posts.comment, { postId: _id, text: newComment })
+      .then((res) => {
+        setPostNumOfComments(postNumOfComments + 1);
 
-    setPostNumOfComments(postNumOfComments + 1);
+        if (isShowingDetails) {
+          const newComment = res.data.newComment;
+          const ownerUsername = res.data.ownerUsername;
+          console.log(res.data);
 
-    if (isShowingDetails) {
-      setComments([
-        {
-          comment: newComment,
-          ownerUsername: "snirAshwal",
-          createdAt: new Date().toISOString(),
-        },
-        ...comments,
-      ]);
-    }
+          setComments([
+            {
+              comment: newComment.text,
+              ownerUsername: ownerUsername,
+              createdAt: newComment.createdAt,
+            },
+            ...comments,
+          ]);
+        }
 
-    // Reset form
-    setNewComment("");
+        // Reset form
+        setNewComment("");
+      })
+      .catch((error) => {
+        console.log("Failed to comment on post: ", error);
+        toast.error(error.response.data);
+      });
   };
 
   const showAllComments = () => {
@@ -253,8 +265,9 @@ function Post({
           alt="post-img"
           onDoubleClick={(e) => {
             if (!isLiked) {
-              likePost();
-              showHeartOnPost(e.target as HTMLElement);
+              likePost().then(() => {
+                showHeartOnPost(e.target as HTMLElement);
+              });
             }
           }}
         />
@@ -297,7 +310,7 @@ function Post({
                 onClick={likePost}
               />
             )}
-            {numOfLikes > 0 && (
+            {postNumOfLikes > 0 && (
               <span className="post-likes">{postNumOfLikes} likes</span>
             )}
           </div>
@@ -379,7 +392,7 @@ function Post({
             })}
           </div>
         ) : (
-          numOfComments > 0 && (
+          postNumOfComments > 0 && (
             <span
               id={"post-" + _id + "-num-of-comments"}
               className="post-show-comments"

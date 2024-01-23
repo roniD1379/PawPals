@@ -132,7 +132,7 @@ class PostController extends BaseController<IPost> {
       const postObj = await Post.findById(req.body.postId);
       if (!postObj) return res.status(400).send("Post not found");
 
-      PostService.like(postObj, userId);
+      await PostService.like(postObj, userId);
       res.status(200).send();
     } catch (err) {
       res.status(500).json({ message: err.message });
@@ -145,7 +145,7 @@ class PostController extends BaseController<IPost> {
       const postObj = await Post.findById(req.body.postId);
       if (!postObj) return res.status(400).send("Post not found");
 
-      PostService.dislike(postObj, userId);
+      await PostService.dislike(postObj, userId);
       res.status(200).send();
     } catch (err) {
       res.status(500).json({ message: err.message });
