@@ -7,6 +7,7 @@ import FormUploadImage from "../utils/FormUploadImage/FormUploadImage";
 import { globals } from "../utils/Globals";
 import toast from "react-hot-toast";
 import api from "../utils/AxiosInterceptors";
+import defaultProfileImg from "../../assets/images/default_profile_img.png";
 
 interface RegistrationData {
   firstName: string;
@@ -73,6 +74,7 @@ function Register() {
           <FormUploadImage
             uploadedImageId="profile-img"
             setSelectedFile={setSelectedFile}
+            currentImage={defaultProfileImg}
           />
           <FormInput
             name="firstName"

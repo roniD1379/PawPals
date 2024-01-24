@@ -28,6 +28,7 @@ export const globals = {
   },
   users: {
     userDetails: BASE_URL + USER_CONTROLLER + "details",
+    edit: BASE_URL + USER_CONTROLLER + "edit",
   },
   files: BASE_URL + FILES,
 };
