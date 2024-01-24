@@ -49,7 +49,7 @@ function MainPage() {
   };
 
   const showFeed = () => {
-    setShowSection("nav-feed");
+    handleNavbarClick("nav-feed");
   };
 
   return (
