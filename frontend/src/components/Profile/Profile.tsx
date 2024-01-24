@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "./Profile.css";
-import { FaUser } from "react-icons/fa";
 import Post, { IPostProp } from "../Post/Post";
 import Modal from "../utils/Modal/Modal";
 import EditProfileModal from "./EditProfileModal/EditProfileModal";
@@ -15,6 +14,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { globals } from "../utils/Globals";
 import api from "../utils/AxiosInterceptors";
 import { ClipLoader } from "react-spinners";
+import defaultProfileImg from "../../assets/images/default_profile_img.png";
 
 function Profile() {
   const [username, setUsername] = useState("");
@@ -23,6 +23,7 @@ function Profile() {
   const [description, setDescription] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [posts, setPosts] = useState<IPostProp[][]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [showEditProfile, setShowEditProfile] = useState(false);
@@ -39,6 +40,7 @@ function Profile() {
         setDescription(response.data.description);
         setFirstName(response.data.firstName);
         setLastName(response.data.lastName);
+        setPhoneNumber(response.data.phoneNumber);
       })
       .catch((error) => {
         console.log("Failed to get user details from server: ", error);
@@ -114,17 +116,15 @@ function Profile() {
               </p>
             </div>
             <div className="profile-details-image-container">
-              {userImage === "" ? (
-                <div className="profile-img-default">
-                  <FaUser size={80} />
-                </div>
-              ) : (
-                <img
-                  className="profile-img"
-                  src={userImage === "" ? "#" : globals.files + userImage}
-                  alt="profile-image"
-                />
-              )}
+              <img
+                className="profile-img"
+                src={
+                  userImage === ""
+                    ? defaultProfileImg
+                    : globals.files + userImage
+                }
+                alt="profile-image"
+              />
               <button
                 type="submit"
                 className="btn btn-large profile-edit-btn"
@@ -182,7 +182,9 @@ function Profile() {
               lastName={lastName}
               description={description}
               profileImg={userImage}
+              phoneNumber={phoneNumber}
               setShowEditProfile={setShowEditProfile}
+              onEditSuccess={getUserDetails}
             />
           }
         />
