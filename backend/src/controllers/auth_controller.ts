@@ -100,7 +100,10 @@ const login = async (req: Request, res: Response) => {
       user.refreshTokens.push(refreshToken);
     }
 
-    await user.save();
+    await User.updateOne(
+      { _id: user._id },
+      { refreshTokens: user.refreshTokens }
+    );
 
     return res.status(200).send({
       accessToken: accessToken,
@@ -115,7 +118,7 @@ const login = async (req: Request, res: Response) => {
 const logout = async (req: Request, res: Response) => {
   const refreshToken = req.body.refreshToken;
   if (refreshToken == null) {
-    return res.sendStatus(401);
+    return res.status(401).send();
   }
 
   jwt.verify(
@@ -123,7 +126,7 @@ const logout = async (req: Request, res: Response) => {
     process.env.JWT_REFRESH_SECRET,
     async (err, user: { _id: ObjectId }) => {
       if (err) {
-        return res.sendStatus(401);
+        return res.status(401).send();
       }
 
       try {
@@ -135,17 +138,17 @@ const logout = async (req: Request, res: Response) => {
           userDb.refreshTokens = [];
           await userDb.save();
 
-          return res.sendStatus(401);
+          return res.status(401).send();
         } else {
           userDb.refreshTokens = userDb.refreshTokens.filter(
             (t) => t !== refreshToken
           );
           await userDb.save();
 
-          return res.sendStatus(200);
+          return res.status(200).send();
         }
       } catch (err) {
-        res.sendStatus(500).send(err.message);
+        return res.status(500).send(err.message);
       }
     }
   );
@@ -154,16 +157,14 @@ const logout = async (req: Request, res: Response) => {
 const refresh = async (req: Request, res: Response) => {
   const refreshToken = req.body.refreshToken;
   if (refreshToken == null) {
-    return res.sendStatus(401);
+    return res.status(401).send();
   }
 
   jwt.verify(
     refreshToken,
     process.env.JWT_REFRESH_SECRET,
     async (err, user: { _id: ObjectId }) => {
-      if (err) {
-        return res.sendStatus(401);
-      }
+      if (err) return res.status(401).send();
 
       try {
         const userDb = await User.findOne({ _id: user._id });
@@ -171,9 +172,13 @@ const refresh = async (req: Request, res: Response) => {
           !userDb.refreshTokens ||
           !userDb.refreshTokens.includes(refreshToken)
         ) {
+          console.log("Refresh token not found");
           userDb.refreshTokens = [];
-          await userDb.save();
-          return res.sendStatus(401);
+          await User.updateOne(
+            { _id: userDb._id },
+            { refreshTokens: userDb.refreshTokens }
+          );
+          return res.status(401).send();
         }
 
         const accessToken = jwt.sign(
@@ -185,18 +190,23 @@ const refresh = async (req: Request, res: Response) => {
           { _id: user._id },
           process.env.JWT_REFRESH_SECRET
         );
+
         userDb.refreshTokens = userDb.refreshTokens.filter(
           (t) => t !== refreshToken
         );
+
         userDb.refreshTokens.push(newRefreshToken);
-        await userDb.save();
+        await User.updateOne(
+          { _id: userDb._id },
+          { refreshTokens: userDb.refreshTokens }
+        );
 
         return res.status(200).send({
           accessToken: accessToken,
-          refreshToken: refreshToken,
+          refreshToken: newRefreshToken,
         });
       } catch (err) {
-        res.sendStatus(500).send(err.message);
+        return res.status(500).send(err.message);
       }
     }
   );
