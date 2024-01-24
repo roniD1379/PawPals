@@ -1,8 +1,6 @@
 import "./Feed.css";
 import Post, { IPostProp } from "../Post/Post";
-import Modal from "../utils/Modal/Modal";
 import { useEffect, useState } from "react";
-import PostContactDetails from "../PostContactDetails/PostContactDetails";
 import { PullToRefresh, PullDownContent } from "react-js-pull-to-refresh";
 import PullToRefreshLoader from "../utils/PullToRefreshLoader/PullToRefreshLoader";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -15,25 +13,6 @@ import api from "../utils/AxiosInterceptors";
 import { globals } from "../utils/Globals";
 
 function Feed() {
-  const [showPostDetails, setShowPostDetails] = useState(false);
-  const [showPostOwnerContactDetails, setShowPostOwnerContactDetails] =
-    useState(false);
-  const [post, setPost] = useState<IPostProp>({
-    _id: "0",
-    ownerId: 0,
-    ownerUsername: "",
-    img: "",
-    description: "",
-    isLikedByUser: false,
-    isPostOwner: false,
-    numOfLikes: 0,
-    numOfComments: 0,
-    breed: "",
-    breedId: 0,
-    createdAt: "",
-    ownerFirstName: "",
-    ownerPhoneNumber: "",
-  });
   const [posts, setPosts] = useState<IPostProp[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(0);
@@ -90,43 +69,10 @@ function Feed() {
           height={"calc(100vh - 155px)"}
         >
           {posts.map((post, i) => {
-            return (
-              <Post
-                key={i}
-                post={post}
-                setPost={setPost}
-                setShowPostDetails={setShowPostDetails}
-                setShowPostOwnerContactDetails={setShowPostOwnerContactDetails}
-              />
-            );
+            return <Post key={i} postDetails={post} />;
           })}
         </InfiniteScroll>
       </PullToRefresh>
-      {showPostDetails && (
-        <Modal
-          setIsOpen={setShowPostDetails}
-          component={
-            <Post
-              post={post}
-              setPost={setPost}
-              setShowPostDetails={setShowPostDetails}
-              setShowPostOwnerContactDetails={setShowPostOwnerContactDetails}
-              isShowingDetails={true}
-            />
-          }
-        />
-      )}
-      {showPostOwnerContactDetails && (
-        <Modal
-          setIsOpen={setShowPostOwnerContactDetails}
-          component={
-            <PostContactDetails
-              ownerFirstName={post.ownerFirstName}
-              ownerPhoneNumber={post.ownerPhoneNumber}
-            />
-          }
-        />
-      )}
     </div>
   );
 }

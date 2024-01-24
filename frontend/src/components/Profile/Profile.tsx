@@ -4,7 +4,6 @@ import { FaUser } from "react-icons/fa";
 import Post, { IPostProp } from "../Post/Post";
 import Modal from "../utils/Modal/Modal";
 import EditProfileModal from "./EditProfileModal/EditProfileModal";
-import PostContactDetails from "../PostContactDetails/PostContactDetails";
 import { PullToRefresh, PullDownContent } from "react-js-pull-to-refresh";
 import PullToRefreshLoader from "../utils/PullToRefreshLoader/PullToRefreshLoader";
 import {
@@ -26,27 +25,7 @@ function Profile() {
   const [lastName, setLastName] = useState("");
   const [posts, setPosts] = useState<IPostProp[][]>([]);
   const [hasMore, setHasMore] = useState(true);
-  const [showPostDetails, setShowPostDetails] = useState(false);
-  const [renderPosts, setRenderPosts] = useState(false);
-  const [showPostOwnerContactDetails, setShowPostOwnerContactDetails] =
-    useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
-  const [post, setPost] = useState<IPostProp>({
-    _id: "0",
-    ownerId: 0,
-    ownerUsername: "",
-    img: "",
-    description: "",
-    isLikedByUser: false,
-    isPostOwner: false,
-    numOfLikes: 0,
-    numOfComments: 0,
-    breed: "",
-    breedId: 0,
-    createdAt: "",
-    ownerFirstName: "",
-    ownerPhoneNumber: "",
-  });
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -113,7 +92,7 @@ function Profile() {
     getProfileData().then(() => {
       setLoading(false);
     });
-  }, [renderPosts]);
+  }, []);
 
   return (
     <div className="Profile">
@@ -180,15 +159,11 @@ function Profile() {
                 {posts.map((row, rowIndex) => (
                   <div key={rowIndex} className="profile-feed-post-img-row">
                     {row.map((post, columnIndex) => (
-                      <img
+                      <Post
                         key={columnIndex}
-                        src={globals.files + post.img}
-                        alt="post-image"
-                        className="profile-feed-post-img"
-                        onClick={() => {
-                          setPost(post);
-                          setShowPostDetails(true);
-                        }}
+                        postDetails={post}
+                        isProfilePage={true}
+                        onDeleteSuccess={onRefresh}
                       />
                     ))}
                   </div>
@@ -197,32 +172,6 @@ function Profile() {
             </PullToRefresh>
           </div>
         </>
-      )}
-      {showPostDetails && (
-        <Modal
-          setIsOpen={setShowPostDetails}
-          component={
-            <Post
-              post={post}
-              setPost={setPost}
-              setShowPostDetails={setShowPostDetails}
-              setShowPostOwnerContactDetails={setShowPostOwnerContactDetails}
-              setRenderPosts={setRenderPosts}
-              isShowingDetails={true}
-            />
-          }
-        />
-      )}
-      {showPostOwnerContactDetails && (
-        <Modal
-          setIsOpen={setShowPostOwnerContactDetails}
-          component={
-            <PostContactDetails
-              ownerFirstName={post.ownerFirstName}
-              ownerPhoneNumber={post.ownerPhoneNumber}
-            />
-          }
-        />
       )}
       {showEditProfile && (
         <Modal
