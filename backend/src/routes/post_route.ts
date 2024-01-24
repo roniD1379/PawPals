@@ -1,11 +1,10 @@
 import express from "express";
-const router = express.Router();
 import postController from "../controllers/post_controller";
 import authMiddleware from "../common/auth_middleware";
 import commentController from "../controllers/comment_controller";
 import { imageUploadMiddleware } from "../common/image_middleware";
 
-router.get("/all", authMiddleware, postController.get.bind(postController));
+const router = express.Router();
 
 router.get(
   "/allByUser/:page",
@@ -18,8 +17,6 @@ router.get(
   authMiddleware,
   postController.getFeedPosts.bind(postController)
 );
-
-router.get("/:id", authMiddleware, postController.getById.bind(postController));
 
 router.get(
   "/comments/:id",

@@ -28,6 +28,15 @@ class UserController extends BaseController<IUser> {
       res.status(500).json({ message: err.message });
     }
   }
+
+  async editUserDetails(req: AuthRequest, res: Response) {
+    // TODO: Write edit user details logic
+    try {
+      res.status(200).send();
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  }
 }
 
 export default new UserController();

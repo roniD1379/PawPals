@@ -14,40 +14,6 @@ class PostController extends BaseController<IPost> {
     super(Post);
   }
 
-  async get(req: AuthRequest, res: Response) {
-    const userIdObject = PostService.convertToIdObject(req.user._id);
-    let posts = null;
-
-    try {
-      if (req.body.query) {
-        posts = await Post.find(req.body.query).exec();
-      } else {
-        posts = await Post.find();
-      }
-
-      const output = await Promise.all(
-        posts.map(async (post) => {
-          const postOwner = await PostService.getOwnerObj(post);
-
-          return {
-            ...post.toObject(), // Convert Mongoose document to plain JavaScript object
-            ownerUsername: postOwner.username,
-            ownerFirstName: postOwner.firstname,
-            ownerPhoneNumber: postOwner.phoneNumber,
-            isLikedByUser: PostService.getIsLikedByUser(post, userIdObject),
-            isPostOwner: PostService.getIsPostOwner(post, userIdObject),
-            numOfLikes: PostService.getNumOfLikes(post),
-            numOfComments: PostService.getNumOfComments(post),
-          };
-        })
-      );
-
-      res.send(output);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
-  }
-
   async getFeedPosts(req: AuthRequest, res: Response) {
     try {
       const userIdObject = PostService.convertToIdObject(req.user._id);
