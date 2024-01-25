@@ -93,7 +93,11 @@ function EditProfileModal({
         <FormUploadImage
           uploadedImageId="edit-profile-img"
           currentImage={
-            profileImg === "" ? defaultProfileImg : globals.files + profileImg
+            profileImg === ""
+              ? defaultProfileImg
+              : profileImg.startsWith("https")
+              ? profileImg
+              : globals.files + profileImg
           }
           setSelectedFile={setSelectedFile}
         />

@@ -11,6 +11,7 @@ export const globals = {
     auth: BASE_URL + AUTH_CONTROLLER,
     register: BASE_URL + AUTH_CONTROLLER + "register",
     login: BASE_URL + AUTH_CONTROLLER + "login",
+    googleLogin: BASE_URL + AUTH_CONTROLLER + "googleLogin",
     refreshToken: BASE_URL + AUTH_CONTROLLER + "refresh",
     logout: BASE_URL + AUTH_CONTROLLER + "logout",
   },
