@@ -3,9 +3,12 @@ import User from "../models/user_model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongoose";
+import { OAuth2Client } from "google-auth-library";
+import user_service from "../services/user_service";
 
 const USERNAME_REGEX = /^[a-zA-Z0-9]{6,}$/;
 const PASSWORD_REGEX = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
+const client = new OAuth2Client();
 
 const register = async (req: Request, res: Response) => {
   let filename = "";
@@ -115,6 +118,65 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
+const googleLogin = async (req: Request, res: Response) => {
+  const { credential, client_id } = req.body;
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: client_id,
+    });
+    const payload = ticket.getPayload();
+    const email = payload.email;
+    const givenName = payload.given_name;
+    const familyName = payload.family_name;
+    const profileImage = payload.picture;
+    let username = email.split("@")[0];
+
+    let user = await User.findOne({ username: username });
+    if (!user) {
+      username = await user_service.generateUniqueUsername(email);
+      user = await User.create({
+        username: username,
+        firstname: givenName,
+        lastname: familyName,
+        description: "",
+        userImage: profileImage,
+        phoneNumber: "-",
+        password: "-",
+        authSource: "google",
+      });
+    }
+
+    // Create JWT
+    const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRATION,
+    });
+    const refreshToken = jwt.sign(
+      { _id: user._id },
+      process.env.JWT_REFRESH_SECRET
+    );
+
+    if (user.refreshTokens == null) {
+      user.refreshTokens = [refreshToken];
+    } else {
+      user.refreshTokens.push(refreshToken);
+    }
+
+    await User.updateOne(
+      { _id: user._id },
+      { refreshTokens: user.refreshTokens }
+    );
+
+    return res.status(200).send({
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    });
+  } catch (err) {
+    console.log("Google login error: " + err);
+    return res.status(500).send("Server error");
+  }
+};
+
 const logout = async (req: Request, res: Response) => {
   const refreshToken = req.body.refreshToken;
   if (refreshToken == null) {
@@ -215,6 +277,7 @@ const refresh = async (req: Request, res: Response) => {
 export default {
   register,
   login,
+  googleLogin,
   logout,
   refresh,
 };

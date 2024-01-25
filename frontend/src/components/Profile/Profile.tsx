@@ -121,6 +121,8 @@ function Profile() {
                 src={
                   userImage === ""
                     ? defaultProfileImg
+                    : userImage.startsWith("https") // For google authentication
+                    ? userImage
                     : globals.files + userImage
                 }
                 alt="profile-image"
