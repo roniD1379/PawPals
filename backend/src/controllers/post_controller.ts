@@ -76,7 +76,7 @@ class PostController extends BaseController<IPost> {
     if (!breedId) return res.status(400).send("Breed is required");
 
     try {
-      await post_model.create({
+      const post = await post_model.create({
         description: description,
         image: filename,
         breed: breed,
@@ -86,7 +86,7 @@ class PostController extends BaseController<IPost> {
       });
 
       console.log("Post created successfully");
-      res.status(201).send();
+      res.status(201).send(post);
     } catch (err) {
       res.status(500).send("Fail: " + err.message);
     }

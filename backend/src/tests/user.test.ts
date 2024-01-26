@@ -1,72 +1,90 @@
 import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
-import { Express } from "express";
 import User, { IUser } from "../models/user_model";
+import { Express } from "express";
 
 let app: Express;
 let accessToken: string;
-const user: IUser = {
-  username: "alonee",
-  password: "1234567890",
-  firstname: "alon",
-  lastname: "test",
-  phoneNumber: "050-0000000"
+const user = {
+  _id: null,
+  username: "alonRee",
+  password: "a1234567890",
+  firstName: "alon",
+  lastName: "test",
+  phoneNumber: "050-0000000",
 }
 
-const stu: IUser = {
-  username: "alony",
-  password: "1234567890",
-  firstname: "alon",
-  lastname: "test",
-  phoneNumber: "050-0000000"
+const user2: IUser= {
+  _id: null,
+  username: "alonMee",
+  password: "a1234567890",
+  firstName: "alon",
+  lastName: "test",
+  phoneNumber: "050-0000000",
 }
 
 beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
-  await User.deleteMany();
 
-  User.deleteMany({ 'username': user.username });
+  await User.deleteOne({username: user.username});
+  await User.deleteOne({username: user2.username});
   await request(app).post("/auth/register").send(user);
   const response = await request(app).post("/auth/login").send(user);
   accessToken = response.body.accessToken;
 });
 
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
 
-describe("user tests", () => {
+describe("User tests", () => {
 
-  const adduser = async (userrInp: IUser) => {
-    const response = await request(app).post("/user")
-      .set("Authorization", "JWT " + accessToken)
-      .send(userrInp);
-    expect(response.statusCode).toBe(201);
+
+  const addUser = async (user: IUser) => {
+      const response = await request(app)
+                              .post("/auth/register")
+                              .send(user);
+      expect(response.statusCode).toBe(201);
   };
 
-
-  test("Test Post user", async () => {
-    adduser(stu);
+  test("Test POST User", async () => {
+    addUser(user2);
   });
 
-  test("Test Post duplicate user", async () => {
-    const response = await request(app).post("/user").set("Authorization", "JWT " + accessToken).send(user);
+  test("Test POST Duplicate User", async () => {
+    const response = await request(app)
+                            .post("/auth/register")
+                            .send(user);
     expect(response.statusCode).toBe(406);
   });
 
-  // test("Test PUT /user/:id", async () => {
-  //   const updateduser = { ...user, name: "Jane Doe 33" };
-  //   const response = await request(app)
-  //     .put(`/user/${user._id}`)
-  //     .send(updateduser);
-  //   expect(response.statusCode).toBe(200);
-  //   expect(response.body.name).toBe(updateduser.name);
-  // });
+  test("Test GET User", async () => {
+    const response = await request(app)
+                            .get("/user/details")
+                            .set("Authorization", "JWT " + accessToken);
+    expect(response.statusCode).toBe(200);
+    const userObj = response.body;
+    expect(userObj.username).toBe(user.username);
+  });
 
-  // test("Test DELETE /user/:id", async () => {
-  //   const response = await request(app).delete(`/user/${user._id}`);
-  //   expect(response.statusCode).toBe(200);
-  // });
+  test("Test PUT User", async () => {
+    const updatedUser = { ...user, firstName: "Boni" };
+    const response = await request(app)
+                            .put("/user/edit")
+                            .set("Authorization", "JWT " + accessToken)
+                            .send(updatedUser);
+    expect(response.statusCode).toBe(200);
+    expect(response.body.firstName).toBe(updatedUser.firstName);
+  });
+
+  test("Test DELETE User", async () => {
+    const response = await request(app)
+                            .delete("/user/delete/")
+                            .set("Authorization", "JWT " + accessToken);
+    expect(response.statusCode).toBe(200);
+  });
+
 });

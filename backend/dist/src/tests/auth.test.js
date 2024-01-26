@@ -18,16 +18,16 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
 const user = {
-    username: "alonr",
-    password: "1234567890",
-    firstname: "alon",
-    lastname: "test",
-    phoneNumber: "050-0000000"
+    username: "alonCee",
+    password: "a1234567890",
+    firstName: "alon",
+    lastName: "test",
+    phoneNumber: "050-0000000",
 };
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
-    yield user_model_1.default.deleteMany({ 'username': user.username });
+    yield user_model_1.default.deleteOne({ username: user.username });
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
@@ -42,7 +42,7 @@ describe("Auth tests", () => {
             .send(user);
         expect(response.statusCode).toBe(201);
     }));
-    test("Test Register exist email", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test Register exist username", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/auth/register")
             .send(user);
@@ -51,7 +51,7 @@ describe("Auth tests", () => {
     test("Test Register missing password", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/auth/register").send({
-            username: "alonl",
+            username: "alonMee",
         });
         expect(response.statusCode).toBe(400);
     }));
@@ -64,18 +64,18 @@ describe("Auth tests", () => {
         expect(accessToken).toBeDefined();
     }));
     test("Test forbidden access without token", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/user");
+        const response = yield (0, supertest_1.default)(app).get("/user/details");
         expect(response.statusCode).toBe(401);
     }));
     test("Test access with valid token", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
-            .get("/user")
+            .get("/user/details")
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(200);
     }));
     test("Test access with invalid token", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
-            .get("/user")
+            .get("/user/details")
             .set("Authorization", "JWT 1" + accessToken);
         expect(response.statusCode).toBe(401);
     }));
@@ -83,7 +83,7 @@ describe("Auth tests", () => {
     test("Test access after timeout of token", () => __awaiter(void 0, void 0, void 0, function* () {
         yield new Promise(resolve => setTimeout(() => resolve("done"), 5000));
         const response = yield (0, supertest_1.default)(app)
-            .get("/user")
+            .get("/user/details")
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).not.toBe(200);
     }));
@@ -92,13 +92,14 @@ describe("Auth tests", () => {
             .get("/auth/refresh")
             .set("Authorization", "JWT " + refreshToken)
             .send();
+        console.log(response);
         expect(response.statusCode).toBe(200);
         expect(response.body.accessToken).toBeDefined();
         expect(response.body.refreshToken).toBeDefined();
         const newAccessToken = response.body.accessToken;
         newRefreshToken = response.body.refreshToken;
         const response2 = yield (0, supertest_1.default)(app)
-            .get("/user")
+            .get("/user/details")
             .set("Authorization", "JWT " + newAccessToken);
         expect(response2.statusCode).toBe(200);
     }));

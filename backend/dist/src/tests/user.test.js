@@ -19,24 +19,26 @@ const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
 let accessToken;
 const user = {
-    username: "alonee",
-    password: "1234567890",
-    firstname: "alon",
-    lastname: "test",
-    phoneNumber: "050-0000000"
+    _id: null,
+    username: "alonRee",
+    password: "a1234567890",
+    firstName: "alon",
+    lastName: "test",
+    phoneNumber: "050-0000000",
 };
-const stu = {
-    username: "alony",
-    password: "1234567890",
-    firstname: "alon",
-    lastname: "test",
-    phoneNumber: "050-0000000"
+const user2 = {
+    _id: null,
+    username: "alonMee",
+    password: "a1234567890",
+    firstName: "alon",
+    lastName: "test",
+    phoneNumber: "050-0000000",
 };
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
-    yield user_model_1.default.deleteMany();
-    user_model_1.default.deleteMany({ 'username': user.username });
+    yield user_model_1.default.deleteOne({ username: user.username });
+    yield user_model_1.default.deleteOne({ username: user2.username });
     yield (0, supertest_1.default)(app).post("/auth/register").send(user);
     const response = yield (0, supertest_1.default)(app).post("/auth/login").send(user);
     accessToken = response.body.accessToken;
@@ -44,31 +46,44 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
-describe("user tests", () => {
-    const adduser = (userrInp) => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/user")
-            .set("Authorization", "JWT " + accessToken)
-            .send(userrInp);
+describe("User tests", () => {
+    const addUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register")
+            .send(user);
         expect(response.statusCode).toBe(201);
     });
-    test("Test Post user", () => __awaiter(void 0, void 0, void 0, function* () {
-        adduser(stu);
+    test("Test POST User", () => __awaiter(void 0, void 0, void 0, function* () {
+        addUser(user2);
     }));
-    test("Test Post duplicate user", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/user").set("Authorization", "JWT " + accessToken).send(user);
+    test("Test POST Duplicate User", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register")
+            .send(user);
         expect(response.statusCode).toBe(406);
     }));
-    // test("Test PUT /user/:id", async () => {
-    //   const updateduser = { ...user, name: "Jane Doe 33" };
-    //   const response = await request(app)
-    //     .put(`/user/${user._id}`)
-    //     .send(updateduser);
-    //   expect(response.statusCode).toBe(200);
-    //   expect(response.body.name).toBe(updateduser.name);
-    // });
-    // test("Test DELETE /user/:id", async () => {
-    //   const response = await request(app).delete(`/user/${user._id}`);
-    //   expect(response.statusCode).toBe(200);
-    // });
+    test("Test GET User", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .get("/user/details")
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toBe(200);
+        const userObj = response.body;
+        expect(userObj.username).toBe(user.username);
+    }));
+    test("Test PUT User", () => __awaiter(void 0, void 0, void 0, function* () {
+        const updatedUser = Object.assign(Object.assign({}, user), { firstName: "Boni" });
+        const response = yield (0, supertest_1.default)(app)
+            .put("/user/edit")
+            .set("Authorization", "JWT " + accessToken)
+            .send(updatedUser);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.firstName).toBe(updatedUser.firstName);
+    }));
+    test("Test DELETE User", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .delete("/user/delete")
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toBe(200);
+    }));
 });
 //# sourceMappingURL=user.test.js.map

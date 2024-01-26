@@ -1,10 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = __importDefault(require("mongoose"));
-const userSchema = new mongoose_1.default.Schema({
+const mongoose_1 = require("mongoose");
+const userSchema = new mongoose_1.Schema({
     username: {
         type: String,
         required: true,
@@ -13,13 +10,21 @@ const userSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
-    firstname: {
+    firstName: {
         type: String,
         required: true,
     },
-    lastname: {
+    lastName: {
         type: String,
         required: true,
+    },
+    userImage: {
+        type: String,
+        required: false,
+    },
+    description: {
+        type: String,
+        required: false,
     },
     phoneNumber: {
         type: String,
@@ -29,6 +34,11 @@ const userSchema = new mongoose_1.default.Schema({
         type: [String],
         required: false,
     },
+    authSource: {
+        type: String,
+        enum: ["self", "google"],
+        default: "self",
+    },
 });
-exports.default = mongoose_1.default.model("User", userSchema, "Users");
+exports.default = (0, mongoose_1.model)("User", userSchema, "Users");
 //# sourceMappingURL=user_model.js.map

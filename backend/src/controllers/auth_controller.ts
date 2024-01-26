@@ -55,8 +55,8 @@ const register = async (req: Request, res: Response) => {
     const newUser = await User.create({
       username: username,
       password: encryptedPassword,
-      firstname: firstName,
-      lastname: lastName,
+      firstName: firstName,
+      lastName: lastName,
       userImage: userImage,
       description: description,
       phoneNumber: phoneNumber,
@@ -137,8 +137,8 @@ const googleLogin = async (req: Request, res: Response) => {
       username = await user_service.generateUniqueUsername(email);
       user = await User.create({
         username: username,
-        firstname: givenName,
-        lastname: familyName,
+        firstName: givenName,
+        lastName: familyName,
         description: "",
         userImage: profileImage,
         phoneNumber: "-",
@@ -221,6 +221,8 @@ const refresh = async (req: Request, res: Response) => {
   if (refreshToken == null) {
     return res.status(401).send();
   }
+
+  console.log("got into");
 
   jwt.verify(
     refreshToken,

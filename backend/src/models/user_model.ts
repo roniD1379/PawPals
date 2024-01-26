@@ -4,8 +4,8 @@ export interface IUser {
   _id: mongo.ObjectId;
   username: string;
   password: string;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   userImage?: string;
   description?: string;
   phoneNumber: string;
@@ -22,11 +22,11 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: true,
   },
-  firstname: {
+  firstName: {
     type: String,
     required: true,
   },
-  lastname: {
+  lastName: {
     type: String,
     required: true,
   },

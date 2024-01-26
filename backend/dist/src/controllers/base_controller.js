@@ -16,10 +16,9 @@ class BaseController {
     }
     get(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("get all");
             try {
-                if (req.query.name) {
-                    const obj = yield this.model.find({ name: req.query.name });
+                if (req.body.query) {
+                    const obj = yield this.model.find((req.body.query)).exec();
                     res.send(obj);
                 }
                 else {
@@ -34,9 +33,8 @@ class BaseController {
     }
     getById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("get by id:" + req.params.id);
             try {
-                const obj = yield this.model.findById(req.params.id);
+                const obj = yield this.model.findById(req.body._id);
                 res.send(obj);
             }
             catch (err) {
@@ -46,28 +44,36 @@ class BaseController {
     }
     post(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("post:" + req.body);
             try {
-                const findUsername = yield this.model.findOne({ 'username': req.body.username });
-                console.log("adsdasdfcsfccfs  " + findUsername);
-                if (findUsername != null) {
-                    throw "Username exists";
-                }
                 const obj = yield this.model.create(req.body);
                 res.status(201).send(obj);
             }
             catch (err) {
-                console.log("got intoooooooooooooooooo");
-                console.log(err);
                 res.status(406).send("fail: " + err.message);
             }
         });
     }
     putById(req, res) {
-        res.send("put by id: " + req.params.id);
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const obj = yield this.model.findByIdAndUpdate(req.body._id, req.body, { new: true });
+                res.status(201).send(obj);
+            }
+            catch (err) {
+                res.status(406).send("fail: " + err.message);
+            }
+        });
     }
     deleteById(req, res) {
-        res.send("delete user by id: " + req.params.id);
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const obj = yield this.model.findByIdAndDelete(req.body._id);
+                res.status(201).send(obj);
+            }
+            catch (err) {
+                res.status(406).send("fail: " + err.message);
+            }
+        });
     }
 }
 exports.BaseController = BaseController;

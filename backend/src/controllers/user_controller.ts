@@ -19,8 +19,8 @@ class UserController extends BaseController<IUser> {
         numOfPosts: numOfPosts,
         userImage: user.userImage,
         description: user.description,
-        firstName: user.firstname,
-        lastName: user.lastname,
+        firstName: user.firstName,
+        lastName: user.lastName,
         phoneNumber: user.phoneNumber,
       };
 
@@ -46,21 +46,36 @@ class UserController extends BaseController<IUser> {
       if (!lastName) return res.status(400).send("Last name is required");
       if (!phoneNumber) return res.status(400).send("Phone number is required");
 
-      const user = await User.findById(userId);
+      let user = await User.findById(userId);
       if (!user) return res.status(400).send("User not found");
 
-      await User.findByIdAndUpdate(userId, {
-        firstname: firstName,
-        lastname: lastName,
+      user = await User.findByIdAndUpdate(userId, {
+        firstName: firstName,
+        lastName: lastName,
         userImage: userImage === "" ? user.userImage : userImage,
         phoneNumber: phoneNumber,
         description: description,
-      });
+      }, {new: true});
 
       console.log("Edited user details successfully");
-      res.status(200).send();
+      res.status(200).send(user);
     } catch (err) {
       console.log("Failed to edit user details: " + err.message);
+      res.status(500).json({ message: err.message });
+    }
+  }
+
+  async deleteUser(req: AuthRequest, res: Response) {
+    const userId = req.user._id;
+
+    try {
+      const userObj = await User.findById(userId);
+      if (!userObj) return res.status(400).send("user not found");
+  
+      await User.deleteOne({ _id: userObj._id });
+
+      res.status(200).send();
+    } catch (err) {
       res.status(500).json({ message: err.message });
     }
   }
