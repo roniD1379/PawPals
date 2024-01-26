@@ -17,7 +17,7 @@ const user = {
 
 const user2: IUser= {
   _id: null,
-  username: "alonMee",
+  username: "alonPee",
   password: "a1234567890",
   firstName: "alon",
   lastName: "test",
