@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { globals } from "../utils/Globals";
 import { clearTokens, setTokens } from "../utils/AuthUtils";
 import api from "../utils/AxiosInterceptors";
+import GoogleAuth from "./GoogleAuth";
 
 interface LoginData {
   username: string;
@@ -83,6 +84,7 @@ function Login() {
             Sign In
           </button>
         </form>
+        <GoogleAuth />
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
-//import https from 'https';
+// import https from 'https';
 const http_1 = __importDefault(require("http"));
 //import fs from 'fs';
 (0, app_1.default)().then((app) => {

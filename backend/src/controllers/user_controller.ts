@@ -19,8 +19,9 @@ class UserController extends BaseController<IUser> {
         numOfPosts: numOfPosts,
         userImage: user.userImage,
         description: user.description,
-        firstName: user.firstname,
-        lastName: user.lastname,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phoneNumber: user.phoneNumber,
       };
 
       res.status(200).send(userDetails);
@@ -30,8 +31,49 @@ class UserController extends BaseController<IUser> {
   }
 
   async editUserDetails(req: AuthRequest, res: Response) {
-    // TODO: Write edit user details logic
     try {
+      let filename = "";
+      if (req.file) filename = (req.file as Express.Multer.File).filename;
+
+      const userId = req.user._id;
+      const firstName = req.body.firstName;
+      const lastName = req.body.lastName;
+      const userImage = filename ? filename : "";
+      const phoneNumber = req.body.phoneNumber;
+      const description = req.body.description;
+
+      if (!firstName) return res.status(400).send("First name is required");
+      if (!lastName) return res.status(400).send("Last name is required");
+      if (!phoneNumber) return res.status(400).send("Phone number is required");
+
+      let user = await User.findById(userId);
+      if (!user) return res.status(400).send("User not found");
+
+      user = await User.findByIdAndUpdate(userId, {
+        firstName: firstName,
+        lastName: lastName,
+        userImage: userImage === "" ? user.userImage : userImage,
+        phoneNumber: phoneNumber,
+        description: description,
+      }, {new: true});
+
+      console.log("Edited user details successfully");
+      res.status(200).send(user);
+    } catch (err) {
+      console.log("Failed to edit user details: " + err.message);
+      res.status(500).json({ message: err.message });
+    }
+  }
+
+  async deleteUser(req: AuthRequest, res: Response) {
+    const userId = req.user._id;
+
+    try {
+      const userObj = await User.findById(userId);
+      if (!userObj) return res.status(400).send("user not found");
+  
+      await User.deleteOne({ _id: userObj._id });
+
       res.status(200).send();
     } catch (err) {
       res.status(500).json({ message: err.message });

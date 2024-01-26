@@ -14,14 +14,24 @@ const postSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
-    userIdOwner: {
+    breedId: {
+        type: Number,
+        required: true,
+    },
+    ownerId: {
         type: mongoose_1.Schema.Types.ObjectId,
+        ref: "User",
         required: true,
     },
     likes: {
-        type: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'User' }],
+        type: [
+            {
+                type: mongoose_1.Schema.Types.ObjectId,
+                ref: "User",
+            },
+        ],
         required: true,
     },
-});
+}, { timestamps: true });
 exports.default = (0, mongoose_1.model)("Post", postSchema, "Posts");
 //# sourceMappingURL=post_model.js.map

@@ -73,7 +73,7 @@ class PostService {
       ownerId: post.ownerId,
       createdAt: post.createdAt,
       ownerUsername: postOwner.username,
-      ownerFirstName: postOwner.firstname,
+      ownerFirstName: postOwner.firstName,
       ownerPhoneNumber: postOwner.phoneNumber,
       isLikedByUser: this.getIsLikedByUser(post, userIdObject),
       isPostOwner: this.getIsPostOwner(post, userIdObject),

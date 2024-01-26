@@ -17,4 +17,10 @@ router.put(
   userController.editUserDetails.bind(userController)
 );
 
+router.delete(
+  "/delete",
+  authMiddleware,
+  userController.deleteUser.bind(userController)
+);
+
 export default router;

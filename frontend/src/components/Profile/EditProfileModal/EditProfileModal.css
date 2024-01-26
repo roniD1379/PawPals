@@ -1,5 +1,6 @@
 .EditProfileModal {
   width: 320px;
+  position: relative;
 }
 
 .register-form {
@@ -11,4 +12,11 @@
 
 .update-profile-btn {
   margin-top: 1em;
+}
+
+.edit-profile-details-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
