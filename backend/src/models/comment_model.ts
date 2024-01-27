@@ -1,12 +1,12 @@
 import { Schema, model, mongo } from "mongoose";
 
 export interface IComment {
-  _id: mongo.ObjectId;
+  _id?: mongo.ObjectId;
   postId: mongo.ObjectId;
   text: string;
   ownerId: mongo.ObjectId;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const comment = new Schema<IComment>(

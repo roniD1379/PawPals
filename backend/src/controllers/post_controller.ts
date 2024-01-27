@@ -62,12 +62,13 @@ class PostController extends BaseController<IPost> {
   }
 
   async createPost(req: AuthRequest, res: Response) {
-    const filename = (req.file as Express.Multer.File).filename;
+    let filename = "";
+    if (req.file) filename = (req.file as Express.Multer.File).filename;
     const description = req.body.description;
     const breed = req.body.breed;
     const breedId = req.body.breedId;
 
-    if (!filename || filename === "")
+    if (!filename || filename === "" || filename === null)
       return res.status(400).send("Image is required");
     if (!description || description === "")
       return res.status(400).send("Description is required");
@@ -86,7 +87,7 @@ class PostController extends BaseController<IPost> {
       });
 
       console.log("Post created successfully");
-      res.status(201).send(post);
+      return res.status(201).send(post);
     } catch (err) {
       res.status(500).send("Fail: " + err.message);
     }
@@ -165,7 +166,7 @@ class PostController extends BaseController<IPost> {
 
       if (!updatedPost) return res.status(400).send("Post not found");
 
-      res.status(200).send();
+      res.status(200).send(updatedPost);
     } catch (err) {
       res.status(500).json({ message: err.message });
     }

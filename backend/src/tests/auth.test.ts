@@ -2,10 +2,10 @@ import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
 import { Express } from "express";
-import User from "../models/user_model";
+import User, { IUser } from "../models/user_model";
 
 let app: Express;
-const user = {
+const user : IUser = {
   username: "alonCee",
   password: "a1234567890",
   firstName: "alon",
@@ -92,9 +92,8 @@ describe("Auth tests", () => {
 
   test("Test refresh token", async () => {
     const response = await request(app)
-      .get("/auth/refresh")
-      .set("Authorization", "JWT " + refreshToken)
-      .send();
+      .post("/auth/refresh")
+      .send({refreshToken: refreshToken});
     console.log(response);
     expect(response.statusCode).toBe(200);
     expect(response.body.accessToken).toBeDefined();

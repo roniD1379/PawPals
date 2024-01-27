@@ -1,7 +1,7 @@
 import { Schema, model, mongo } from "mongoose";
 
 export interface IUser {
-  _id: mongo.ObjectId;
+  _id?: mongo.ObjectId;
   username: string;
   password: string;
   firstName: string;

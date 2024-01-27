@@ -19,7 +19,6 @@ const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
 let accessToken;
 const user = {
-    _id: null,
     username: "alonRee",
     password: "a1234567890",
     firstName: "alon",
@@ -27,8 +26,7 @@ const user = {
     phoneNumber: "050-0000000",
 };
 const user2 = {
-    _id: null,
-    username: "alonMee",
+    username: "alonPee",
     password: "a1234567890",
     firstName: "alon",
     lastName: "test",
@@ -54,7 +52,7 @@ describe("User tests", () => {
         expect(response.statusCode).toBe(201);
     });
     test("Test POST User", () => __awaiter(void 0, void 0, void 0, function* () {
-        addUser(user2);
+        yield addUser(user2);
     }));
     test("Test POST Duplicate User", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
@@ -81,7 +79,7 @@ describe("User tests", () => {
     }));
     test("Test DELETE User", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
-            .delete("/user/delete")
+            .delete("/user/delete/")
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(200);
     }));

@@ -7,7 +7,6 @@ import { Express } from "express";
 let app: Express;
 let accessToken: string;
 const user = {
-  _id: null,
   username: "alonRee",
   password: "a1234567890",
   firstName: "alon",
@@ -16,7 +15,6 @@ const user = {
 }
 
 const user2: IUser= {
-  _id: null,
   username: "alonPee",
   password: "a1234567890",
   firstName: "alon",
@@ -51,7 +49,7 @@ describe("User tests", () => {
   };
 
   test("Test POST User", async () => {
-    addUser(user2);
+    await addUser(user2);
   });
 
   test("Test POST Duplicate User", async () => {
