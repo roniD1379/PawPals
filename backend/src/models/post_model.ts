@@ -1,15 +1,15 @@
 import { Schema, model, mongo } from "mongoose";
 
 export interface IPost {
-  _id: mongo.ObjectId;
+  _id?: mongo.ObjectId;
   description: string;
-  image?: string;
+  image: string;
   breed: string;
   breedId: number;
   ownerId: mongo.ObjectId;
-  likes: Array<mongo.ObjectId>;
-  createdAt: Date;
-  updatedAt: Date;
+  likes?: Array<mongo.ObjectId>;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const postSchema = new Schema<IPost>(

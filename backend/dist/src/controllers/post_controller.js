@@ -65,11 +65,13 @@ class PostController extends base_controller_1.BaseController {
     }
     createPost(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const filename = req.file.filename;
+            let filename = "";
+            if (req.file)
+                filename = req.file.filename;
             const description = req.body.description;
             const breed = req.body.breed;
             const breedId = req.body.breedId;
-            if (!filename || filename === "")
+            if (!filename || filename === "" || filename === null)
                 return res.status(400).send("Image is required");
             if (!description || description === "")
                 return res.status(400).send("Description is required");
@@ -87,7 +89,7 @@ class PostController extends base_controller_1.BaseController {
                     likes: [],
                 });
                 console.log("Post created successfully");
-                res.status(201).send(post);
+                return res.status(201).send(post);
             }
             catch (err) {
                 res.status(500).send("Fail: " + err.message);

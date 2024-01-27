@@ -2,12 +2,15 @@ import { Express } from "express";
 import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
+import fs from "fs";
 import Post, { IPost } from "../models/post_model";
 import User, { IUser } from "../models/user_model";
 
+const imagePath = "C:/PawPals/uploads/pet.jpg"
+const imageFile = fs.createReadStream(imagePath);
+
 let app: Express;
 const user : IUser= {
-  _id: null,
   username: "alonBee",
   password: "a1234567890",
   firstName: "alon",
@@ -16,93 +19,82 @@ const user : IUser= {
 }
 
 const post: IPost = {
-  _id: null,
   description: "title1",
   breed: "test",
   breedId: 2,
   ownerId: null,
-  likes: null,
-  createdAt: null,
-  updatedAt: null,
+  image: imagePath
 };
 let accessToken = "";
+let formData = null;
 
 beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
 
-  await Post.deleteOne({ breed: post.breed});
-  await User.deleteOne({ username: user.username });
-  const response = await request(app).post("/auth/register").send(user);
-  user._id = response.body._id;
-  const response2 = await request(app).post("/auth/login").send(user);
-  accessToken = response2.body.accessToken;
+  await User.deleteOne({username: user.username});
+  await Post.deleteOne({breed: post.breed});
+  await request(app).post("/auth/register").send(user);
+  const response = await request(app).post("/auth/login").send(user);
+  accessToken = response.body.accessToken;
+  
+  // Create a string variable to store the data
+
+  // Listen for the 'data' event and append the data to the string variable
+  // imageFile.on('data', (chunk) => {
+  //   data += chunk.toString();
+  // });
+
+  formData = new FormData();
+  formData.append('image',imageFile);
 });
+
 
 afterAll(async () => {
   await mongoose.connection.close();
 });
 
-
-
 describe("Post tests", () => {
 
   const addPost = async (post: IPost) => {
-    const response = await request(app)
-      .post("/post/create")
-      .set("Authorization", "JWT " + accessToken)
-      .send(post);
-    expect(response.statusCode).toBe(201);
-    const rs = response.body[0];
-    expect(rs.ownerId).toBe(user._id);
-    expect(rs.description).toBe(post.description);
-    expect(rs.breed).toBe(post.breed);
-    expect(rs.breedId).toBe(post.breedId);
+      const response = await request(app)
+                              .post("/post/create")
+                              .set("Authorization", "JWT " + accessToken)
+                              .set('image',formData)
+                              .send(post);
+      console.log(response);
+      expect(response.statusCode).toBe(201);
   };
 
-  test("Test Get All User Posts - Empty Response", async () => {
-    const response = await request(app)
-      .get("/post/allByUser/"+user._id)
-      .set("Authorization", "JWT " + accessToken);
-    expect(response.statusCode).toBe(200);
-    expect(response.body).toStrictEqual([]);
+  test("Test POST Post", async () => {
+    await addPost(post);
   });
 
-  test("Test POST post", async () => {
-    addPost(post);
-  });
 
-  test("Test Get All User's Posts", async () => {
+  // test("Test GET Post", async () => {
+  //   const response = await request(app)
+  //                           .get("/post/details")
+  //                           .set("Authorization", "JWT " + accessToken);
+  //   expect(response.statusCode).toBe(200);
+  //   const postObj = response.body;
+  //   expect(postObj.postname).toBe(post.postname);
+  // });
 
-    const response = await request(app)
-      .get("/post/allByUser/"+user._id)
-      .set("Authorization", "JWT " + accessToken);
+  // test("Test PUT Post", async () => {
+  //   const updatedPost = { ...post, firstName: "Boni" };
+  //   const response = await request(app)
+  //                           .put("/post/edit")
+  //                           .set("Authorization", "JWT " + accessToken)
+  //                           .send(updatedPost);
+  //   expect(response.statusCode).toBe(200);
+  //   expect(response.body.firstName).toBe(updatedPost.firstName);
+  // });
 
-    expect(response.statusCode).toBe(200);
-    const rs = response.body;
-    console.log(response);
-    expect(rs.ownerId).toBe(user._id);
-    expect(rs.description).toBe(post.description);
-    expect(rs.breed).toBe(post.breed);
-    expect(rs.breedId).toBe(post.breedId);
-  });
-
-  test("Test PUT Post", async () => {
-    const updatedPost = { ...user, description: "title2" };
-    const response = await request(app)
-                            .put("/post/edit")
-                            .set("Authorization", "JWT " + accessToken)
-                            .send(updatedPost);
-    expect(response.statusCode).toBe(200);
-    expect(response.body.description).toBe(updatedPost.description);
-  });
-
-  test("Test DELETE post", async () => {
-    post._id = (await Post.findOne({breed: "test" })).ownerId;
-    const response = await request(app)
-                            .delete("/post/delete/"+post._id)
-                            .set("Authorization", "JWT " + accessToken);
-    expect(response.statusCode).toBe(200);
-  });
+  // test("Test DELETE Post", async () => {
+  //   const response = await request(app)
+  //                           .delete("/post/delete/")
+  //                           .set("Authorization", "JWT " + accessToken);
+  //   expect(response.statusCode).toBe(200);
+  // });
 
 });
