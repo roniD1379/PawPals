@@ -8,6 +8,10 @@ body,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
+#root {
+  min-width: 350px;
+}
+
 /* For google auth */
 #g_a11y_announcement {
   display: none;

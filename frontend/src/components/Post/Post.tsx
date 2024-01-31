@@ -2,6 +2,7 @@ import {
   FaHeart,
   FaInfoCircle,
   FaPaperPlane,
+  FaPaw,
   FaPhone,
   FaRegHeart,
   FaTrash,
@@ -60,7 +61,7 @@ function Post({
   onDeleteSuccess,
 }: IProps) {
   const [post, setPost] = useState<IPostProp>(postDetails);
-
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [showPostDetails, setShowPostDetails] = useState(false);
   const [showPostOwnerContactDetails, setShowPostOwnerContactDetails] =
     useState(false);
@@ -254,17 +255,30 @@ function Post({
     if (isShowingDetails) {
       getPostComments(post._id);
     }
+
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   return (
     <>
       {isProfilePage ? (
-        <img
-          src={globals.files + post.img}
-          alt="post-image"
-          className="profile-feed-post-img"
-          onClick={showAllComments}
-        />
+        <div className="profile-feed-post-img-size-warper">
+          <div className="profile-feed-post-img-warper">
+            <img
+              src={globals.files + post.img}
+              alt="post-image"
+              className="profile-feed-post-img"
+              onClick={showAllComments}
+            />
+          </div>
+        </div>
       ) : (
         <div
           id={"post-" + post._id}
@@ -359,7 +373,10 @@ function Post({
                 </span>
                 {isEditMode ? (
                   <span className="post-breed-edit-select">
-                    <div className="form-select" style={{ width: "180px" }}>
+                    <div
+                      className="form-select"
+                      style={{ width: "180px", marginTop: "0" }}
+                    >
                       <select
                         id={"post-" + post._id + "-edit-breed-select"}
                         value={post.breedId}
@@ -381,8 +398,10 @@ function Post({
                       </select>
                     </div>
                   </span>
-                ) : (
+                ) : windowWidth > 600 ? (
                   <span className="post-breed">{post.breed}</span>
+                ) : (
+                  <FaPaw size={18} title={post.breed} />
                 )}
               </div>
             </div>
@@ -484,6 +503,7 @@ function Post({
               onDeleteSuccess={onDeleteSuccess}
             />
           }
+          style={{ width: "80%", maxWidth: "850px" }}
         />
       )}
       {showPostOwnerContactDetails && (

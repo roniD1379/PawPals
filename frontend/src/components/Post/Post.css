@@ -10,12 +10,16 @@
 }
 
 .modal .Post {
-  max-height: 650px;
+  max-height: 700px;
+  margin: 0em auto;
 }
 
 .post-img {
   width: 100%;
   border-radius: 20px;
+  object-fit: scale-down;
+  height: 450px;
+  background-color: black;
 }
 
 .post-img-container {

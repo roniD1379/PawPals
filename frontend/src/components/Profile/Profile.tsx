@@ -114,6 +114,14 @@ function Profile() {
                 </span>
                 <span>posts</span>
               </p>
+              <button
+                className="btn btn-medium profile-edit-btn"
+                onClick={() => {
+                  setShowEditProfile(true);
+                }}
+              >
+                Edit Profile
+              </button>
             </div>
             <div className="profile-details-image-container">
               <img
@@ -127,15 +135,6 @@ function Profile() {
                 }
                 alt="profile-image"
               />
-              <button
-                type="submit"
-                className="btn btn-large profile-edit-btn"
-                onClick={() => {
-                  setShowEditProfile(true);
-                }}
-              >
-                Edit Profile
-              </button>
             </div>
           </div>
           <div className="profile-posts-container">
@@ -145,7 +144,7 @@ function Profile() {
               refreshContent={<PullToRefreshLoader />}
               pullDownThreshold={80}
               onRefresh={onRefresh}
-              triggerHeight={500}
+              triggerHeight={80}
               backgroundColor="white"
             >
               <InfiniteScroll
@@ -168,6 +167,13 @@ function Profile() {
                         onDeleteSuccess={onRefresh}
                       />
                     ))}
+                    {row.length < 3 &&
+                      Array.from({ length: 3 - row.length }, (_, index) => (
+                        <div
+                          key={index}
+                          className="profile-feed-post-img-size-warper"
+                        ></div>
+                      ))}
                   </div>
                 ))}
               </InfiniteScroll>

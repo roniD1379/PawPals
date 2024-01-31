@@ -57,7 +57,7 @@ function Feed() {
         refreshContent={<PullToRefreshLoader />}
         pullDownThreshold={80}
         onRefresh={onRefresh}
-        triggerHeight={500}
+        triggerHeight={120}
         backgroundColor="white"
       >
         <InfiniteScroll
