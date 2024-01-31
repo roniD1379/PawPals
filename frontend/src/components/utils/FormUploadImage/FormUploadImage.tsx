@@ -38,6 +38,7 @@ function FormUploadImage({
       <input
         className="upload-image-input"
         type="file"
+        accept="image/*"
         onChange={(e) => {
           if (e.target.files && e.target.files[0]) {
             const img = document.getElementById(uploadedImageId);

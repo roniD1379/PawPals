@@ -4,9 +4,10 @@ import "./Modal.css";
 interface IProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   component: JSX.Element;
+  style?: React.CSSProperties;
 }
 
-export default function Modal({ setIsOpen, component }: IProps) {
+export default function Modal({ setIsOpen, component, style }: IProps) {
   const closeModal = () => {
     setIsOpen(false);
   };
@@ -21,7 +22,7 @@ export default function Modal({ setIsOpen, component }: IProps) {
   return (
     <div className="Modal">
       <div className="modal-overlay" onClick={handleOverlayClick}>
-        <div className="modal">
+        <div className="modal" style={style}>
           <span className="close-button" onClick={closeModal}>
             <CgClose />
           </span>

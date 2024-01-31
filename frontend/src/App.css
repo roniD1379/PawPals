@@ -10,7 +10,7 @@
   --color-scroll-bar-hover: #e2e2e2;
   --welcome-page-border-color: #e0e0e0;
   --color-heart-on-post: white;
-  --profile-details-container-height: 210px;
+  --profile-details-container-height: 170px;
   --color-post-operations-btns: rgb(82, 82, 82);
 }
 
@@ -62,4 +62,10 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-scroll-bar-hover);
+}
+
+@media screen and (max-width: 600px) {
+  .btn {
+    font-size: 0.8rem;
+  }
 }
