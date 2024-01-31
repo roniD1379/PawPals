@@ -1,8 +1,6 @@
 import "./Feed.css";
 import Post, { IPostProp } from "../Post/Post";
 import { useEffect, useState } from "react";
-import { PullToRefresh, PullDownContent } from "react-js-pull-to-refresh";
-import PullToRefreshLoader from "../utils/PullToRefreshLoader/PullToRefreshLoader";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {
   FEED_PAGE_SIZE,
@@ -39,40 +37,24 @@ function Feed() {
     getPosts();
   };
 
-  const onRefresh = async () => {
-    setHasMore(true);
-    setPage(0);
-    getPosts(true);
-  };
-
   useEffect(() => {
     getPosts();
   }, []);
 
   return (
     <div className="Feed">
-      <PullToRefresh
-        pullDownContent={<PullDownContent />}
-        releaseContent={<PullToRefreshLoader />}
-        refreshContent={<PullToRefreshLoader />}
-        pullDownThreshold={80}
-        onRefresh={onRefresh}
-        triggerHeight={120}
-        backgroundColor="white"
+      <InfiniteScroll
+        dataLength={posts.length}
+        next={fetchMorePosts}
+        hasMore={hasMore}
+        loader={loaderElement}
+        endMessage={noMoreDataElement}
+        height={"calc(100vh - 155px)"}
       >
-        <InfiniteScroll
-          dataLength={posts.length}
-          next={fetchMorePosts}
-          hasMore={hasMore}
-          loader={loaderElement}
-          endMessage={noMoreDataElement}
-          height={"calc(100vh - 155px)"}
-        >
-          {posts.map((post, i) => {
-            return <Post key={i} postDetails={post} />;
-          })}
-        </InfiniteScroll>
-      </PullToRefresh>
+        {posts.map((post, i) => {
+          return <Post key={i} postDetails={post} />;
+        })}
+      </InfiniteScroll>
     </div>
   );
 }

@@ -10,7 +10,6 @@
 }
 
 .modal .Post {
-  max-height: 700px;
   margin: 0em auto;
 }
 
@@ -31,7 +30,7 @@
 .post-breed-and-contact-container-edit {
   display: flex;
   align-items: center;
-  margin-top: -1em;
+  margin-top: -0.5em;
 }
 
 .post-breed-edit-select {

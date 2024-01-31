@@ -3,8 +3,6 @@ import "./Profile.css";
 import Post, { IPostProp } from "../Post/Post";
 import Modal from "../utils/Modal/Modal";
 import EditProfileModal from "./EditProfileModal/EditProfileModal";
-import { PullToRefresh, PullDownContent } from "react-js-pull-to-refresh";
-import PullToRefreshLoader from "../utils/PullToRefreshLoader/PullToRefreshLoader";
 import {
   PROFILE_FEED_PAGE_SIZE,
   loaderElement,
@@ -138,46 +136,36 @@ function Profile() {
             </div>
           </div>
           <div className="profile-posts-container">
-            <PullToRefresh
-              pullDownContent={<PullDownContent />}
-              releaseContent={<PullToRefreshLoader />}
-              refreshContent={<PullToRefreshLoader />}
-              pullDownThreshold={80}
-              onRefresh={onRefresh}
-              triggerHeight={80}
-              backgroundColor="white"
+            <InfiniteScroll
+              dataLength={posts.length}
+              next={fetchMorePosts}
+              hasMore={hasMore}
+              loader={loaderElement}
+              endMessage={noMoreDataElement}
+              height={
+                "calc(100vh - 175px - var(--profile-details-container-height))"
+              }
             >
-              <InfiniteScroll
-                dataLength={posts.length}
-                next={fetchMorePosts}
-                hasMore={hasMore}
-                loader={loaderElement}
-                endMessage={noMoreDataElement}
-                height={
-                  "calc(100vh - 175px - var(--profile-details-container-height))"
-                }
-              >
-                {posts.map((row, rowIndex) => (
-                  <div key={rowIndex} className="profile-feed-post-img-row">
-                    {row.map((post, columnIndex) => (
-                      <Post
-                        key={columnIndex}
-                        postDetails={post}
-                        isProfilePage={true}
-                        onDeleteSuccess={onRefresh}
-                      />
+              {posts.map((row, rowIndex) => (
+                <div key={rowIndex} className="profile-feed-post-img-row">
+                  {row.map((post, columnIndex) => (
+                    <Post
+                      key={columnIndex}
+                      postDetails={post}
+                      isProfilePage={true}
+                      onDeleteSuccess={onRefresh}
+                    />
+                  ))}
+                  {row.length < 3 &&
+                    Array.from({ length: 3 - row.length }, (_, index) => (
+                      <div
+                        key={index}
+                        className="profile-feed-post-img-size-warper"
+                      ></div>
                     ))}
-                    {row.length < 3 &&
-                      Array.from({ length: 3 - row.length }, (_, index) => (
-                        <div
-                          key={index}
-                          className="profile-feed-post-img-size-warper"
-                        ></div>
-                      ))}
-                  </div>
-                ))}
-              </InfiniteScroll>
-            </PullToRefresh>
+                </div>
+              ))}
+            </InfiniteScroll>
           </div>
         </>
       )}
