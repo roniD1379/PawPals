@@ -101,7 +101,7 @@ const router = express.Router();
  *         description: Username of the post owner
  *       ownerFirstName:
  *         type: string
- *         description: Firstname of the post owner
+ *         description: First name of the post owner
  *       ownerPhoneNumber:
  *         type: string
  *         description: Phone number of the post owner
@@ -196,21 +196,21 @@ router.get(
 
 /**
  * @swagger
-*   /post/comments/:id:
-*     get:
-*       summary: Get comments of post
-*       tags: [Post]
-*       security:
-*         - bearerAuth: []
-*       responses:
-*         200:
-*           description: comments of post.
-*           content:
-*             application/json:
-*               schema:
-*                 $ref: '#/definitions/formattedComments'
-*         500:
-*           description: Server error.
+ *   /post/comments/:id:
+ *     get:
+ *       summary: Get comments of post
+ *       tags: [Post]
+ *       security:
+ *         - bearerAuth: []
+ *       responses:
+ *         200:
+ *           description: comments of post.
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 $ref: '#/definitions/formattedComments'
+ *         500:
+ *           description: Server error.
  */
 
 router.get(
