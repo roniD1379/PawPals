@@ -5,19 +5,19 @@ import { Express } from "express";
 import User, { IUser } from "../models/user_model";
 
 let app: Express;
-const user : IUser = {
+const user: IUser = {
   username: "alonCee",
   password: "a1234567890",
   firstName: "alon",
   lastName: "test",
   phoneNumber: "050-0000000",
-}
+};
 
 beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
 
-  await User.deleteOne({username: user.username});
+  await User.deleteOne({ username: user.username });
 });
 
 afterAll(async () => {
@@ -26,34 +26,28 @@ afterAll(async () => {
 
 let accessToken: string;
 let refreshToken: string;
-let newRefreshToken: string
+let newRefreshToken: string;
 
 describe("Auth tests", () => {
   test("Test Register", async () => {
-    const response = await request(app)
-      .post("/auth/register")
-      .send(user);
+    const response = await request(app).post("/auth/register").send(user);
     expect(response.statusCode).toBe(201);
   });
 
   test("Test Register exist username", async () => {
-    const response = await request(app)
-      .post("/auth/register")
-      .send(user);
+    const response = await request(app).post("/auth/register").send(user);
     expect(response.statusCode).toBe(406);
   });
 
   test("Test Register missing password", async () => {
-    const response = await request(app)
-      .post("/auth/register").send({
-        username: "alonMee",
-      });
+    const response = await request(app).post("/auth/register").send({
+      username: "alonMee",
+    });
     expect(response.statusCode).toBe(400);
   });
 
   test("Test Login", async () => {
-    const response = await request(app)
-      .post("/auth/login").send(user);
+    const response = await request(app).post("/auth/login").send(user);
     expect(response.statusCode).toBe(200);
     accessToken = response.body.accessToken;
     refreshToken = response.body.refreshToken;
@@ -82,7 +76,7 @@ describe("Auth tests", () => {
   jest.setTimeout(10000);
 
   test("Test access after timeout of token", async () => {
-    await new Promise(resolve => setTimeout(() => resolve("done"), 5000));
+    await new Promise((resolve) => setTimeout(() => resolve("done"), 5000));
 
     const response = await request(app)
       .get("/user/details")
@@ -93,8 +87,7 @@ describe("Auth tests", () => {
   test("Test refresh token", async () => {
     const response = await request(app)
       .post("/auth/refresh")
-      .send({refreshToken: refreshToken});
-    console.log(response);
+      .send({ refreshToken: refreshToken });
     expect(response.statusCode).toBe(200);
     expect(response.body.accessToken).toBeDefined();
     expect(response.body.refreshToken).toBeDefined();
