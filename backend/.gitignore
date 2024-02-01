@@ -2,3 +2,6 @@ node_modules
 dist
 coverage
 .env
+client-cert.pem
+client-key.pem
+client.csr
