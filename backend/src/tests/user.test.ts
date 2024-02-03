@@ -71,6 +71,16 @@ describe("User tests", () => {
     expect(response.body.firstName).toBe(updatedUser.firstName);
   });
 
+  test("Test PUT User - required field is missing  ", async () => {
+    const missedFieldUser: IUser = JSON.parse(JSON.stringify(user));
+    missedFieldUser['firstName'] = "";
+    const response = await request(app)
+                            .put("/user/edit")
+                            .set("Authorization", "JWT " + accessToken)
+                            .send(missedFieldUser);
+    expect(response.statusCode).toBe(400);
+  });
+
   test("Test DELETE User", async () => {
     const response = await request(app)
       .delete("/user/delete/")
