@@ -1,14 +1,9 @@
-import User, { IUser } from "../models/user_model";
-import { BaseController } from "./base_controller";
+import User from "../models/user_model";
 import { Response } from "express";
 import { AuthRequest } from "../common/auth_middleware";
 import user_service from "../services/user_service";
 
-class UserController extends BaseController<IUser> {
-  constructor() {
-    super(User);
-  }
-
+class UserController {
   async getUserDetails(req: AuthRequest, res: Response) {
     try {
       const userId = req.user._id;
@@ -49,13 +44,17 @@ class UserController extends BaseController<IUser> {
       let user = await User.findById(userId);
       if (!user) return res.status(400).send("User not found");
 
-      user = await User.findByIdAndUpdate(userId, {
-        firstName: firstName,
-        lastName: lastName,
-        userImage: userImage === "" ? user.userImage : userImage,
-        phoneNumber: phoneNumber,
-        description: description,
-      }, {new: true});
+      user = await User.findByIdAndUpdate(
+        userId,
+        {
+          firstName: firstName,
+          lastName: lastName,
+          userImage: userImage === "" ? user.userImage : userImage,
+          phoneNumber: phoneNumber,
+          description: description,
+        },
+        { new: true }
+      );
 
       console.log("Edited user details successfully");
       res.status(200).send(user);
@@ -71,7 +70,7 @@ class UserController extends BaseController<IUser> {
     try {
       const userObj = await User.findById(userId);
       if (!userObj) return res.status(400).send("user not found");
-  
+
       await User.deleteOne({ _id: userObj._id });
 
       res.status(200).send();
