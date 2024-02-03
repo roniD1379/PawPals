@@ -3,6 +3,7 @@ import initApp from "../app";
 import mongoose from "mongoose";
 import User, { IUser } from "../models/user_model";
 import { Express } from "express";
+import user_service from "../services/user_service";
 
 let app: Express;
 let accessToken: string;
@@ -22,6 +23,14 @@ const user2: IUser = {
   phoneNumber: "050-0000000",
 };
 
+const user3: IUser = {
+  username: null,
+  password: "a1234567890",
+  firstName: "alon",
+  lastName: "test",
+  phoneNumber: "050-0000000",
+};
+
 beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
@@ -34,6 +43,9 @@ beforeAll(async () => {
 afterAll(async () => {
   await User.deleteOne({ username: user.username });
   await User.deleteOne({ username: user2.username });
+  await User.deleteOne({ username: "test00" });
+  await User.deleteOne({ username: "test001" });
+  await User.deleteOne({ username: "test002" });
   await mongoose.connection.close();
 });
 
@@ -73,12 +85,35 @@ describe("User tests", () => {
 
   test("Test PUT User - required field is missing  ", async () => {
     const missedFieldUser: IUser = JSON.parse(JSON.stringify(user));
-    missedFieldUser['firstName'] = "";
+    missedFieldUser["firstName"] = "";
     const response = await request(app)
-                            .put("/user/edit")
-                            .set("Authorization", "JWT " + accessToken)
-                            .send(missedFieldUser);
+      .put("/user/edit")
+      .set("Authorization", "JWT " + accessToken)
+      .send(missedFieldUser);
     expect(response.statusCode).toBe(400);
+  });
+
+  test("Test Unique Username", async () => {
+    const uniqueUsername1 = await user_service.generateUniqueUsername(
+      "test@gmail.com"
+    );
+    user3.username = uniqueUsername1;
+    await addUser(user3);
+    expect(user3.username).toBe("test00");
+
+    const uniqueUsername2 = await user_service.generateUniqueUsername(
+      "test00@gmail.com"
+    );
+    user3.username = uniqueUsername2;
+    await addUser(user3);
+    expect(user3.username).toBe("test001");
+
+    const uniqueUsername3 = await user_service.generateUniqueUsername(
+      "test00@gmail.com"
+    );
+    user3.username = uniqueUsername3;
+    await addUser(user3);
+    expect(user3.username).toBe("test002");
   });
 
   test("Test DELETE User", async () => {

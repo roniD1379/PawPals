@@ -9,6 +9,12 @@ class UserService {
   async generateUniqueUsername(email: string) {
     const baseUsername = email.split("@")[0];
     let username = baseUsername;
+
+    if (baseUsername.length < 6) {
+      const underscoresToAdd = 6 - baseUsername.length;
+      username += "0".repeat(underscoresToAdd);
+    }
+
     let suffix = 0;
 
     while (await this.isUsernameExists(username)) {
