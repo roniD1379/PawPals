@@ -26,14 +26,14 @@ beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
 
-  await User.deleteOne({ username: user.username });
-  await User.deleteOne({ username: user2.username });
   await request(app).post("/auth/register").send(user);
   const response = await request(app).post("/auth/login").send(user);
   accessToken = response.body.accessToken;
 });
 
 afterAll(async () => {
+  await User.deleteOne({ username: user.username });
+  await User.deleteOne({ username: user2.username });
   await mongoose.connection.close();
 });
 
@@ -69,6 +69,16 @@ describe("User tests", () => {
       .send(updatedUser);
     expect(response.statusCode).toBe(200);
     expect(response.body.firstName).toBe(updatedUser.firstName);
+  });
+
+  test("Test PUT User - required field is missing  ", async () => {
+    const missedFieldUser: IUser = JSON.parse(JSON.stringify(user));
+    missedFieldUser['firstName'] = "";
+    const response = await request(app)
+                            .put("/user/edit")
+                            .set("Authorization", "JWT " + accessToken)
+                            .send(missedFieldUser);
+    expect(response.statusCode).toBe(400);
   });
 
   test("Test DELETE User", async () => {

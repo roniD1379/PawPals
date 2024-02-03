@@ -222,7 +222,6 @@ const refresh = async (req: Request, res: Response) => {
     return res.status(401).send();
   }
 
-  console.log("got into");
 
   jwt.verify(
     refreshToken,

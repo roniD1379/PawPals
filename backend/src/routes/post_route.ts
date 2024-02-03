@@ -46,7 +46,45 @@ const router = express.Router();
  *         breed: "test"
  *         breedId: 2
  *         ownerId: ObjectId("507f1f77bcf86cd799439011")
- *
+ *         image: 'dog.png'
+ * 
+ *     EditPost:
+ *       type: object
+ *       required:
+ *         - description
+ *         - breed
+ *         - breedId
+ *         - image
+ *       properties:
+ *         description:
+ *           type: string
+ *           description: Post's description
+ *         breed:
+ *           type: string
+ *           description: Breed of the pet
+ *         breedId:
+ *           type: number
+ *           description: Breed id of the pet
+ *         image:
+ *           type: string
+ *           description: Image of the post
+ *       example:
+ *         description: "title1"
+ *         breed: "test"
+ *         breedId: 2
+ *         image: 'dog.png'
+ * 
+ *     PostId:
+ *       type: object
+ *       required:
+ *         - postId
+ *       properties:
+ *         postId:
+ *           type: mongo.ObjectId
+ *           description: Post id
+ *       example:
+ *         postId: ObjectId("507f1f77bcf86cd799439011")
+ * 
  *     Comment:
  *       type: object
  *       required:
@@ -101,7 +139,7 @@ const router = express.Router();
  *         description: Username of the post owner
  *       ownerFirstName:
  *         type: string
- *         description: First name of the post owner
+ *         description: Firstname of the post owner
  *       ownerPhoneNumber:
  *         type: string
  *         description: Phone number of the post owner
@@ -147,8 +185,8 @@ const router = express.Router();
  * @swagger
  * /post/allByUser/:page:
  *   get:
- *     summary: Get all user's posts sorted by latest date
  *     tags: [Post]
+ *     summary: Get all user's posts sorted by latest date. Page is a numeric variable that represent the wanted page.
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -172,7 +210,7 @@ router.get(
  * @swagger
 * /post/feed/:page:
 *   get:
-*     summary: Get posts sorted by the latest date
+*     summary: Get posts sorted by the latest date. Page is a numeric variable that represent the wanted page.
 *     tags: [Post]
 *     security:
 *       - bearerAuth: []
@@ -196,21 +234,21 @@ router.get(
 
 /**
  * @swagger
- *   /post/comments/:id:
- *     get:
- *       summary: Get comments of post
- *       tags: [Post]
- *       security:
- *         - bearerAuth: []
- *       responses:
- *         200:
- *           description: comments of post.
- *           content:
- *             application/json:
- *               schema:
- *                 $ref: '#/definitions/formattedComments'
- *         500:
- *           description: Server error.
+*   /post/comments/:id:
+*     get:
+*       summary: Get comments of post. Id is a variable that represent the post id that related to the comment.
+*       tags: [Post]
+*       security:
+*         - bearerAuth: []
+*       responses:
+*         200:
+*           description: comments of post.
+*           content:
+*             application/json:
+*               schema:
+*                 $ref: '#/definitions/formattedComments'
+*         500:
+*           description: Server error.
  */
 
 router.get(
@@ -228,7 +266,7 @@ router.get(
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             $ref: '#/components/schemas/Post'
  *     responses:
@@ -295,14 +333,14 @@ router.post(
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Post'
+ *             $ref: '#/components/schemas/EditPost'
  *     responses:
  *       200:
  *         description: The post updated details.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Post'
+ *               $ref: '#/components/schemas/EditPost'
  *
  *       400:
  *         description: Bad request. Validation tests failed.
@@ -330,7 +368,7 @@ router.put(
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Post'
+ *             $ref: '#/components/schemas/PostId'
  *     responses:
  *       200:
  *         description: The post has been marked as 'liked' successfully.
@@ -354,7 +392,7 @@ router.put("/like", authMiddleware, postController.like.bind(postController));
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Post'
+ *             $ref: '#/components/schemas/PostId'
  *     responses:
  *       200:
  *         description: The post has been marked as 'disliked' successfully.
@@ -377,6 +415,12 @@ router.put(
  *     tags: [Post]
  *     security:
  *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PostId'
  *     responses:
  *       200:
  *         description: The post has been successfully deleted.
