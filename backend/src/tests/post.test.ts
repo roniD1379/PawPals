@@ -35,14 +35,14 @@ beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
 
-  await User.deleteOne({ username: user.username });
-  await Post.deleteOne({ breed: post.breed });
   await request(app).post("/auth/register").send(user);
   const response = await request(app).post("/auth/login").send(user);
   accessToken = response.body.accessToken;
 });
 
 afterAll(async () => {
+  await User.deleteOne({ username: user.username });
+  await Post.deleteOne({ breed: post.breed });
   await mongoose.connection.close();
 });
 

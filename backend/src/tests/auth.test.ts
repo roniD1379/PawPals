@@ -17,10 +17,10 @@ beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
 
-  await User.deleteOne({ username: user.username });
 });
 
 afterAll(async () => {
+  await User.deleteOne({ username: user.username });
   await mongoose.connection.close();
 });
 
