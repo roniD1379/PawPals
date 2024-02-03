@@ -222,7 +222,6 @@ const refresh = async (req: Request, res: Response) => {
     return res.status(401).send();
   }
 
-
   jwt.verify(
     refreshToken,
     process.env.JWT_REFRESH_SECRET,
