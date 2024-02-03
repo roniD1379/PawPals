@@ -1,14 +1,9 @@
-import Comment, { IComment } from "../models/comment_model";
-import { BaseController } from "./base_controller";
+import Comment from "../models/comment_model";
 import { Response } from "express";
 import { AuthRequest } from "../common/auth_middleware";
 import CommentService from "../services/comment_service";
 
-class CommentController extends BaseController<IComment> {
-  constructor() {
-    super(Comment);
-  }
-
+class CommentController {
   async getPostComments(req: AuthRequest, res: Response) {
     const postId = req.params.id;
 

@@ -1,5 +1,4 @@
-import Post, { IPost } from "../models/post_model";
-import { BaseController } from "./base_controller";
+import Post from "../models/post_model";
 import { Response } from "express";
 import { AuthRequest } from "../common/auth_middleware";
 import PostService from "../services/post_service";
@@ -9,11 +8,7 @@ import post_service from "../services/post_service";
 const FEED_PAGE_SIZE = 5;
 const PROFILE_FEED_PAGE_SIZE = 12;
 
-class PostController extends BaseController<IPost> {
-  constructor() {
-    super(Post);
-  }
-
+class PostController {
   async getFeedPosts(req: AuthRequest, res: Response) {
     try {
       const userIdObject = PostService.convertToIdObject(req.user._id);
