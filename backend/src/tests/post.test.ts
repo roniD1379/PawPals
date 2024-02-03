@@ -67,15 +67,15 @@ describe("Post tests", () => {
 
   test("Test POST Post - required field is missing  ", async () => {
     const missedFieldPost: IPost = JSON.parse(JSON.stringify(post));
-    missedFieldPost['breed'] = "";
+    missedFieldPost["breed"] = "";
     const response = await addPost(missedFieldPost);
     expect(response.status).toBe(400);
   });
 
-   test("Test GET Post - feed", async () => {
+  test("Test GET Post - feed", async () => {
     const response = await request(app)
-                            .get("/post/feed/1")
-                            .set("Authorization", "JWT " + accessToken);
+      .get("/post/feed/1")
+      .set("Authorization", "JWT " + accessToken);
     expect(response.statusCode).toBe(200);
     const postObj = response.body[0];
     expect(postObj.breed).toBe(post.breed);
@@ -84,8 +84,8 @@ describe("Post tests", () => {
 
   test("Test GET Post - all by user", async () => {
     const response = await request(app)
-                            .get("/post/allByUser/1")
-                            .set("Authorization", "JWT " + accessToken);
+      .get("/post/allByUser/1")
+      .set("Authorization", "JWT " + accessToken);
     expect(response.statusCode).toBe(200);
     const postObj = response.body[0];
     expect(postObj.breed).toBe(post.breed);
@@ -94,11 +94,11 @@ describe("Post tests", () => {
 
   test("Test Put Post - edit", async () => {
     let editPost = JSON.parse(JSON.stringify(post));
-    editPost = {...post,description: "title2", postId: post._id};
+    editPost = { ...post, description: "title2", postId: post._id };
     const response = await request(app)
-                            .put("/post/edit")
-                            .set("Authorization", "JWT " + accessToken)
-                            .send(editPost);
+      .put("/post/edit")
+      .set("Authorization", "JWT " + accessToken)
+      .send(editPost);
     expect(response.statusCode).toBe(200);
     const postObj = response.body;
     expect(postObj.description).toBe(editPost.description);
@@ -106,47 +106,71 @@ describe("Post tests", () => {
 
   test("Test PUT Post - required field is missing  ", async () => {
     const missedFieldPost: IPost = JSON.parse(JSON.stringify(post));
-    missedFieldPost['breed'] = "";
+    missedFieldPost["breed"] = "";
     const response = await request(app)
-                            .put("/post/edit")
-                            .set("Authorization", "JWT " + accessToken)
-                            .send(missedFieldPost);
+      .put("/post/edit")
+      .set("Authorization", "JWT " + accessToken)
+      .send(missedFieldPost);
     expect(response.statusCode).toBe(400);
   });
 
   test("Test PUT Post - like", async () => {
-    const postId = {postId: post._id};
+    const postId = { postId: post._id };
     const response = await request(app)
-                            .put("/post/like")
-                            .set("Authorization", "JWT " + accessToken)
-                            .send(postId);
+      .put("/post/like")
+      .set("Authorization", "JWT " + accessToken)
+      .send(postId);
     expect(response.statusCode).toBe(200);
   });
 
-  test("Test PUT Post - like post that doesn't exist", async () => {
-    const postId = {postId: user._id};
+  test("Test PUT Post - like post that already been liked before by user", async () => {
+    const postId = { postId: post._id };
     const response = await request(app)
-                            .put("/post/like")
-                            .set("Authorization", "JWT " + accessToken)
-                            .send(postId);
+      .put("/post/like")
+      .set("Authorization", "JWT " + accessToken)
+      .send(postId);
+    expect(response.statusCode).toBe(500);
+    expect(JSON.parse(response.text).message).toBe(
+      "Failed to like post: already liked by user"
+    );
+  });
+
+  test("Test PUT Post - like post that doesn't exist", async () => {
+    const postId = { postId: user._id };
+    const response = await request(app)
+      .put("/post/like")
+      .set("Authorization", "JWT " + accessToken)
+      .send(postId);
     expect(response.statusCode).toBe(400);
   });
 
   test("Test PUT Post - dislike", async () => {
-    const postId = {postId: post._id};
+    const postId = { postId: post._id };
     const response = await request(app)
-                            .put("/post/dislike")
-                            .set("Authorization", "JWT " + accessToken)
-                            .send(postId);
+      .put("/post/dislike")
+      .set("Authorization", "JWT " + accessToken)
+      .send(postId);
     expect(response.statusCode).toBe(200);
   });
 
-  test("Test PUT Post - dislike post that doesn't exist", async () => {
-    const postId = {postId: user._id};
+  test("Test PUT Post - dislike", async () => {
+    const postId = { postId: post._id };
     const response = await request(app)
-                            .put("/post/like")
-                            .set("Authorization", "JWT " + accessToken)
-                            .send(postId);
+      .put("/post/dislike")
+      .set("Authorization", "JWT " + accessToken)
+      .send(postId);
+    expect(response.statusCode).toBe(500);
+    expect(JSON.parse(response.text).message).toBe(
+      "Failed to dislike post: Post wasn't liked by user"
+    );
+  });
+
+  test("Test PUT Post - dislike post that doesn't exist", async () => {
+    const postId = { postId: user._id };
+    const response = await request(app)
+      .put("/post/like")
+      .set("Authorization", "JWT " + accessToken)
+      .send(postId);
     expect(response.statusCode).toBe(400);
   });
 
@@ -160,7 +184,7 @@ describe("Post tests", () => {
   };
 
   test("Test POST Comment", async () => {
-    comment = {...comment, ownerId: user._id, postId: post._id}
+    comment = { ...comment, ownerId: user._id, postId: post._id };
     const response = await addComment(comment);
     expect(response.status).toBe(201);
     expect(response.body.newComment.text).toBe(comment.text);
@@ -168,15 +192,15 @@ describe("Post tests", () => {
 
   test("Test POST Comment - required field is missing  ", async () => {
     const missedFieldComment: IComment = JSON.parse(JSON.stringify(post));
-    missedFieldComment['text'] = "";
+    missedFieldComment["text"] = "";
     const response = await addComment(missedFieldComment);
     expect(response.status).toBe(400);
   });
 
   test("Test GET Comments", async () => {
     const response = await request(app)
-                            .get("/post/comments/"+post._id)
-                            .set("Authorization", "JWT " + accessToken);
+      .get("/post/comments/" + post._id)
+      .set("Authorization", "JWT " + accessToken);
     expect(response.statusCode).toBe(200);
     const commentObj = response.body[0];
     expect(commentObj.comment).toBe(comment.text);
@@ -184,9 +208,8 @@ describe("Post tests", () => {
 
   test("Test DELETE Post", async () => {
     const response = await request(app)
-                            .delete("/post/delete/"+post._id)
-                            .set("Authorization", "JWT " + accessToken);
+      .delete("/post/delete/" + post._id)
+      .set("Authorization", "JWT " + accessToken);
     expect(response.statusCode).toBe(200);
   });
-
 });

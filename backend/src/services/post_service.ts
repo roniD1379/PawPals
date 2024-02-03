@@ -50,14 +50,16 @@ class PostService {
   async dislike(post: IPost, userId: mongo.ObjectId) {
     const indexOfUserLike = post.likes.indexOf(userId);
 
-    if (indexOfUserLike > -1) {
-      try {
-        await post_model.findByIdAndUpdate(post._id, {
-          $pull: { likes: userId },
-        });
-      } catch (err) {
-        throw new Error("Failed to dislike post: " + err.message);
+    try {
+      if (indexOfUserLike == -1) {
+        throw new Error("Post wasn't liked by user");
       }
+
+      await post_model.findByIdAndUpdate(post._id, {
+        $pull: { likes: userId },
+      });
+    } catch (err) {
+      throw new Error("Failed to dislike post: " + err.message);
     }
   }
 
