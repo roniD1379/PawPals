@@ -10,7 +10,7 @@ initApp().then((app) => {
     definition: {
       openapi: "3.0.0",
       info: {
-        title: "PawPals Application development 2023 REST API",
+        title: "PawPals Application Development 2023 REST API",
         version: "1.0.0",
         description: "REST server including authentication using JWT and refresh token",
       },
