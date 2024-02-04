@@ -8,20 +8,23 @@ interface IProps {
 }
 
 export default function Modal({ setIsOpen, component, style }: IProps) {
+  const modalId = "modal-" + new Date().getTime();
+
   const closeModal = () => {
     setIsOpen(false);
   };
 
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
     // Prevent clicks inside the modal from closing it
-    if ((event.target as HTMLDivElement).classList.contains("modal-overlay")) {
+
+    if ((event.target as HTMLDivElement).id === modalId) {
       closeModal();
     }
   };
 
   return (
     <div className="Modal">
-      <div className="modal-overlay" onClick={handleOverlayClick}>
+      <div className="modal-overlay" onClick={handleOverlayClick} id={modalId}>
         <div className="modal" style={style}>
           <span className="close-button" onClick={closeModal}>
             <CgClose />
