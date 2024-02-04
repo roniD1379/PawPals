@@ -41,11 +41,13 @@ export const useCustomNavigate = () => {
   return { redirectToLogin };
 };
 
-export const navigateToLogin = () => {
-  const message = "Session expired, please login again";
-  toast.error(message, {
-    id: message, // Th ID field prevents duplicate toast messages
-  });
+export const navigateToLogin = (showExpiredMessage = true) => {
+  if (showExpiredMessage) {
+    const message = "Session expired, please login again";
+    toast.error(message, {
+      id: message, // Th ID field prevents duplicate toast messages
+    });
+  }
   if (globalRouter.navigate) globalRouter.navigate("/login");
 };
 
@@ -56,13 +58,17 @@ export const handleUserAlreadyLoggedIn = async () => {
     try {
       // Try to refresh the token
       const refreshToken = localStorage.getItem("refreshToken");
-      const response = await axios.post(globals.auth.refreshToken, {
-        refreshToken: refreshToken,
-      });
-      const newAccessToken = response.data.accessToken;
-      const newRefreshToken = response.data.refreshToken;
-      setTokens(newAccessToken, newRefreshToken);
-      navigateToMain();
+      if (refreshToken) {
+        const response = await axios.post(globals.auth.refreshToken, {
+          refreshToken: refreshToken,
+        });
+        const newAccessToken = response.data.accessToken;
+        const newRefreshToken = response.data.refreshToken;
+        setTokens(newAccessToken, newRefreshToken);
+        navigateToMain();
+      } else {
+        navigateToLogin(false);
+      }
     } catch (error) {
       console.error("Error refreshing token:", error);
       navigateToLogin();
