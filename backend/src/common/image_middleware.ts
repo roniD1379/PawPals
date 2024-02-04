@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
     _file: Express.Multer.File,
     cb: (error: Error | null, destination: string) => void
   ) {
-    cb(null, "C:/PawPals/uploads/");
+    cb(null, process.env.UPLOAD_IMAGE_FILES_DIRECTORY);
   },
   filename: function (
     _req: Request,
