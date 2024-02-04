@@ -39,7 +39,7 @@ const router = express.Router();
  *           type: string
  *           description: Image of the post
  *         ownerId:
- *           type: mongo.ObjectId
+ *           type: string
  *           description: User id of the post owner
  *       example:
  *         description: "title1"
@@ -80,7 +80,7 @@ const router = express.Router();
  *         - postId
  *       properties:
  *         postId:
- *           type: mongo.ObjectId
+ *           type: string
  *           description: Post id
  *       example:
  *         postId: ObjectId("507f1f77bcf86cd799439011")
@@ -96,10 +96,10 @@ const router = express.Router();
  *           type: string
  *           description: comments's text
  *         ownerId:
- *           type: mongo.ObjectId
+ *           type: string
  *           description: User id of the comment owner
  *         postId:
- *           type: mongo.ObjectId
+ *           type: string
  *           description: post id related to the comment
  *       example:
  *         text: "comment1"
@@ -114,7 +114,7 @@ const router = express.Router();
  *     type: object
  *     properties:
  *       _id:
- *         type: mongo.ObjectId()
+ *         type: string
  *         description: User id of the post owner
  *       description:
  *         type: string
@@ -129,10 +129,11 @@ const router = express.Router();
  *         type: number
  *         description: Breed id of the pet
  *       ownerId:
- *         type: mongo.ObjectId
+ *         type: string
  *         description: User id of the post owner
  *       createdAt:
- *         type: date
+ *         type: string
+ *         format: date
  *         description: Post's creation date
  *       ownerUsername:
  *         type: string
@@ -144,10 +145,10 @@ const router = express.Router();
  *         type: string
  *         description: Phone number of the post owner
  *       isLikedByUser:
- *         type: bool
+ *         type: boolean
  *         description: Is the user mark 'like' on the post or not
  *       isPostOwner:
- *         type: bool
+ *         type: boolean
  *         description: Is the user is the owner of the post
  *       numOfLikes:
  *         type: number
@@ -159,7 +160,7 @@ const router = express.Router();
  *   formattedPosts:
  *     type: array
  *     items:
- *       type: formatPost
+ *        $ref: '#/definitions/formatPost'
  *
  *   formatComment:
  *     type: object
@@ -171,14 +172,15 @@ const router = express.Router();
  *         type: string
  *         description: Data of the comment
  *       createdAt:
- *         type: date
+ *         type: string
+ *         format: date
  *         description: Creation date of the comment
  *
  *
  *   formattedComments:
  *     type: array
  *     items:
- *       type: formatComment
+ *       $ref: '#/definitions/formatComment'
  */
 
 /**
@@ -189,6 +191,14 @@ const router = express.Router();
  *     summary: Get all user's posts sorted by latest date. Page is a numeric variable that represent the wanted page.
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: page
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 0
+ *         description: Page number
  *     responses:
  *       200:
  *         description: The user's posts.
@@ -214,6 +224,14 @@ router.get(
 *     tags: [Post]
 *     security:
 *       - bearerAuth: []
+*     parameters:
+*       - in: path
+*         name: page
+*         required: true
+*         schema:
+*           type: integer
+*           minimum: 0
+*         description: Page number
 *     responses:
 *       200:
 *         description: Posts.
@@ -238,6 +256,13 @@ router.get(
  *     get:
  *       summary: Get comments of post. Id is a variable that represent the post id that related to the comment.
  *       tags: [Post]
+ *       parameters:
+ *         - in: path
+ *           name: id
+ *           required: true
+ *           schema:
+ *             type: string
+ *           description: Post id
  *       security:
  *         - bearerAuth: []
  *       responses:

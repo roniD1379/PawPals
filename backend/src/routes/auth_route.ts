@@ -74,6 +74,22 @@ const router = express.Router();
  *       example:
  *         username: 'bob25'
  *         password: 'A123456a154'
+ *
+ *     GoogleLoginCredentials:
+ *       type: object
+ *       required:
+ *         - client_id
+ *         - credential
+ *       properties:
+ *         client_id:
+ *           type: string
+ *           description: The client ID of the application
+ *         credential:
+ *           type: string
+ *           description: The token from the Google login
+ *       example:
+ *         client_id: 'gdshngashjdgjkashdjhaskldhalikshdl'
+ *         credential: 'sdashgdgsajmhdjsafgduyadgiaw454584sdad'
  */
 
 /**
@@ -183,7 +199,7 @@ router.post("/login", authController.login);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/UserCredentials'
+ *             $ref: '#/components/schemas/GoogleLoginCredentials'
  *     responses:
  *       200:
  *         description: The access & refresh tokens
@@ -191,9 +207,6 @@ router.post("/login", authController.login);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Tokens'
- *       400:
- *         description: Bad request. Validation tests failed.
- *
  *       500:
  *         description: Server error.
  */
