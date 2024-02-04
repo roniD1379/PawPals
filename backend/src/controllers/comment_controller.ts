@@ -12,8 +12,8 @@ class CommentController {
 
     try {
       const postComments = await Comment.find({ postId })
-        .populate("ownerId", "username") // Populate the ownerId field with username
-        .sort({ createdAt: -1 }); // Sort comments by createdAt in descending order
+        .populate("ownerId", "username")
+        .sort({ createdAt: -1 });
 
       const formattedComments = postComments.map((comment) => ({
         ownerUsername: (comment.ownerId as unknown as { username: string })

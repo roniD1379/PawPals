@@ -47,7 +47,7 @@ const router = express.Router();
  *         breedId: 2
  *         ownerId: ObjectId("507f1f77bcf86cd799439011")
  *         image: 'dog.png'
- * 
+ *
  *     EditPost:
  *       type: object
  *       required:
@@ -73,7 +73,7 @@ const router = express.Router();
  *         breed: "test"
  *         breedId: 2
  *         image: 'dog.png'
- * 
+ *
  *     PostId:
  *       type: object
  *       required:
@@ -84,7 +84,7 @@ const router = express.Router();
  *           description: Post id
  *       example:
  *         postId: ObjectId("507f1f77bcf86cd799439011")
- * 
+ *
  *     Comment:
  *       type: object
  *       required:
@@ -139,7 +139,7 @@ const router = express.Router();
  *         description: Username of the post owner
  *       ownerFirstName:
  *         type: string
- *         description: Firstname of the post owner
+ *         description: First name of the post owner
  *       ownerPhoneNumber:
  *         type: string
  *         description: Phone number of the post owner
@@ -234,21 +234,21 @@ router.get(
 
 /**
  * @swagger
-*   /post/comments/:id:
-*     get:
-*       summary: Get comments of post. Id is a variable that represent the post id that related to the comment.
-*       tags: [Post]
-*       security:
-*         - bearerAuth: []
-*       responses:
-*         200:
-*           description: comments of post.
-*           content:
-*             application/json:
-*               schema:
-*                 $ref: '#/definitions/formattedComments'
-*         500:
-*           description: Server error.
+ *   /post/comments/:id:
+ *     get:
+ *       summary: Get comments of post. Id is a variable that represent the post id that related to the comment.
+ *       tags: [Post]
+ *       security:
+ *         - bearerAuth: []
+ *       responses:
+ *         200:
+ *           description: comments of post.
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 $ref: '#/definitions/formattedComments'
+ *         500:
+ *           description: Server error.
  */
 
 router.get(
