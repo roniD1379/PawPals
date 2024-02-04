@@ -190,7 +190,7 @@ describe("Post tests", () => {
     expect(response.body.newComment.text).toBe(comment.text);
   });
 
-  test("Test POST Comment - required field is missing  ", async () => {
+  test("Test POST Comment - required field is missing (Text)", async () => {
     const missedFieldComment: IComment = JSON.parse(JSON.stringify(post));
     missedFieldComment["text"] = "";
     const response = await addComment(missedFieldComment);
@@ -204,6 +204,13 @@ describe("Post tests", () => {
     expect(response.statusCode).toBe(200);
     const commentObj = response.body[0];
     expect(commentObj.comment).toBe(comment.text);
+  });
+
+  test("Test GET Comments fail - Invalid postId", async () => {
+    const response = await request(app)
+      .get("/post/comments/JASHDK")
+      .set("Authorization", "JWT " + accessToken);
+    expect(response.status).toBe(500);
   });
 
   test("Test DELETE Post", async () => {
