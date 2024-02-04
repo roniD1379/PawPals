@@ -107,15 +107,9 @@ import { imageUploadMiddleware } from "../common/image_middleware";
  *     tags: [User]
  *     security:
  *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/UserId'
  *     responses:
  *       200:
- *         description: The user details.
+ *         description: The authenticated user details.
  *         content:
  *           application/json:
  *             schema:
@@ -174,7 +168,7 @@ router.put(
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: The user delete successfully.
+ *         description: The user deleted successfully.
  *       400:
  *         description: Bad request. User not found.
  *       500:
