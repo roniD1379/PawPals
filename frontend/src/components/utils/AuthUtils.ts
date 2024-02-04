@@ -1,6 +1,8 @@
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import globalRouter from "./GlobalRouter";
+import { globals } from "./Globals";
+import axios from "axios";
 
 export const clearTokens = () => {
   localStorage.removeItem("accessToken");
@@ -40,6 +42,34 @@ export const useCustomNavigate = () => {
 };
 
 export const navigateToLogin = () => {
-  toast.error("Session expired, please login again");
+  const message = "Session expired, please login again";
+  toast.error(message, {
+    id: message, // Th ID field prevents duplicate toast messages
+  });
   if (globalRouter.navigate) globalRouter.navigate("/login");
+};
+
+export const handleUserAlreadyLoggedIn = async () => {
+  if (isValidToken()) {
+    navigateToMain();
+  } else {
+    try {
+      // Try to refresh the token
+      const refreshToken = localStorage.getItem("refreshToken");
+      const response = await axios.post(globals.auth.refreshToken, {
+        refreshToken: refreshToken,
+      });
+      const newAccessToken = response.data.accessToken;
+      const newRefreshToken = response.data.refreshToken;
+      setTokens(newAccessToken, newRefreshToken);
+      navigateToMain();
+    } catch (error) {
+      console.error("Error refreshing token:", error);
+      navigateToLogin();
+    }
+  }
+};
+
+const navigateToMain = () => {
+  if (globalRouter.navigate) globalRouter.navigate("/main");
 };
