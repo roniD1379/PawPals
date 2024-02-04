@@ -1,6 +1,6 @@
 import "./BreedInfo.css";
 import axios from "axios";
-import { APIDogDetails } from "../CreatePost/CreatePost";
+import { APIDogDetails } from "../utils/Api";
 import { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 
