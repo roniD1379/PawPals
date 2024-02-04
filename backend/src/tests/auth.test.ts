@@ -16,7 +16,6 @@ const user: IUser = {
 beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
-
 });
 
 afterAll(async () => {
@@ -46,12 +45,68 @@ describe("Auth tests", () => {
     expect(response.statusCode).toBe(400);
   });
 
+  test("Test Register fail - required field is missing (firstName)", async () => {
+    const response = await request(app)
+      .post("/auth/register")
+      .send({ ...user, firstName: "" });
+    expect(response.statusCode).toBe(400);
+  });
+
+  test("Test Register fail - required field is missing (lastName)", async () => {
+    const response = await request(app)
+      .post("/auth/register")
+      .send({ ...user, lastName: "" });
+    expect(response.statusCode).toBe(400);
+  });
+
+  test("Test Register fail - required field is missing (phoneNumber)", async () => {
+    const response = await request(app)
+      .post("/auth/register")
+      .send({ ...user, phoneNumber: "" });
+    expect(response.statusCode).toBe(400);
+  });
+
+  test("Test Register fail - invalid username", async () => {
+    const response = await request(app)
+      .post("/auth/register")
+      .send({ ...user, username: "test" });
+    expect(response.statusCode).toBe(400);
+  });
+
   test("Test Login", async () => {
     const response = await request(app).post("/auth/login").send(user);
     expect(response.statusCode).toBe(200);
     accessToken = response.body.accessToken;
     refreshToken = response.body.refreshToken;
     expect(accessToken).toBeDefined();
+  });
+
+  test("Test Login fail - required field is missing (username)", async () => {
+    const response = await request(app)
+      .post("/auth/login")
+      .send({ ...user, username: "" });
+    expect(response.statusCode).toBe(400);
+  });
+
+  test("Test Login fail - required field is missing (password)", async () => {
+    const response = await request(app)
+      .post("/auth/login")
+      .send({ ...user, password: "" });
+    expect(response.statusCode).toBe(400);
+  });
+
+  test("Test Login fail - incorrect username", async () => {
+    const response = await request(app)
+      .post("/auth/login")
+      .send({ ...user, username: "klhasd" });
+    expect(response.statusCode).toBe(400);
+  });
+
+  test("Test Login fail - incorrect password", async () => {
+    const response = await request(app)
+      .post("/auth/login")
+      .send({ ...user, password: "ajskd" });
+    expect(response.statusCode).toBe(400);
   });
 
   test("Test forbidden access without token", async () => {
@@ -114,5 +169,50 @@ describe("Auth tests", () => {
       .set("Authorization", "JWT " + newRefreshToken)
       .send();
     expect(response1.statusCode).not.toBe(200);
+  });
+
+  test("Test logout", async () => {
+    const response = await request(app)
+      .post("/auth/logout")
+      .send({ refreshToken: newRefreshToken });
+    expect(response.statusCode).toBe(200);
+  });
+
+  test("Test logout fail - missing refresh token", async () => {
+    const response = await request(app).post("/auth/logout").send({});
+    expect(response.statusCode).toBe(401);
+  });
+
+  test("Test logout fail - invalid refresh token", async () => {
+    const response = await request(app)
+      .post("/auth/logout")
+      .send({ refreshToken: "djklahsdhjkasjdklajldjaljd" });
+    expect(response.statusCode).toBe(401);
+  });
+
+  test("Test refresh token - missing refresh token", async () => {
+    const response = await request(app).post("/auth/refresh").send({});
+    expect(response.statusCode).toBe(401);
+  });
+
+  test("Test refresh token fail - invalid refresh token", async () => {
+    const response = await request(app)
+      .post("/auth/refresh")
+      .send({ refreshToken: "djklahsdhjkasjdklajldjaljd" });
+    expect(response.statusCode).toBe(401);
+  });
+
+  test("Test refresh token fail - token is not in user's refresh tokens", async () => {
+    const response = await request(app)
+      .post("/auth/refresh")
+      .send({ refreshToken: refreshToken });
+    expect(response.statusCode).toBe(401);
+  });
+
+  test("Test google login - fail - missing credentials", async () => {
+    const response = await request(app)
+      .post("/auth/googleLogin")
+      .send({ credential: "", client_id: "" });
+    expect(response.statusCode).toBe(500);
   });
 });
