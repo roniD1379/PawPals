@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { globals } from "../utils/Globals";
-import { clearTokens, setTokens } from "../utils/AuthUtils";
+import { handleUserAlreadyLoggedIn, setTokens } from "../utils/AuthUtils";
 import api from "../utils/AxiosInterceptors";
 import GoogleAuth from "./GoogleAuth";
 
@@ -51,7 +51,7 @@ function Login() {
   };
 
   useEffect(() => {
-    clearTokens();
+    handleUserAlreadyLoggedIn();
   }, []);
 
   return (
