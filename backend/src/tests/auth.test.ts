@@ -212,7 +212,7 @@ describe("Auth tests", () => {
   test("Test google login - fail - missing credentials", async () => {
     const response = await request(app)
       .post("/auth/googleLogin")
-      .send({ credential: "", client_id: "" });
+      .send({ credential: "" });
     expect(response.statusCode).toBe(500);
   });
 });
