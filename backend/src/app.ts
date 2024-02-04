@@ -33,6 +33,7 @@ const initApp = (): Promise<Express> => {
         app.use("/user", userRoute);
         app.use("/post", postRoute);
         app.use("/auth", authRoute);
+        app.use("/public", express.static("public"));
         resolve(app);
       });
   });
