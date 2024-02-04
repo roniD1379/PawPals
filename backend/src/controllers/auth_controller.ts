@@ -119,11 +119,11 @@ const login = async (req: Request, res: Response) => {
 };
 
 const googleLogin = async (req: Request, res: Response) => {
-  const { credential, client_id } = req.body;
+  const { credential } = req.body;
   try {
     const ticket = await client.verifyIdToken({
       idToken: credential,
-      audience: client_id,
+      audience: process.env.GOOGLE_CLIENT_ID,
     });
     const payload = ticket.getPayload();
     const email = payload.email;

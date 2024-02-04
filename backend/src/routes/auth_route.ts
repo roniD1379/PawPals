@@ -78,17 +78,12 @@ const router = express.Router();
  *     GoogleLoginCredentials:
  *       type: object
  *       required:
- *         - client_id
  *         - credential
  *       properties:
- *         client_id:
- *           type: string
- *           description: The client ID of the application
  *         credential:
  *           type: string
  *           description: The token from the Google login
  *       example:
- *         client_id: 'gdshngashjdgjkashdjhaskldhalikshdl'
  *         credential: 'sdashgdgsajmhdjsafgduyadgiaw454584sdad'
  */
 
