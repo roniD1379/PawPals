@@ -1,6 +1,6 @@
 const BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "https://localhost:443/"
+    ? "https://193.106.55.176:443/"
     : "http://localhost:3000/";
 
 const AUTH_CONTROLLER = "auth/";
