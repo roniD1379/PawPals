@@ -66,8 +66,6 @@ export const handleUserAlreadyLoggedIn = async () => {
         const newRefreshToken = response.data.refreshToken;
         setTokens(newAccessToken, newRefreshToken);
         navigateToMain();
-      } else {
-        navigateToLogin(false);
       }
     } catch (error) {
       console.error("Error refreshing token:", error);
