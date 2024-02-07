@@ -75,6 +75,7 @@ function Register() {
             uploadedImageId="profile-img"
             setSelectedFile={setSelectedFile}
             currentImage={defaultProfileImg}
+            isDefault={true}
           />
           <FormInput
             name="firstName"

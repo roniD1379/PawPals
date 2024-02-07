@@ -39,6 +39,10 @@
   background-color: black;
 }
 
+.upload-image-img-default {
+  background: transparent;
+}
+
 @media screen and (min-width: 1300px) {
   .upload-image-container-large {
     width: 350px;

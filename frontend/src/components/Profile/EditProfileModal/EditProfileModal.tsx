@@ -100,6 +100,7 @@ function EditProfileModal({
               : globals.files + profileImg
           }
           setSelectedFile={setSelectedFile}
+          isDefault={profileImg === ""}
         />
         <FormInput
           name="firstName"
