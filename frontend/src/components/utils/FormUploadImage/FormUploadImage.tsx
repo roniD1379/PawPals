@@ -5,6 +5,7 @@ import { FaImage } from "react-icons/fa";
 interface IProps {
   uploadedImageId: string;
   isLarge?: boolean;
+  isDefault?: boolean;
   currentImage?: string;
   setSelectedFile: React.Dispatch<React.SetStateAction<File | null>>;
 }
@@ -12,6 +13,7 @@ interface IProps {
 function FormUploadImage({
   uploadedImageId,
   isLarge = false,
+  isDefault = false,
   currentImage = "#",
   setSelectedFile,
 }: IProps) {
@@ -51,13 +53,16 @@ function FormUploadImage({
               setSelectedFile(e.target.files[0]);
               img.style.display = "block";
               document.getElementById("default-upload-image")?.remove();
+              img.classList.remove("upload-image-img-default");
             }
           }
         }}
       />
       <img
         id={uploadedImageId}
-        className="upload-image-img"
+        className={
+          "upload-image-img " + (isDefault ? "upload-image-img-default" : "")
+        }
         src={currentImage === "" ? "#" : currentImage}
       />
     </div>
