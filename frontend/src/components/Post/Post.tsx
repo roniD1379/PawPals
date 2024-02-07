@@ -19,6 +19,7 @@ import api from "../utils/AxiosInterceptors";
 import toast from "react-hot-toast";
 import { getSelectedText } from "../utils/FormUtils";
 import PostContactDetails from "../PostContactDetails/PostContactDetails";
+import { CanceledError } from "axios";
 
 export interface IPostProp {
   _id: string;
@@ -223,13 +224,20 @@ function Post({
       });
   };
 
-  const getPostComments = async (postId: string) => {
+  const getPostComments = async (
+    postId: string,
+    abortController?: AbortController
+  ) => {
     await api
-      .get(globals.posts.comments + "/" + postId)
+      .get(
+        globals.posts.comments + "/" + postId,
+        !abortController ? {} : { signal: abortController?.signal }
+      )
       .then((response) => {
         setComments(response.data);
       })
       .catch((error) => {
+        if (error instanceof CanceledError) return;
         console.log("Failed to get post comments", error);
       });
   };
@@ -252,8 +260,9 @@ function Post({
   };
 
   useEffect(() => {
+    const abortController = new AbortController();
     if (isShowingDetails) {
-      getPostComments(post._id);
+      getPostComments(post._id, abortController);
     }
 
     const handleResize = () => {
@@ -263,6 +272,7 @@ function Post({
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
+      abortController.abort();
     };
   }, []);
 

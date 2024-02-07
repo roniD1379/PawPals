@@ -9,17 +9,24 @@ import {
 } from "../utils/InfiniteScroll/InfiniteScrollUtils";
 import api from "../utils/AxiosInterceptors";
 import { globals } from "../utils/Globals";
+import { CanceledError } from "axios";
 
 function Feed() {
   const [posts, setPosts] = useState<IPostProp[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(0);
 
-  const getPosts = async (isRefresh = false) => {
+  const getPosts = async (
+    isRefresh = false,
+    abortController?: AbortController
+  ) => {
     const postsPage = isRefresh ? 0 : page;
 
     await api
-      .get(globals.posts.feedPosts + "/" + postsPage)
+      .get(
+        globals.posts.feedPosts + "/" + postsPage,
+        !abortController ? {} : { signal: abortController.signal }
+      )
       .then((response) => {
         const newPosts = response.data;
         setPage(postsPage + 1);
@@ -28,6 +35,7 @@ function Feed() {
         else setPosts((prevData) => [...prevData, ...newPosts]);
       })
       .catch((error) => {
+        if (error instanceof CanceledError) return;
         setPosts([]);
         console.log("Failed to get feed posts", error);
       });
@@ -38,7 +46,9 @@ function Feed() {
   };
 
   useEffect(() => {
-    getPosts();
+    const abortController = new AbortController();
+    getPosts(undefined, abortController);
+    return () => abortController.abort();
   }, []);
 
   return (

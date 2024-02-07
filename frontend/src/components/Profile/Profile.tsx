@@ -13,6 +13,7 @@ import { globals } from "../utils/Globals";
 import api from "../utils/AxiosInterceptors";
 import { ClipLoader } from "react-spinners";
 import defaultProfileImg from "../../assets/images/default_profile_img.png";
+import { CanceledError } from "axios";
 
 function Profile() {
   const [username, setUsername] = useState("");
@@ -28,9 +29,12 @@ function Profile() {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const getUserDetails = async () => {
+  const getUserDetails = async (abortController?: AbortController) => {
     await api
-      .get(globals.users.userDetails)
+      .get(
+        globals.users.userDetails,
+        !abortController ? {} : { signal: abortController.signal }
+      )
       .then((response) => {
         setUsername(response.data.username);
         setUserImage(response.data.userImage);
@@ -41,6 +45,7 @@ function Profile() {
         setPhoneNumber(response.data.phoneNumber);
       })
       .catch((error) => {
+        if (error instanceof CanceledError) return;
         console.log("Failed to get user details from server: ", error);
       });
   };
@@ -55,11 +60,16 @@ function Profile() {
     });
   };
 
-  const getPostsForUserProfile = async (isRefresh = false) => {
+  const getPostsForUserProfile = async (
+    isRefresh = false,
+    abortController?: AbortController
+  ) => {
     const postsPage = isRefresh ? 0 : page;
 
     await api
-      .get(globals.posts.userPosts + "/" + postsPage)
+      .get(globals.posts.userPosts + "/" + postsPage, {
+        signal: abortController?.signal,
+      })
       .then((response) => {
         const newPosts = response.data;
         setPage(postsPage + 1);
@@ -68,6 +78,7 @@ function Profile() {
         else setPosts((prevData) => [...prevData, ...chunkArray(newPosts, 3)]);
       })
       .catch((error) => {
+        if (error instanceof CanceledError) return;
         setPosts([]);
         console.log("Failed to get user posts posts", error);
       });
@@ -83,15 +94,17 @@ function Profile() {
     getPostsForUserProfile(true);
   };
 
-  const getProfileData = async () => {
-    await getUserDetails();
-    await getPostsForUserProfile();
+  const getProfileData = async (abortController: AbortController) => {
+    await getUserDetails(abortController);
+    await getPostsForUserProfile(undefined, abortController);
   };
 
   useEffect(() => {
-    getProfileData().then(() => {
+    const abortController = new AbortController();
+    getProfileData(abortController).then(() => {
       setLoading(false);
     });
+    return () => abortController.abort();
   }, []);
 
   return (

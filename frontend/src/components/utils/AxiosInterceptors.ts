@@ -48,10 +48,12 @@ api.interceptors.response.use(
 
           return api(originalRequest);
         } catch (refreshError) {
+          localStorage.clear();
           navigateToLogin();
           return Promise.reject(refreshError);
         }
       } else {
+        localStorage.clear();
         navigateToLogin();
         return Promise.reject(error);
       }
