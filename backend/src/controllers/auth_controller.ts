@@ -253,14 +253,9 @@ const refresh = async (req: Request, res: Response) => {
           process.env.JWT_REFRESH_SECRET
         );
 
-        userDb.refreshTokens = userDb.refreshTokens.filter(
-          (t) => t !== refreshToken
-        );
-
-        userDb.refreshTokens.push(newRefreshToken);
         await User.updateOne(
           { _id: userDb._id },
-          { refreshTokens: userDb.refreshTokens }
+          { refreshTokens: [newRefreshToken] }
         );
 
         return res.status(200).send({
