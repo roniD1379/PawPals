@@ -74,7 +74,7 @@ describe("Post tests", () => {
 
   test("Test GET Post - feed", async () => {
     const response = await request(app)
-      .get("/post/feed/1")
+      .get("/post/feed/0")
       .set("Authorization", "JWT " + accessToken);
     expect(response.statusCode).toBe(200);
     const postObj = response.body[0];
@@ -84,7 +84,7 @@ describe("Post tests", () => {
 
   test("Test GET Post - all by user", async () => {
     const response = await request(app)
-      .get("/post/allByUser/1")
+      .get("/post/allByUser/0")
       .set("Authorization", "JWT " + accessToken);
     expect(response.statusCode).toBe(200);
     const postObj = response.body[0];
