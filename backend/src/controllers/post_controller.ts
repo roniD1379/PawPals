@@ -15,7 +15,7 @@ class PostController {
       let posts = [];
 
       const page = req.params.page ? parseInt(req.params.page) : 1;
-      const skip = page === 0 ? 0 : (page - 1) * FEED_PAGE_SIZE;
+      const skip = page === 0 ? 0 : page * FEED_PAGE_SIZE;
 
       posts = await Post.find()
         .sort({ createdAt: -1 })
@@ -38,7 +38,7 @@ class PostController {
       const userIdObject = PostService.convertToIdObject(req.user._id);
       let posts = [];
       const page = req.params.page ? parseInt(req.params.page) : 1;
-      const skip = page === 0 ? 0 : (page - 1) * PROFILE_FEED_PAGE_SIZE;
+      const skip = page === 0 ? 0 : page * PROFILE_FEED_PAGE_SIZE;
 
       posts = await Post.find({ ownerId: userIdObject })
         .sort({ createdAt: -1 })
